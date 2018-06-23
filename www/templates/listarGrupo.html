@@ -1,0 +1,48 @@
+<ion-view view-title="Listar grupos de viajes">
+  <div class="bar bar-subheader bar-custom item-input-inset">
+    <label class="item-input-wrapper">
+      <i class="icon ion-ios-search placeholder-icon"></i>
+      <input type="text" placeholder="Buscar encuesta..." ng-model="search">
+    </label>
+    <button class="button button-clear  button-has-search" ng-if="search">
+      <i class="ion-close"></i>
+      <span>Cancelar</span>
+    </button>
+  </div>
+  <ion-content class="has-subheader">
+    <div class="card">   
+      <div class="item item-divider situr-header">
+        <h2>Listar grupos de viajes</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-25">Id</div>
+            <div class="col col-75">Fecha de aplicación</div>
+            <div class="col col-75">Lugar de aplicación</div>
+            <div class="col col-75">Nombre de usuario</div>
+            <div class="col col-50">Encuestas diligenciadas</div>
+            <div class="col col-33"></div>
+          </div>
+          <div class="row row-table-col" ng-repeat="n in [] | range:3">
+            <div class="col col-25">2279</div>
+            <div class="col col-75">Jan 2 2017 9:30AM</div>
+            <div class="col col-75">El Rodadero</div>
+            <div class="col col-75">zinty0525@gmail.com</div>
+            <div class="col col-50">1/1</div>
+            <div class="col col-33"><a class="button button-outline button-stable ripple ripple-green" href="#/app/verGrupo"><i class="ion-eye"></i></a></div>
+          </div>
+
+        </ion-scroll>
+      </div> 
+    </div> 
+  </ion-content> 
+
+  <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+    <a href="#/app/nuevoGrupo">
+      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+        <i class="icon ion-plus"></i>
+      </button>
+    </a>
+  </div> 
+</ion-view>

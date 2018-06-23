@@ -1,0 +1,426 @@
+<ion-view view-title="Viajes realizados">
+  <ion-content>
+    <div class="card animated fadeInLeft list" ng-if="errores">
+      <div class="item item-divider situr-header-error">
+          <h2>Corrige los errores</h2>
+        </div>
+      <div class="assertive item" ng-repeat="error in errores">
+        {{error[0]}}
+      </div>
+    </div>
+    <div class="card animated fadeInLeft">
+      <div class="item item-divider situr-header required">
+        <h2>Duración de la estancia</h2>
+      </div>
+      <div class="item">
+        <button class="button button-outline button-positive button-small" ng-click="ver = true; clearForm()" ng-disabled="ver">Agregar</button>
+      </div>
+      
+      <ion-scroll direction="x" id="scroll-x"  ng-show="Viajes.length > 0">
+        <div class="row row-table">
+          <div class="col col-33">Viaje</div>
+          <div class="col col-75">Fecha</div>
+          <div class="col col-33">Selección</div>
+          <div class="col col-50"></div>
+        </div>
+        <div class="row row-table-col" ng-repeat="n in Viajes">
+          <div class="col col-33" >
+            viaje {{$index+1}}
+          </div>
+
+          <div class="col col-75">
+             {{n.fecha_inicio | date:"yyyy/MM/dd"}} - {{n.fecha_final | date:"yyyy/MM/dd"}}
+          </div>
+
+          
+
+          <div class="col col-33">
+            <ion-radio class="ripple ripple-green" name="principal_viaje" ng-model="PrincipalViaje.id" ng-value="n.id" ng-click="c(n.id)">
+            </ion-radio>
+          </div>
+
+          <div class="col col-50">
+
+            <button class="button button-small button-outline button-positive ripple ripple-green" ng-click="editar(n)">
+              <i class="ion-edit"></i>
+            </button>
+            <button class="button button-small button-outline button-assertive ripple ripple-green"  ng-click="eliminar(n)"  ng-disabled="ver">
+              <i class="ion-ios-trash"></i>
+            </button>
+          </div>
+
+        </div>
+
+
+      </ion-scroll>
+       
+    </div>
+    <div ng-show="ver" >
+      <form role="form" name="forms.EstanciaForm" novalidate>
+        <div class="card animated fadeInLeft" >
+          <div class="item item-divider situr-header required">
+            <h2>Fecha del viaje principal</h2>
+          </div>
+          
+          <div class="item">
+            <label class="input-label">Fecha de inicio del viaje</label>
+             <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.llegada.$touched">
+                <span ng-show="forms.EstanciaForm.llegada.$error.required">*</span>
+                <span ng-show="forms.EstanciaForm.llegada.$error.date">*</span>
+            </span>
+            <a 
+              class="item date ripple ripple-green" 
+              ion-datetime-picker 
+              date
+              ng-model="encuesta.Inicio" 
+              name="llegada" 
+              ng-required="true">
+              {{encuesta.Inicio| date: "yyyy-MM-dd" }}
+            </a>
+          </div>
+          <div class="item">
+            <label class="input-label">Fecha de inicio del viaje</label>
+             <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.salida.$touched">
+                <span ng-show="forms.EstanciaForm.salida.$error.required">*</span>
+                <span ng-show="forms.EstanciaForm.salida.$error.date">*</span>
+            </span>
+            <a 
+              class="item date ripple ripple-green" 
+              ion-datetime-picker 
+              date
+              ng-model="encuesta.Fin" 
+              name="salida" 
+              ng-required="true">
+              {{encuesta.Fin| date: "yyyy-MM-dd" }}
+            </a>
+          </div>
+        </div>
+
+        <div class="card animated fadeInLeft">
+          <div class="item item-divider situr-header required">
+            <h2>Duración de la estancia</h2>
+          </div>
+          <div class="item">
+            <a class="button button-small button-outline button-positive ripple ripple-green" ng-click="agregar()">
+              <i class="ion-plus"></i>
+            </a>
+          </div>
+      
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table">
+              <div class="col col-50">País</div>
+              <div class="col col-50">Dpto</div>
+              <div class="col col-50">Mpios</div>
+              <div class="col col-33">Principal</div>
+              <div class="col col-33"></div>
+            </div>
+            <div class="row row-table-col" ng-repeat="n in encuesta.Estancias">
+              <div class="col col-50" >
+                <a 
+                  class="item item-input item-select ripple ripple-green item-select-block" 
+                  modal-select 
+                  ng-model="n.pais" 
+                  options="Datos.Paises" 
+                  modal-title="Elegir grupo" 
+                  has-search="true" 
+                  header-footer-class="bar-custom" 
+                  cancel-search-button='X' 
+                  search-placeholder="Buscar..." 
+                  cancel-button="Cancelar" 
+                  sub-header-class="bar-custom"
+                  reset-button="Limpiar" 
+                  ng-change="n.Pais=n.pais.id;cambioselectpais(n)"
+                  name="pais{{$index}}"
+                  ng-required="true">
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.pais{{$index}}.$touched">
+                     <span ng-show="forms.EstanciaForm.pais{{$index}}.$error.required">*</span>
+                  </span>
+                  {{n.pais.nombre}}
+                  <div class="option ripple ripple-green">
+                      {{option.nombre}}
+                  </div>  
+                </a> 
+              </div>
+
+              <div class="col col-50">
+                <a 
+                  class="item item-input item-select ripple ripple-green item-select-block" 
+                  modal-select 
+                  ng-model="n.departamento" 
+                  options="Datos.Depertamentos " 
+                  modal-title="Elegir grupo" 
+                  has-search="true" 
+                  header-footer-class="bar-custom" 
+                  cancel-search-button='X' 
+                  search-placeholder="Buscar..." 
+                  cancel-button="Cancelar" 
+                  sub-header-class="bar-custom"
+                  reset-button="Limpiar" 
+                  short-list-break  
+                  ng-change="n.Departamento=n.departamento.id;cambioselectdepartamento(n)"
+                  ng-required="true"
+                  name="departamento{{$index}}">
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.departamento{{$index}}.$touched">
+                     <span  ng-show="forms.EstanciaForm.departamento{{$index}}.$error.required">*</span>
+                  </span>
+                  {{n.departamento.nombre}}
+                  <div class="option ripple ripple-green">
+                      {{option.nombre}}
+                  </div>  
+                </a>
+              </div>
+
+              <div class="col col-50">
+                <a 
+                  class="item item-input item-select ripple ripple-green item-select-block" 
+                  modal-select 
+                  ng-model="n.municipio" 
+                  options="Datos.Municipios" 
+                  modal-title="Elegir grupo" 
+                  has-search="true" 
+                  header-footer-class="bar-custom" 
+                  cancel-search-button='X' 
+                  search-placeholder="Buscar..." 
+                  cancel-button="Cancelar" 
+                  sub-header-class="bar-custom"
+                  reset-button="Limpiar" 
+                  ng-change="n.Municipio=n.municipio.id;cambioselectmunicipio(n)"
+                  ng-required="true"
+                  name="municipio@{{$index}}">
+                  {{n.municipio.nombre}}
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.municipio{{$index}}.$touched">
+                     <span  ng-show="forms.EstanciaForm.municipio{{$index}}.$error.required">*</span>
+                 </span>
+                  <div class="option ripple ripple-green">
+                      {{option.nombre}}
+                  </div>  
+                </a>
+                
+              </div>
+
+              <div class="col col-33">
+                <ion-radio ng-model="encuesta.Principal" ng-value="n.Municipio" class="ripple ripple-green" name="destino">
+                </ion-radio>
+              </div>
+
+              <div class="col col-33">
+
+                <a class="button button-small button-outline button-assertive ripple ripple-green" ng-click="quitar(n)">
+                  <i class="ion-close-round"></i>
+                </a>
+              </div>
+            </div>
+          </ion-scroll>
+        </div>
+
+        <div class="card animated fadeInLeft" >
+
+          <div class="item item-divider situr-header required">
+            <h2> ¿Cuál fue el motivo principal del primer viaje?</h2>
+          </div>
+
+            <a 
+              class="item item-input item-select ripple ripple-green item-select-block" 
+              modal-select 
+              ng-model="encuesta.motivo" 
+              options="Datos.Motivos" 
+              modal-title="Elegir grupo" 
+              has-search="true" 
+              header-footer-class="bar-custom" 
+              cancel-search-button='X' 
+              search-placeholder="Buscar..." 
+              cancel-button="Cancelar" 
+              sub-header-class="bar-custom"
+              reset-button="Limpiar" 
+              ng-change="encuesta.Motivo=encuesta.motivo.id"
+              name="motivo"
+              ng-required="true">
+              Motivo:{{encuesta.motivo.nombre}}
+              <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.motivo.$touched">
+                <span ng-show="forms.EstanciaForm.motivo.$error.required">*</span>
+              </span>
+              <div class="option ripple ripple-green">
+                  {{option.nombre}}
+              </div>  
+            </a>   
+        </div>
+
+        <div class="card animated fadeInLeft" >
+          <div class="item item-divider situr-header required">
+            <h2> ¿Con que frecuencia realiza este viaje?</h2>
+          </div>
+          
+          <ion-radio 
+            ng-repeat="item in Datos.Frecuencias" 
+            ng-if="item.id != 10" 
+            name="frecuencia" 
+            ng-value="{{item.id}}" 
+            ng-model="encuesta.Frecuencia" 
+            class="ripple ripple-green"
+            ng-required="true"
+            name="frecuencia">
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.frecuencia.$touched">
+               <span  ng-show="forms.EstanciaForm.frecuencia.$error.required">*</span>
+            </span>
+            {{item.frecuencia}}
+          </ion-radio>
+        </div>
+
+        <div class="card animated fadeInLeft" >
+          <div class="item item-divider situr-header required">
+            <h2> ¿Cuántas personas incluyéndose usted, realizaron juntos el viaje desde la salida hasta el regreso al lugar de residencia?</h2>
+          </div>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Número de personas</span>
+            <input type="number" placeholder="Número de personas" ng-model="encuesta.Numero" ng-required="true" name="numero">
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.numero.$touched">
+              <span  ng-show="forms.EstanciaForm.numero.$error.required">*</span>
+            </span>
+          </label> <br>     
+        </div>
+
+        <div class="card animated fadeInLeft" >
+          <div class="item item-divider situr-header required">
+            <h2> ¿Quiénes eran esas personas?</h2>
+          </div>
+          <ion-checkbox 
+              ng-repeat="item in Datos.Acompaniantes"
+              class="ripple ripple-green" 
+              ng-value="{{item.id}}" 
+              ng-checked="encuesta.Personas.indexOf(item.id) > -1"
+              ng-click="toggleSelection(item.id, $event)"
+              ng-disabled="(encuesta.Numero == 1 && item.id != 1) || (encuesta.Numero > 1 && item.id == 1) || encuesta.Numero == null || encuesta.Numero < 1"
+              ng-required="true"
+              name="personas"
+            >
+            {{item.nombre}}
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.personas.$touched">
+               <span  ng-show="encuesta.Personas.length == 0">*</span>
+
+           </span>
+          </ion-checkbox>
+        </div>
+
+        <div class="card animated fadeInLeft" ng-if="existe(2)">
+          <div class="item item-divider situr-header required">
+            <h2>¿Cuántas personas del hogar compartiendo gastos?</h2>
+          </div>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Ingrese el No. de personas del hogar con gatos</span>
+            <input 
+              type="number" 
+              placeholder="Ingrese el No. de personas del hogar con gatos" 
+              ng-model="encuesta.Numerohogar" 
+              ng-required="true" 
+              ng-change="verificaT()"
+              min="1" 
+              max="@{{TotalD}}" 
+              name="numerohogar"
+            >
+
+              <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.numerohogar.$touched">
+                 <span ng-show="forms.EstanciaForm.numerohogar.$error.required">*</span>
+             </span>
+          </label> <br>
+        </div>
+
+        <div class="card animated fadeInLeft" ng-if="existe(3)">
+          <div class="item item-divider situr-header required">
+            <h2>¿Cuántas personas del hogar compartiendo gastos?</h2>
+          </div>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Ingrese el No. de personas del hogar sin gatos</span>
+            <input 
+              type="number" 
+              placeholder="Ingrese el No. de personas del hogar sin gatos" 
+              ng-model="encuesta.NumerohogarSinGasto" 
+              ng-required="true" 
+              ng-change="verificaT()"
+              name="numerohogarsingasto"
+              min="1" 
+              max="@{{TotalG}}"
+            >
+
+              <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.numerohogarsingasto.$touched">
+                 <span ng-show="forms.EstanciaForm.numerohogarsingasto.$error.required">*</span>
+             </span>
+          </label> <br>
+        </div>
+
+        <div class="card animated fadeInLeft" ng-if="existe(6)">
+          <div class="item item-divider situr-header required">
+            <h2>¿Cuántas personas del hogar compartiendo gastos?</h2>
+          </div>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Ingrese el Número de turístas</span>
+            <input 
+              type="number" 
+              placeholder="Ingrese el Número de turístas" 
+              ng-model="encuesta.Numerotros" 
+              ng-required="true" 
+              ng-change="verificaT()"
+              name="numerotros"
+              min="1" 
+              max="@{{TotalF}}"
+            >
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.numerotros.$touched">
+                 <span ng-show="forms.EstanciaForm.numerotros.$error.required">*</span>
+             </span>
+
+          </label> <br>
+        </div>
+
+        <div class="row">
+          <div class="col col-50">
+            <a class="button button-outline button-positive ripple ripple-green button-block" ng-click="ver = false;cancelar();">
+              Cancelar
+            </a>
+          </div>
+          <div class="col col-50">
+            <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block">
+              Guardar
+            </button>
+          </div>
+        </div>
+        <div class="padding">
+          <hr>
+        </div>
+      </form>
+    </div>
+
+    <div class="row animated fadeInLeft">
+      <div class="col col-50">
+        <a href="#/app/editHogar/{{id}}" class="button button-outline button-stable ripple ripple-green button-block" >
+          Anterior
+        </a>
+      </div>
+      <div class="col col-50">
+        <button type="submit" ng-click="siguiente()" class=" button button-positive ripple ripple-light button-block">
+          Siguiente
+        </button>
+      </div>
+    </div>
+    <br><br><br>
+  </ion-content>
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="20"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+    </round-progress>
+    <div class="progress-text">
+      <span class="progress-percent">20%</span>
+    </div>
+  </div>
+</ion-view>

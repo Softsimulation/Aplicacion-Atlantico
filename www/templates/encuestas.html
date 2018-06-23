@@ -1,0 +1,106 @@
+<ion-view view-title="Encuestas">
+  <div class="bar bar-subheader bar-custom item-input-inset">
+    <label class="item-input-wrapper">
+      <i class="icon ion-ios-search placeholder-icon"></i>
+      <input type="text" placeholder="Buscar encuesta..." ng-model="search">
+    </label>
+    <button class="button button-clear  button-has-search" ng-if="search">
+      <i class="ion-close"></i>
+      <span>Cancelar</span>
+    </button>
+  </div>
+  <ion-content class="has-subheader">
+    <div class="list">
+      <!--<label class="item item-input item-select ripple ripple-green">
+        <div class="input-label">
+          Encuestas
+        </div>
+        <select>
+          <option>Todas las encuestas</option>
+          <option>Calculadas</option>
+          <option>Sin Calcular</option>
+        </select>
+      </label>-->
+      <button 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="someModel" 
+        options="selectables" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        reset-button="Limpiar" >
+        Encuestas: {{someModel}}
+        <div class="option ripple ripple-green">
+            {{option}}
+        </div>  
+      </button>
+
+      <!--<label class="item item-input item-select ripple ripple-green">
+        <div class="input-label">
+          Campos
+        </div>
+        <select>
+          <option>Cualquier Campo</option>
+          <option>Fecha de aplicación</option>
+          <option>Fecha de llegadar</option>
+        </select>
+      </label>-->
+      <button 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="someModel" 
+        options="selectables" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        reset-button="Limpiar" >
+        Campos: {{someModel}}
+        <div class="option ripple ripple-green">
+            {{option}}
+        </div>  
+      </button>
+
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x" >
+
+          <div class="row row-table">
+            <div class="col col-25"># de encuesta</div>
+            <div class="col col-25">Grupo</div>
+            <div class="col col-50">Lugar de aplicación</div>
+            <div class="col col-25">Fecha de aplicación</div>
+            <div class="col col-25">Fecha de llegada</div>
+            <div class="col col-33">Estado</div>
+            <div class="col col-33">Última sección</div>
+          </div>
+          <div class="row row-table-col" ng-repeat="n in [] | range:3">
+            <div class="col col-25">9</div>
+            <div class="col col-25">3</div>
+            <div class="col col-50">El Rodadero</div>
+            <div class="col col-25">2016-12-31</div>
+            <div class="col col-25">2017-01-02 </div>
+            <div class="col col-33">Cerrada Calculada</div>
+
+            <div class="col col-33">7 
+            <a class="button button-outline button-stable ripple ripple-green" href="#/app/general"><i class="ion-edit"></i></a></div>
+          </div>
+        </ion-scroll>
+      </div>
+    </div> 
+    <br><br><br>
+  </ion-content> 
+
+  <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+    <a href="#/app/general">
+      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+        <i class=" ion-plus"></i>
+      </button>
+    </a>
+  </div> 
+</ion-view>

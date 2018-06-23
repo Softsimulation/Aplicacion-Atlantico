@@ -1,0 +1,368 @@
+<ion-view view-title="Caracterización de empleados">
+  <ion-content>
+    <div class="card animated bounceInUp">   
+      <div class="item item-divider situr-header required">
+        <h2> Nivel educativo de los empleados</h2>
+      </div>
+
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Posgrado</span>
+        <input type="number" placeholder="Posgrado" min="1" required ng-model="posgrado">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Universitario</span>
+        <input type="number" placeholder="Universitario " min="1" required ng-model="universitario">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Tecnológico y Técnico</span>
+        <input type="number" placeholder="Tecnológico y Técnico" min="1" required ng-model="tecnico">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Bachiller</span>
+        <input type="number" placeholder="Bachiller" min="1" required ng-model="bachiller">
+      </label>
+      <label class="item">
+        Total: {{posgrado+universitario+tecnico+bachiller}}
+      </label>          
+    </div>
+
+    <div class="card animated bounceInUp">
+      <div class="item item-divider situr-header required">
+        <h2> Asignación salarial</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-75"></div>
+            <div class="col col-75">Menos o igual que 1 SMLV</div>
+            <div class="col col-75">Más de 1 pero menos o igual que 3 SMLV</div>
+            <div class="col col-75">Más de 3 pero menos o igual que 5 SMLV</div>
+            <div class="col col-75">Más de 5 SMLV</div>
+
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Gerencial 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+
+            </div>    
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Administrativo 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+
+            </div>    
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Operativo 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+
+            </div>    
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              Total 
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>    
+          </div>
+        </ion-scroll>
+      </div>  
+    </div>
+
+    <div class="card animated bounceInUp">
+      <div class="item item-divider situr-header required">
+        <h2> Dominio de inglés</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-75"></div>
+            <div class="col col-75">Saben inglés</div>
+            <div class="col col-75">No saben inglés</div>
+
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Gerencial 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Administrativo 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              <br>
+              Operativo 
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>
+
+            <div class="col col-75">
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" required>
+              </label>
+              <br>
+            </div>   
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75" >
+              Total 
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>
+
+            <div class="col col-75">
+              0
+            </div>
+
+
+          </div>
+        </ion-scroll>
+      </div>  
+    </div>
+
+    <div class="card animated bounceInUp">   
+      <div class="item item-divider situr-header required">
+        <h2> Necesidades de capacitación: ¿Hubo cargos que requerían capacitación?</h2>
+      </div>
+
+      <label class="item">                
+        <ion-radio ng-value="1" ng-model="capacitacion" class="ripple ripple-green" name="capacitacion">
+          Si
+        </ion-radio>
+
+        <ion-radio ng-value="2" ng-model="capacitacion" class="ripple ripple-green" name="capacitacion">
+          No
+        </ion-radio>  
+      </label>  
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="capacitacion==1">   
+      <div class="item item-divider situr-header required">
+        <h2> ¿En cuáles temas realizó la capacitación?</h2>
+      </div>
+
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Describa...</span>
+        <textarea placeholder="Describa..." rows="5"></textarea>
+      </label><br>     
+    </div>
+
+
+    <br><br><br>
+  </ion-content>
+
+  <div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+
+      <a class="popup-menu-item ripple ripple-green" href="#/app/caracterizacionAlojamientos" ng-click="togglePopupMenu()">
+        <i class="ion ion-clipboard"></i>
+        <span>Caracterizacion</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/ofertaAlojamiento" ng-click="togglePopupMenu()">
+        <i class="ion ion-calculator"></i>
+        <span>Oferta</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleoMensual" ng-click="togglePopupMenu()">
+        <i class="ion-ios-people"></i>
+        <span>Empleo mensual</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/numeroEmpleados" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>N° Empleados</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleadosCaracterizacion" ng-click="togglePopupMenu();">
+        <i class="ion ion-briefcase"></i>
+        <span>Empleados Caracterización</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="90"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+    </round-progress>
+    <div class="progress-text">
+
+      <span class="progress-percent">90%</span>
+    </div>
+  </div>
+
+</ion-view>

@@ -1,0 +1,363 @@
+<ion-view view-title="Actividades Realizadas">
+  <ion-content>
+    
+  <div class="card animated bounceInUp">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué actividades realizó en el Atlántico?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox 
+        name= "actividadesr"  
+        class="ripple ripple-green" 
+        ng-value="{{item}}"
+        ng-click="cambioActividadesRealizadas(item); toggleSelection(item);"
+        ng-repeat="item in Datos.Actividadesrelizadas"
+      >
+        {{item.actividades_realizadas_con_idiomas[0].nombre}}
+      </ion-checkbox>
+      <label class="item item-input item-floating-label"  >
+        <span class="input-label" >Otro</span>
+        <input 
+          type="text" 
+          placeholder="Otro"  
+          name ="opcionp@{$index}}" 
+          id="opcionp@{{activ.id}}" 
+          ng-if="item.actividades_realizadas_con_idiomas[0].nombre == 'Otro'" 
+          ng-model="Actividad(item.id).otro" 
+          ng-disabled="!existeActividad(item.id)" 
+          ng-required="existeActividad(item.id)" >
+      </label>
+      <br>
+
+     
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.playa">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué playas visitó en el Magdalena?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.neguanje">
+        Bahía Neguanje
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.rodadero">
+        El Rodadero
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.blanca">
+        Playa Blanca
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.taganga">
+        Taganga
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.bahia">
+        Bahía de Santa Marta
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.concha">
+        Bahía Concha
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.sanJuan">
+        Cabo San Juan del Guía
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.crital">
+        Playa Cristal o Playa del Muerto
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.horizonte">
+        Bello Horizonte
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.canaveral">
+        Playa Cañaveral
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.piscina">
+        Piscina Natural
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.arrecifes">
+        Playa Arrecifes
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.playaca">
+        Playaca
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.salguero">
+        Playa Salguero
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.gairaca">
+        Playa Gairaca
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.playas.buritaca">
+        Buritaca
+      </ion-checkbox>
+
+
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.parque">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué parques naturales, Cascadas, ríos, pozos, balnearios, zoológicos y jardines botánicos visitó?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.salto">
+        Cascada, catarata o salto
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.rio">
+        Río
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.parque">
+        Parque nacional natural
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.reserva">
+        Reserva natural
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.miradores">
+        Miradores paisajísticos
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.zoo">
+        Zoológicos
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parques.jardines">
+        Jardines botánicos
+      </ion-checkbox>  				  				
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.parques.parque">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué parques?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parquesNac.tayrona">
+        Parque Nacional Natural Tayrona
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parquesNac.salamanca">
+        Vía Parque Isla de Salamanca
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parquesNac.SFF">
+        Santuario de Fauna y Flora (SFF) Ciénaga Grande de Santa Marta
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.parquesNac.SN">
+        Parque Nacional Natural Sierra Nevada de Santa Marta
+      </ion-checkbox>				  				
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.museo">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué museos?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.iglesias">
+        Catedrales, iglesias
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.cultura">
+        Casas de la cultura
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.haciendas">
+        Haciendas y/o casas históricas
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.puentes">
+        Puentes históricos
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.monumentos">
+        Monumentos
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.cementerios">
+        Cementerios
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.santuarios">
+        Santuarios
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museos.museos">
+        Museos
+      </ion-checkbox> 				
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.museos.museos">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué museos?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.oro">
+        Museo del oro- Casa de la Aduana
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.GGM">
+        Casa Museo Gabriel García Márquez
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.etnografico">
+        Museo Etnográfico
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.marino">
+        Acuario Mundo Marino
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.bolivariano">
+        Museo Bolivariano de Arte Contempóraneo
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.CMA">
+        Museo Arqueológico Casa de Madame Agustine
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.museoMar">
+        Acuario y Museo del Mar
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.museosNal.nepomuceno">
+        Claustro San Juan Nepomuceno
+      </ion-checkbox> 				
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.haciendas">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué tipo de haciendas visitó?</h2>
+    </div>
+    <div class="item">  				
+    </div>        	          	
+  </div>
+
+  <div class="card animated bounceInUp" ng-if="data.deporte">
+    <div class="item item-divider situr-header required">
+      <h2>¿Qué actividades deportivas realizó durante su estancia?</h2>
+    </div>
+    <div class="item">
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.buceo">
+        Buceo recreativo
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.senderismo">
+        Senderismo
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.snorkeling">
+        Snorkeling
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.pesca">
+        Pesca deportiva
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.paintball">
+        Paintball
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.escalada">
+        Escalada en roca o muros
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.wakeboard">
+        Wakeboard
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.ciclo">
+        Ciclo Montañismo
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.canopy">
+        Canopy
+      </ion-checkbox>
+
+      <ion-checkbox class="ripple ripple-green" ng-model="data.deportes.rapel">
+        Rápel
+      </ion-checkbox>  				
+    </div>        	                 	          	
+  </div>
+
+  
+  <br><br><br>
+</ion-content>
+
+
+
+<div class="popup-menu">
+  <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+  <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+  <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+    <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+      <i class="ion ion-information-circled"></i>
+      <span>General</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+      <i class="ion ion-clock"></i>
+      <span>Estancia</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+      <i class="ion ion-model-s"></i>
+      <span>Transporte</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+      <i class="ion ion-ios-people"></i>
+      <span>Grupo</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+      <i class="ion-cash"></i>
+      <span>Gastos</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+      <i class="ion ion-person-add"></i>
+      <span>Percepción</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+      <i class="ion ion-speakerphone"></i>
+      <span>Redes e internet</span>
+    </a>
+  </div>
+</div>
+
+<div class="progress-container">
+  <round-progress
+  max="100"
+  current="16"
+  color="#16469e"
+  bgcolor="#c9cdff"
+  radius="10"
+  stroke="1"
+  semi="false"
+  rounded="false"
+  clockwise="true"
+  responsive="true"
+  duration="800"
+  animation="easeInOutQuart"
+  animation-delay="2">
+
+  </round-progress>
+  <div class="progress-text">
+    <span class="progress-percent">16%</span>
+  </div>
+</div>
+
+</ion-view>

@@ -1,0 +1,300 @@
+<ion-view view-title="Caracterización alojamientos">
+  <ion-content>
+    <div class="card animated bounceInUp">
+      <div class="item item-divider situr-header required">
+        <h2> Selecciones las modalidades de alojamiento que ofrece su establecimiento</h2>
+      </div>
+      <div class="item">
+        <ion-checkbox class="ripple ripple-green" ng-model="data.habitaciones">
+          Habitaciones
+        </ion-checkbox>
+
+        <ion-checkbox class="ripple ripple-green" ng-model="data.apartamentos" >
+          Apartamentos
+        </ion-checkbox>
+
+        <ion-checkbox class="ripple ripple-green" ng-model="data.casas" > 
+          Casas
+        </ion-checkbox>
+
+        <ion-checkbox class="ripple ripple-green" ng-model="data.cabanas"  >
+          Cabañas
+        </ion-checkbox>
+
+        <ion-checkbox class="ripple ripple-green" ng-model="data.camping" >
+          Camping
+        </ion-checkbox>
+      </div>                      
+    </div>
+
+
+    <div class="card animated bounceInUp" ng-if="data.habitaciones">
+      <div class="item item-divider situr-header">
+        <h2>Habitaciones</h2>
+      </div>
+      <div class="item">
+        <ion-scroll direction="x" id="scroll-x" >
+          <div class="row row-table-col">
+            <div class="col col-75">Número total de camas que posee el establecimiento</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de camas</span>
+                <input type="number" placeholder="Número de camas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Total habitaciones (Por favor no incluir habitaciones para el personal de la empresa) </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de hab.</span>
+                <input type="number" placeholder="Número de hab." min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">¿Cuál es la capacidad máxima de alojamiento en personas? (Por favor no cuente las personas que pueden hospedarse en camas creadas a petición del cliente)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de capacidad</span>
+                <input type="number" placeholder="Número de capacidad" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+        </ion-scroll>
+
+      </div>                      
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="data.apartamentos">
+      <div class="item item-divider situr-header">
+        <h2>Apartamentos</h2>
+      </div>
+      <div class="item">
+        <ion-scroll direction="x" id="scroll-x" >
+          <div class="row row-table-col">
+            <div class="col col-75">Total apartamentos (Por favor no incluir apartamentos para el personal de la empresa) </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de apartamentos</span>
+                <input type="number" placeholder="Número de apartamentos" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">¿Cuál es la capacidad máxima de alojamiento en personas? (Por favor no cuente las personas que pueden hospedarse en camas creadas a petición del cliente)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de capacidad</span>
+                <input type="number" placeholder="Número de capacidad" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Habitaciones promedio por apartamento </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de hab.</span>
+                <input type="number" placeholder="Número de hab." min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+        </ion-scroll>
+
+      </div>                      
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="data.casas">
+      <div class="item item-divider situr-header">
+        <h2>Casas</h2>
+      </div>
+      <div class="item">
+        <ion-scroll direction="x" id="scroll-x" >
+          <div class="row row-table-col">
+            <div class="col col-75">Total casas (Por favor no incluir casas para el personal de la empresa)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de casas</span>
+                <input type="number" placeholder="Número de casas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">¿Cuál es la capacidad máxima de alojamiento en personas? (Por favor no cuente las personas que pueden hospedarse en camas creadas a petición del cliente)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de capacidad</span>
+                <input type="number" placeholder="Número de capacidad" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Número promedio de personas por casa </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+          <div class="row row-table-col">
+            <div class="col col-75">Habitaciones promedio por casa   </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de hab.</span>
+                <input type="number" placeholder="Número de hab." min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+        </ion-scroll>
+
+      </div>                      
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="data.cabanas">
+      <div class="item item-divider situr-header">
+        <h2>Cabañas</h2>
+      </div>
+      <div class="item">
+        <ion-scroll direction="x" id="scroll-x" >
+          <div class="row row-table-col">
+            <div class="col col-75">Total cabañas (Por favor no incluir cabañas para el personal de la empresa) </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de cabañas</span>
+                <input type="number" placeholder="Número de cabañas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">¿Cuál es la capacidad máxima de alojamiento en personas? (Por favor no cuente las personas que pueden hospedarse en camas creadas a petición del cliente)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de capacidad</span>
+                <input type="number" placeholder="Número de capacidad" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Número promedio de personas por cabaña</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+          <div class="row row-table-col">
+            <div class="col col-75">Habitaciones promedio por cabaña</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de hab.</span>
+                <input type="number" placeholder="Número de hab." min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+        </ion-scroll>
+
+      </div>                      
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="data.camping">
+      <div class="item item-divider situr-header">
+        <h2>Camping</h2>
+      </div>
+      <div class="item">
+        <ion-scroll direction="x" id="scroll-x" >
+          <div class="row row-table-col">
+            <div class="col col-75">Área del terreno para Camping? (m2) </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de m2</span>
+                <input type="number" placeholder="Número de m2" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Total parcelas (N° espacios para carpas)</div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de parcelas</span>
+                <input type="number" placeholder="Número de parcelas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+          <div class="row row-table-col">
+            <div class="col col-75">Capacidad en número de personas </div>
+            <div class="col col-75" >
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de personas</span>
+                <input type="number" placeholder="Número de personas" min="1" required>
+              </label> <br> 
+            </div>
+          </div>
+
+        </ion-scroll>
+
+      </div>                      
+    </div>
+
+    <br><br><br>
+  </ion-content>
+
+  <div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+
+      <a class="popup-menu-item ripple ripple-green" href="#/app/caracterizacionAlojamientos" ng-click="togglePopupMenu()">
+        <i class="ion ion-clipboard"></i>
+        <span>Caracterizacion</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/ofertaAlojamiento" ng-click="togglePopupMenu()">
+        <i class="ion ion-calculator"></i>
+        <span>Oferta</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleoMensual" ng-click="togglePopupMenu()">
+        <i class="ion-ios-people"></i>
+        <span>Empleo mensual</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/numeroEmpleados" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>N° Empleados</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleadosCaracterizacion" ng-click="togglePopupMenu();">
+        <i class="ion ion-briefcase"></i>
+        <span>Empleados Caracterización</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="30"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+    </round-progress>
+    <div class="progress-text">
+
+      <span class="progress-percent">30%</span>
+    </div>
+  </div>
+
+</ion-view>

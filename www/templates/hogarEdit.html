@@ -1,0 +1,297 @@
+<ion-view view-title="Caracterización del hogar">
+  <ion-content>
+    <div class="card animated fadeInLeft list" ng-if="errores">
+      <div class="item item-divider situr-header-error">
+          <h2>Corrige los errores</h2>
+        </div>
+      <div class="assertive item" ng-repeat="error in errores">
+        {{error[0]}}
+      </div>
+    </div> 
+
+    <form name="forms.DatosForm" novalidate="novalidate">
+      <div class="card animated bounceInUp" >
+        <div class="item item-divider situr-header required">
+          <h2>encuestarmación de la vivienda</h2>
+        </div>
+        
+        <div class="item dates">
+          <label class="input-label">Fecha de aplicacíon</label>
+           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.fecha_aplicacion.$touched">
+              <span ng-show="forms.DatosForm.fecha_aplicacion.$error.required">*</span>
+              <span ng-show="forms.DatosForm.fecha_aplicacion.$error.date">*</span>
+          </span>
+          <a 
+            class="item date ripple ripple-green" 
+            ion-datetime-picker 
+            ng-model="encuesta.Fecha_aplicacion" 
+            name="fecha_aplicacion" 
+            ng-required="true">
+            {{encuesta.Fecha_aplicacion| date: "yyyy-MM-dd HH:mm" }}
+          </a>
+        </div>
+        <!--Municipios-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="municipio_id" 
+          options="datos.municipios" 
+          modal-title="Elegir Municipio" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar"  
+          load-list-message ="Cargando..."
+          ng-change="selectBarrios(municipio_id.id)"
+          sub-header-class="bar-custom"
+          ng-required="true" 
+          name="municipio"
+          >
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.municipio.$touched">
+              <span ng-show="forms.DatosForm.municipio.$error.required">*</span>
+          </span>
+          Municipio: {{municipio_id.nombre}}
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+
+        <!--Barrios-->
+        <a 
+          ng-disabled="!encuesta.municipio_id"
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="barrio" 
+          options="barrios" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar" 
+          load-list-message ="Cargando..."
+          ng-required="true"
+          name="barrio"
+          sub-header-class="bar-custom"
+          ng-change="encuesta.Barrio=barrio.id;";
+
+          >
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.barrio.$touched">
+            <span  ng-show="forms.DatosForm.barrio.$error.required">*</span>
+          </span>
+          Barrio: {{barrio.nombre}}
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+
+        <!--Estratos-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="estrato" 
+          options="datos.estratos" 
+          modal-title="Elegir Estrato" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar"
+          load-list-message ="Cargando..."
+          ng-required="true"
+          name="estrato"
+          ng-change="encuesta.Estrato=estrato.id;"
+          >
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.estrato.$touched">
+            <span ng-show="forms.DatosForm.estrato.$error.required">*</span>                         
+          </span>
+          Estrato: {{estrato.nombre}}
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Dirección</span>
+          <input type="text" placeholder="Dirección" ng-model="encuesta.Direccion" ng-required="true" name="direccion">
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.direccion.$touched">
+              <span ng-show="forms.DatosForm.direccion.$error.required">*</span>
+          </span>
+        </label> 
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Telefono Fijo</span>
+          <input type="number" placeholder="Telefono Fijo" ng-model="encuesta.Telefono">
+        </label> 
+        
+    
+       <!--encuestador-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuestador" 
+          options="datos.encuestadores" 
+          modal-title="Elegir Estrato" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar"
+          load-list-message ="Cargando..."
+          ng-required="true"
+          name="encuestador"
+          ng-change="encuesta.Encuestador=encuestador.id"
+          >
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.encuestador.$touched">
+              <span ng-show="forms.DatosForm.encuestador.$error.required">*</span>
+          </span>
+          Encuestador: {{encuestador.asp_net_user.username}}
+          <div class="option ripple ripple-green">
+              {{option.asp_net_user.username}}
+          </div>  
+        </a>
+      </div>
+
+      <div class="card animated bounceInUp" >
+        <div class="item item-divider situr-header required">
+          <h2> encuestarmación del hogar</h2>
+        </div>
+
+        <label class="item">
+          <button type="button" class="button button-outline button-positive button-small ripple ripple-green" ng-click="integranteAdd()">
+            Agregar integrante
+          </button>
+        </label>
+
+        <div class="item" ng-if="encuesta.integrantes.length>0">
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table">
+              
+              <div class="col col-75">Nombre</div>
+              <div class="col col-50">Jefe de hogar</div>
+              <div class="col col-50"></div>
+        
+            </div>
+            <div class="row row-table-col" ng-repeat="data in encuesta.integrantes">
+              <div class="col col-75">{{data.Nombre}}</div>
+              <div class="col col-50">
+                  <ion-radio ng-model="data.jefe_hogar" ng-value="data.jefe_hogar" class="ripple ripple-green genero" name="jefe" value="true">
+                    <span style="color: transparent; float: left;">-</span>
+                  </ion-radio>
+                
+              </div>
+              <div class="col col-50">
+                <a ng-click="integranteAdd($index)" class="button button-outline button-stable button-small"><i class="ion-edit"></i></a>
+                <a ng-click="deleteIntegrante($index)" class="button button-outline button-assertive button-small"><i class="ion-ios-trash"></i></a>
+              </div>
+            </div>
+
+          </ion-scroll>
+        </div>
+      </div>
+
+      <div class="card animated bounceInUp" >
+        <div class="item item-divider situr-header required">
+          <h2>Datos del entrevistado</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Nombre</span>
+          <input type="text" placeholder="Nombre" ng-required="true" name="nombre_entrevistado" ng-model="encuesta.Nombre_Entrevistado" >
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.nombre_entrevistado.$touched">
+            <span  ng-show="forms.DatosForm.nombre_entrevistado.$error.required">*</span>
+          </span>
+        </label>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Celular</span>
+          <input type="number" placeholder="Celular" ng-required="true" name="celular_entrevistado" ng-model="encuesta.Celular_Entrevistado">
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.celular_entrevistado.$touched">
+            <span ng-show="forms.DatosForm.celular_entrevistado.$error.required">*</span>
+          </span>
+
+        </label>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Email</span>
+          <input type="email" placeholder="Email" ng-required="true" name="email_entrevistado" ng-model="encuesta.Email_Entrevistado">
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.email_entrevistado.$touched">
+              <span ng-show="forms.DatosForm.email_entrevistado.$error.required">*</span>
+              <span ng-show="forms.DatosForm.email_entrevistado.$error.email">*</span>
+          </span>
+        </label>
+        <br>
+      </div>
+      <div class="row">
+        <div class="col col-50">
+          <button type="submit" ng-click="save()" class=" button button-positive ripple ripple-light button-block">
+            Guardar
+          </button>
+        </div>
+        <div class="col col-50">
+          <a href="#/app/viajeRealizado/{{id}}" class="button button-outline button-positive ripple ripple-green button-block">
+            Siguiente
+          </a>
+        </div>
+      </div>
+    </form>
+    <br><br><br>
+</ion-content>
+
+<!--<div class="popup-menu">
+  <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+  <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+  <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+    <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+      <i class="ion ion-encuestarmation-circled"></i>
+      <span>General</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+      <i class="ion ion-clock"></i>
+      <span>Estancia</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+      <i class="ion ion-model-s"></i>
+      <span>Transporte</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+      <i class="ion ion-ios-people"></i>
+      <span>Grupo</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+      <i class="ion-cash"></i>
+      <span>Gastos</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+      <i class="ion ion-person-add"></i>
+      <span>Percepción</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+      <i class="ion ion-speakerphone"></i>
+      <span>Redes e internet</span>
+    </a>
+  </div>
+</div>-->
+
+<div class="progress-container">
+  <round-progress
+  max="100"
+  current="0"
+  color="#16469e"
+  bgcolor="#c9cdff"
+  radius="10"
+  stroke="1"
+  semi="false"
+  rounded="false"
+  clockwise="true"
+  responsive="true"
+  duration="800"
+  animation="easeInOutQuart"
+  animation-delay="2">
+  </round-progress>
+  <div class="progress-text">
+    <span class="progress-percent">0%</span>
+  </div>
+</div>
+</ion-view>

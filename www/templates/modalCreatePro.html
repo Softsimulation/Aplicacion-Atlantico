@@ -1,0 +1,80 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-dark bar-custom">
+    <h1 class="title">Crear proveedor</h1>
+    <div class="buttons">
+      <button class="button button-clear ripple ripple-light" ng-click="modal2.hide()">
+        <i class='ion-chevron-down'></i> 
+      </button>
+    </div>
+
+  </ion-header-bar>
+  <ion-content>
+    <div class="card animated bounceInUp">
+      <div class="item item-divider situr-header">
+        <h2></h2>
+      </div>
+      <label class = "item-input item-select ripple ripple-green">    
+        <div class = "input-label">
+          Establecimiento
+        </div>       
+        <select  >
+          <option selected disabled value="">Elegir </option>
+          <option value="1">Santa Marta</option>
+          <option value="2">Barranquilla</option>
+          <option value="3">Bogota</option>
+          <option value="4">Cali</option>
+        </select>
+      </label>
+      <div class="item">
+        <label class="input-label">Fecha de fundación</label>
+        <div class="item date ripple ripple-green" ion-datetime-picker date ng-model="fundacion">
+          {{fundacion| date: "yyyy-MM-dd" }}
+        </div>
+      </div>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Nombre del contacto</span>
+        <input type="text" placeholder="Nombre del contacto" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Cargo</span>
+        <input type="text" placeholder="Cargo" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Email</span>
+        <input type="email" placeholder="Número de horas" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Celular</span>
+        <input type="number" placeholder="Celular" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Teléfono fijo</span>
+        <input type="number" placeholder="Número de horas" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Extensión</span>
+        <input type="number" placeholder="Número de horas" required>
+      </label><br>
+      <label class="item item-divider situr-header"><h2>¿Tiene usted registro en la cámara de comercio?</h2></label>
+      <div class="item">
+        <ion-radio ng-model="cc" name="cc" class="ripple ripple-green">
+          Sí
+        </ion-radio>
+
+        <ion-radio ng-model="cc" name="cc" class="ripple ripple-green">
+          No
+        </ion-radio>
+      </div>
+      <label class="item item-divider situr-header"><h2>¿Tiene usted registro nacional de turismo- RNT?</h2></label>
+      <div class="item">
+        <ion-radio ng-model="rnt" name="rnt" class="ripple ripple-green">
+          Sí
+        </ion-radio>
+
+        <ion-radio ng-model="rnt" name="rnt" class="ripple ripple-green">
+          No
+        </ion-radio>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

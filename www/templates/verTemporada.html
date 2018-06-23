@@ -1,0 +1,113 @@
+<ion-view view-title="Ver temporada">
+  <div class="bar bar-subheader bar-custom item-input-inset">
+    <label class="item-input-wrapper">
+      <i class="icon ion-ios-search placeholder-icon"></i>
+      <input type="text" placeholder="Buscar..." ng-model="search">
+    </label>
+  </div>
+  <ion-content class="has-subheader">
+
+    <div class="card animated fadeInLeft" ng-if="datos">   
+      <div class="item item-divider situr-header">
+        <h2>Temporada</h2>
+
+      </div>
+      <div class="item" >
+        <h2>{{datos.Nombre}}</h2>
+        <p>{{datos.Name}}</p>
+        <p>{{datos.Fecha_ini | date:'MM/dd/yyyy'}} - {{datos.Fecha_fin | date:'MM/dd/yyyy'}}</p>
+      </div> 
+    </div>
+    
+
+    <div class="card animated fadeInLeft" ng-show="active_content=='hogar'" ng-if="datos">
+      <div class="item item-divider situr-header">
+        <h2>Hogares</h2>
+      </div>
+     
+      <div class="card animated fadeInLeft" ng-if="datos" ng-repeat="item in datos.Hogares | filter:search">
+        <div class="item item-divider situr-header"></div>
+        <div class="item" >
+          <h2>{{item.edificacione.barrio.nombre}}</h2>
+          <p>Barrio</p>
+          <hr>
+          <h2>{{item.edificacione.direccion}}</h2>
+          <p>Dirección</p>
+          <hr>
+          <h2>{{item.edificacione.estrato.nombre}}</h2>
+          <p>Estrato</p>
+          <hr>
+          <h2>{{item.digitadore.asp_net_user.email}}</h2>
+          <p>Encuestador</p>
+          <hr>
+          <h2>{{item.edificacione.nombre_entrevistado}}</h2>
+          <p>Nombre entrevistado</p>
+          <hr>
+          <h2>{{item.fecha_realizacion | date:'yyyy/MM/dd HH:mm'}}</h2>
+          <p>Fecha aplicación</p>
+          <div class="pull-right">
+            <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editHogar/{{item.id}}"><i class="ion-edit"></i></a>
+          </div>
+        </div> 
+      </div>
+    </div>
+
+
+    <div class="card" ng-show="active_content=='personas'">
+      <div class="item item-divider situr-header">
+        <h2>Personas</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-33">IdPersona</div>
+            <div class="col col-33">IdHogar</div>
+            <div class="col col-75">Correo</div>
+            <div class="col col-75">Dirección</div>
+            <div class="col col-33">Estrato </div>
+            <div class="col col-50">Encuestador</div>
+            <div class="col col-50">Fecha de Salida </div>
+            <div class="col col-33">Última sección  </div>
+            <div class="col col-33"></div>
+          </div>
+          <div class="row row-table-col" ng-repeat="n in [] | range:3">
+            <div class="col col-33">2</div>
+            <div class="col col-33">1</div>
+            <div class="col col-75">humcals@gmail.com </div>
+            <div class="col col-75">CALLE 31 # 16-50  </div>
+            <div class="col col-33">IV</div>
+            <div class="col col-50">situr</div>
+            <div class="col col-50">12/04/2016</div>
+            <div class="col col-33">4</div>
+            <div class="col col-33">
+              <a class="button button-outline button-stable ripple ripple-green" href="#/app/hogar"><i class="ion-edit"></i></a>
+            </div>
+          </div>
+
+        </ion-scroll>
+      </div> 
+    </div>
+
+    <br><br><br><br>
+  </ion-content> 
+  <div class="tabs-striped tabs-custom">
+    <div class="tabs">
+      <a class="tab-item ripple ripple-light" ng-class="{active: active_content=='hogar'}" ng-click="setActiveContent('hogar')" href="">
+        <i class="icon ion-home"></i>
+        Hogares
+      </a>
+      <a class="tab-item ripple ripple-light" ng-class="{active: active_content=='personas'}" ng-click="setActiveContent('personas')" href="">
+        <i class="icon ion-ios-people"></i>
+        Personas
+      </a>
+    </div>
+  </div>
+
+  <div class="fixed-action-btn" style="bottom: 30px; right: 0px;">
+    <a href="#/app/hogar/{{datos.id}}">
+      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+        <i class="icon ion-plus"></i>
+      </button>
+    </a>
+  </div> 
+</ion-view>

@@ -1,0 +1,36 @@
+<ion-view view-title="Población DANE">
+  <ion-content >
+    <div class="card">   
+      <div class="item item-divider situr-header">
+        <h2>Encuestas oferta y empleo</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-33">Año </div>
+            <div class="col col-33">Valor</div>
+            <div class="col col-50">Tipo</div>
+            
+          </div>
+          <div class="row row-table-col" ng-repeat="n in [] | range:3">
+
+            <div class="col col-33">2017</div>
+            <div class="col col-33">1285384</div>
+            <div class="col col-50">
+              <a href="" class="button button-outline button-stable ripple ripple-green" ng-click="modal.show()"><i class="ion-edit"></i></a>
+              <a class="button button-outline button-assertive ripple ripple-green" href="" ng-click="desactivar()"><i class="ion-ios-trash"></i></a>
+            </div>
+          </div>
+        </ion-scroll>
+      </div> 
+    </div> 
+  </ion-content>  
+
+  <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+    <a href="" ng-click="modal.show()">
+      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+        <i class=" ion-plus"></i>
+      </button>
+    </a>
+  </div> 
+</ion-view>

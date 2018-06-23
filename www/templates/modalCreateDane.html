@@ -1,0 +1,54 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-dark bar-custom">
+    <h1 class="title">Crear proveedor</h1>
+    <div class="buttons">
+      <button class="button button-clear ripple ripple-light" ng-click="modal.hide()">
+        <i class='ion-chevron-down'></i> 
+      </button>
+    </div>
+
+  </ion-header-bar>
+  <ion-content>
+    <div class="card animated bounceInUp">
+      <div class="item item-divider situr-header">
+        <h2></h2>
+      </div>
+      <!--<label class = "item-input item-select">    
+        <div class = "input-label">
+          Año
+        </div>       
+        <select  >
+          <option selected disabled value="">Elegir </option>
+          <option value="1">2018</option>
+          <option value="2">2019</option>
+          <option value="3">2020</option>
+          <option value="4">2021</option>
+        </select>
+      </label>-->
+      <button 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="someModel" 
+        options="selectables" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        reset-button="Limpiar" >
+        Año: {{someModel}}
+        <div class="option ripple ripple-green">
+            {{option}}
+        </div>  
+      </button>
+      
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Valor</span>
+        <input type="number" placeholder="Valor" required>
+      </label>
+      <br>
+     
+    </div>
+  </ion-content>
+</ion-modal-view>

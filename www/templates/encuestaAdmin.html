@@ -1,0 +1,55 @@
+<ion-view view-title="Encuestas sin llenar">
+  <ion-content>
+    <div class="card">   
+      <div class="item item-divider situr-header">
+        <h2>Encuestas sin llenar</h2>
+      </div>
+      <div class="item" >
+        <ion-scroll direction="x" id="scroll-x">
+          <div class="row row-table">
+            <div class="col col-75">Mes</div>
+            <div class="col col-75">Año</div>
+            <div class="col col-75"></div>
+          </div>
+          <div class="row row-table-col" ng-repeat="n in [] | range:3">
+
+            <div class="col col-75">Agosto</div>
+            <div class="col col-75">2016</div>         
+            <div class="col col-75">
+              <a href="#/app/actividadComercialAdmin" class="button ripple ripple-green">
+                <i class="icon ion-clipboard"></i> Llenar encuesta 
+              </a>
+            </div>
+          </div>
+        </ion-scroll>
+        </div>
+    </div> 
+    <br><br><br>
+  </ion-content>
+
+
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="0"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+  </round-progress>
+  <div class="progress-text">
+
+    <span class="progress-percent">0%</span>
+  </div>
+</div>
+
+</ion-view>

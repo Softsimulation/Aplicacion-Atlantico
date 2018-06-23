@@ -1,0 +1,726 @@
+.platform-android .popup{
+
+    border-radius: 2px;
+    max-width: 280px;
+    background-color: #fafafa;
+    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+}
+
+.platform-android .popup-head {
+
+    text-align: left;
+    text-align: start;
+    padding: 24px 24px 20px;
+    border-bottom: 0px;
+  
+}
+
+.platform-android .popup-head,.platform-android .popup-title{
+    color: black;
+    font-size: 22px;
+    
+}
+
+.platform-android .popup-body {
+    padding: 0 24px 24px 24px;
+    color: rgba(0, 0, 0, 0.5);
+    max-height: 240px;
+    font-size: 15px;
+}
+
+.platform-android .popup-buttons{
+	
+	display:block;
+    padding: 8px 8px 8px 24px;
+    text-align: right;
+}
+
+
+
+.platform-android .popup-buttons button, 
+.platform-android .popup-buttons .button, 
+.platform-android .popup-buttons .button-stable,
+.platform-android .popup-buttons .ng-binding,
+.platform-android .popup-buttons .button-positive{
+	/*text-align: right;
+    text-align: end;*/
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #16947f;
+    background-color: transparent;
+    padding: 10px;
+    margin-right: 4px;
+    border:0px;
+   	-webkit-box-flex: 0;
+    -webkit-flex: 0;
+    -moz-box-flex: 0;
+    -moz-flex: 0;
+    -ms-flex: 0;
+    flex: 0;
+   	display: inline-block;
+    font-weight: bold;
+ 
+}
+
+
+.platform-android .popup-buttons button:hover{
+ 	color: #16947f;
+ 	background:#d1d3d6;
+ 	border:none;
+ 	box-shadow: none;
+}
+
+.platform-android .popup-buttons .button:after {
+    position: initial !important;
+    top: 0px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    left: 0px !important;
+    padding: 0px !important;
+    
+}
+
+.platform-ios .popup{
+
+    border-radius: 13px;
+    overflow: hidden;
+    max-width: 270px;
+    background-color: #f8f8f8;
+    box-shadow: none;
+}
+
+.platform-ios .popup-head {
+	text-align: center;
+    padding: 12px 16px 7px;
+  	border-bottom: 0px;
+}
+
+.platform-ios .popup-head,.platform-android .popup-title{
+    color: black;
+    font-size: 22px;
+}
+
+
+.platform-ios .popup-body {
+	text-align: center;
+	max-height: 240px;
+    padding: 0 24px 24px 24px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.platform-ios .popup-buttons{
+	margin-right: -.55px;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 0px;
+    min-height: 0px !important;
+}
+
+.platform-ios .popup-buttons button{
+	margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-width: 50%;
+    height: 44px;
+    border-top: .55px solid #dbdbdf;
+    border-right: .55px solid #dbdbdf;
+    border-bottom: 0px;
+    border-left: 0px;
+    font-size: 17px;
+    color: #488aff;
+    background-color: transparent;
+}
+
+
+.platform-ios .popup-buttons button:hover{
+ 	color: #488aff;
+}
+
+.platform-android .action-sheet-backdrop.active {
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+.platform-android .action-sheet {
+  align-content: center;
+  /*margin:auto;*/
+  /*max-width: 96vw;*/
+  /*border-radius: 5px;*/
+  margin: 0;
+  /*margin-bottom: 10px;*/
+}
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+  text-align: left;
+  /*border-color: #e2e2e2;*/
+  font-size: 16px;
+  color: inherit;
+  border:0px;
+}
+.platform-android .action-sheet .action-sheet-title {
+  font-size: 14px;
+  padding: 16px;
+  color: #666; 
+}
+.platform-android .action-sheet .button {
+  border-color: #e2e2e2;
+  padding-left: 16px;
+  color: #104e89;
+}
+.platform-android .action-sheet .button.destructive {
+  color: red;
+}
+.platform-android .action-sheet .button.active, .platform-android .action-sheet .button.activated {
+  background: #e8e8e8; 
+}
+.platform-android .action-sheet-group {
+  /*margin: 0;*/
+  border-radius: 0;
+  background-color: #fafafa; 
+}
+.platform-android .action-sheet-cancel {
+  display: block;
+  margin-top: 3px;
+ 
+}
+.platform-android .action-sheet-has-icons .button {
+  padding-left: 56px; 
+
+}
+.platform-android .loading-container .loading{
+    border-radius: 2px;
+    max-width: 280px;
+    max-height: 90%;
+    color: rgba(0,0,0,.5);
+    background: #fafafa;
+    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+    padding: 24px;
+}
+.platform-ios .loading-container .loading{
+  border-radius: 8px;
+    max-width: 280px;
+    max-height: 90%;
+    color: #000;
+    background: #f8f8f8;
+    padding: 24px 34px;
+}
+.loading-container .loading span{
+  margin-left: 16px;
+  margin-top: 14px;
+  float: left;
+}
+
+.spinner-android {
+    stroke: #16469e;
+ }
+ .loading-container .spinner svg {
+    width: 45px;
+    height: 45px;
+    float: left;
+}
+.platform-android .ion-badges{
+  border-radius: 4px;
+  background-color: #08501d;
+  color: #fff;
+  margin: 9px 8px 9px 0;
+}
+.platform-ios .ion-badges{
+  border-radius: 10px;
+  background-color: #08501d;
+    color: #fff;
+    margin: 2px;
+}
+
+.platform-android .item-floating-label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 2px;
+    border: none;
+    background: #16469e;
+    font-size: 1px;
+    will-change: transform, visibility;
+    transition: all 200ms ease-out;
+    transform: scaleX(0);
+    visibility: hidden;
+    z-index: 10;
+}
+.platform-android .item-floating-label:focus-within:after {
+  transform: scaleX(1);
+    visibility: visible;
+}
+
+.platform-android .item-input:before {
+  content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 2px;
+    border: none;
+    background: #16469e;
+    font-size: 1px;
+    will-change: transform, visibility;
+    transition: all 200ms ease-out;
+    transform: scaleX(0);
+    visibility: hidden;
+    z-index: 10;
+}
+.platform-android .item-input:focus-within:before {
+  transform: scaleX(1);
+    visibility: visible;
+}
+
+
+.platform-android .item-input.item-select:before{display: none;}
+
+.platform-android .modal-select {
+  position: absolute;
+  width: 90%;
+  
+  top: 5%;
+  left: 5%;
+  background: #fff;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 0 10px 6px -6px #777;
+  height: 90%
+}
+
+.platform-ios .modal-select {
+  position: absolute;
+  width: 90%;
+  
+  top: 5%;
+  left: 5%;
+  background: #fff;
+  border-radius: 13px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 0 10px 6px -6px #777;
+  height: 90%
+}
+
+.platform-ios .modal-select .bar.bar-header.item-input-inset{
+  border-radius: 13px;
+
+}
+
+.platform-android .modal-select .bar.bar-header.item-input-inset{
+  border-radius: 2px;
+}
+.platform-android .modal-select .popup-buttons{
+  border-bottom-right-radius: 2px !important;
+    border-bottom-left-radius: 2px !important;
+    background: white;
+}
+
+.platform-ios .modal-select .popup-buttons{
+  border-bottom-right-radius: 13px !important;
+    border-bottom-left-radius: 13px !important;
+    background: white;
+}
+
+
+.platform-ios .modal-select .popup-buttons .OK{
+    border-bottom-left-radius: 13px !important;
+   
+}
+
+.platform-ios .modal-select .popup-buttons .Cancel{
+  border-bottom-right-radius: 13px !important;
+}
+
+.platform-ios .modal-select .popup-buttons .unique{
+  border-bottom-left-radius: 13px !important;
+  border-bottom-right-radius: 13px !important;
+}
+
+.platform-android .radio-icon{  visibility: visible !important; pointer-events: none;}
+
+
+.platform-android .radio-icon:before{
+  content:"" !important;
+  border:2px solid #16469e !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  overflow:hidden !important;
+  pointer-events: none !important;
+
+}
+
+.platform-ios .radio-icon{
+  color: #16469e;
+  pointer-events: none !important;
+}
+
+
+.platform-android .radio-icon:after{
+  content:"" ;
+  position: absolute ;
+  right: 20px ;
+  top: 21px ;
+  background:#16469e ;
+  width: 12px ;
+  height: 12px ;
+  border-radius: 50% ;
+  overflow:hidden ;
+  transition: -webkit-transform .28s cubic-bezier(0.420, 0.000, 0.000, 1.650) ;
+  transition: transform .28s cubic-bezier(0.420, 0.000, 0.000, 1.650) ;
+  pointer-events: none;
+  -webkit-transform: scale(0) ;
+  transform: scale(0) ;
+  pointer-events: none !important;
+}
+
+/*.item-radio input:checked ~ .item-content {
+background: #F7F7F7;
+}
+*/
+.platform-android .item-radio input:checked ~ .radio-content .radio-icon:after {
+  -webkit-transform: scale(1) !important;
+  transform: scale(1) !important;
+  pointer-events: none;
+}
+
+
+.platform-android .range input {
+  height: 30px !important;
+}
+
+.platform-android .range input::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  box-shadow: none;
+}
+
+.platform-android .range input::-webkit-slider-thumb:before {
+  top: 9px;
+}
+
+.platform-android .range input::-webkit-slider-thumb:after {
+  padding: 25px;
+}
+
+.platform-android .range.range-light input::-webkit-slider-thumb {
+  background: #ddd; 
+}
+.platform-android .range.range-stable input::-webkit-slider-thumb {
+  background: #b2b2b2;
+}
+.platform-android .range.range-positive input::-webkit-slider-thumb {
+  background: #387ef5; 
+}
+.platform-android .range.range-calm input::-webkit-slider-thumb {
+  background: #11c1f3; 
+}
+.platform-android .range.range-balanced input::-webkit-slider-thumb {
+  background: #33cd5f; 
+}
+.platform-android .range.range-assertive input::-webkit-slider-thumb {
+  background: #ef473a; 
+}
+.platform-android .range.range-energized input::-webkit-slider-thumb {
+  background: #ffc900; 
+}
+.platform-android .range.range-royal input::-webkit-slider-thumb {
+  background: #886aea; 
+}
+.platform-android .range.range-dark input::-webkit-slider-thumb {
+  background: #444; 
+}
+
+.platform-android .range.customize input::-webkit-slider-thumb {
+  background: #08501d !important; 
+}
+
+.platform-android .ionic .toggle .track {
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.3s;
+    transition-property: background-color, border;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 40px;
+    height: 12px;
+   /*border: solid 2px #e6e6e6;*/
+    border-radius: 20px;
+    background-color: #e6e6e6;
+    content: ' ';
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.platform-android .ionic .toggle .handle {
+    transition: 0.3s cubic-bezier(0, 1.1, 1, 1.1);
+    transition-property: background-color, -webkit-transform;
+    transition-property: background-color, transform;
+    transition-property: background-color, transform, -webkit-transform;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 27px;
+    background-color: #fff;
+    top: 3px;
+    left: 6px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+.platform-android .ionic .toggle input:checked + .track .handle {
+    background: #377cf2;
+}
+
+.main-modal {
+    background-color: transparent;
+ }
+
+
+.modal-backdrop-bg {
+    background: rgba(0, 0, 0, 0.26);
+}
+
+
+.radio-positive .radio-icon:after{
+  background: #387EF5 !important;
+}
+.radio-positive .radio-icon:before{
+  border-color: #0C63EE !important;
+}
+
+.platform-android .popup-menu-panel{
+    border-radius: 2px;
+    background-color: #fafafa;
+    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+}
+
+
+.platform-ios .popup-menu-panel{
+    border-radius: 13px;
+    box-shadow: none;
+    background-color: #f8f8f8;
+}
+
+
+.platform-android .item-input-wrapper{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 6px 0 5px 16px;
+  width: 100%;
+  border-radius: 2px;
+  box-shadow: 0 16px 20px rgba(0,0,0,.4);
+  background-color: white;
+  margin-bottom: 2px;
+}
+
+.platform-android .button-has-search{
+    position: absolute;
+    color: black;
+    right: 20px;
+}
+
+.platform-ios .button-has-search{
+  color: white;
+}
+
+.platform-android .button-has-search span{
+  display: none;
+}
+
+.platform-ios .button-has-search i{
+  display: none;
+}
+
+.platform-android ion-content .button, .platform-android .botonF1{
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    -webkit-transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+    transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+    transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1);
+    transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+   border-radius: 2px;
+}
+.platform-android .botonF1{
+  border-radius: 50%;
+}
+
+/*.platform-android .bar{
+ /* -webkit-box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
+  
+}*/
+
+/* ANDROID SCALE UP SCALE DOWN POP TRANSITION */
+
+/*@-webkit-keyframes scaleDown {
+    to {
+        opacity: 0;
+        -webkit-transform: scale(.8);
+    }
+}
+@-moz-keyframes scaleDown {
+    to {
+        opacity: 0;
+        -moz-transform: scale(.8);
+    }
+}
+@keyframes scaleDown {
+    to {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+@-webkit-keyframes scaleUp {
+    from {
+        opacity: 0;
+        -webkit-transform: scale(.8);
+    }
+}
+@-moz-keyframes scaleUp {
+    from {
+        opacity: 0;
+        -moz-transform: scale(.8);
+    }
+}
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+.platform-android ion-nav-view [nav-view-direction="forward"] {
+    left: 0;
+    z-index: 2;
+    -webkit-animation: scaleUp .2s ease both;
+    -moz-animation: scaleUp .2s ease both;
+    animation: scaleUp .2s ease both;
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+
+/*.platform-android ion-nav-view [nav-view-direction="back"] {     
+  left: 0;     
+  z-index: 2;     
+  -webkit-animation: scaleDown .2s ease both;     
+  -moz-animation: scaleDown .2s ease both;     
+  animation: scaleDown .2s ease both; 
+}  */
+
+
+
+
+/*
+.platform-android ion-nav-view [nav-view="active"] {
+    -webkit-animation: scaleUp .2s ease both;
+    -moz-animation: scaleUp .2s ease both;
+    animation: scaleUp .2s ease both;
+}
+.platform-android ion-nav-view [nav-view="cached"] {
+    left: 0;
+    z-index: 2;
+    -webkit-animation: scaleDown .2s ease both;
+    -moz-animation: scaleDown .2s ease both;
+    animation: scaleDown .2s ease both;
+}
+*/
+
+
+/*
+ion-nav-view [nav-view-direction="back"] {
+    left: 0;
+    z-index: 1;
+}
+*/
+
+
+/*
+ion-nav-view [nav-view-direction="forward"] {
+    left: 0;
+    z-index: 1;
+}
+*/
+
+/*.scale-in {
+  -webkit-transform: scale(0.0);
+    transform: scale(0.0);
+    opacity: 0;
+}
+.scale-in.ng-enter,
+.scale-in > .ng-enter {
+  -webkit-transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
+  transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
+}
+
+.scale-in.ng-enter-active,
+.scale-in > .ng-enter-active {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  opacity: 1;
+}
+
+.scale-in.ng-leave,
+.scale-in > .ng-leave {
+  -webkit-transition: all ease-in-out 250ms;
+  transition: all ease-in-out 250ms;
+}
+
+.slide-in-right {
+  -webkit-transform: translateX(100%);
+    transform: translateX(100%); }
+
+.slide-in-right.ng-enter, .slide-in-right > .ng-enter {
+  -webkit-transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms;
+  transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms; }
+
+.slide-in-right.ng-enter-active, .slide-in-right > .ng-enter-active {
+  -webkit-transform: translateX(0);
+    transform: translateX(0); }
+
+.slide-in-right.ng-leave, .slide-in-right > .ng-leave {
+  -webkit-transition: all ease-in-out 250ms;
+  transition: all ease-in-out 250ms; }*/
+
+.platform-android .card{
+    margin: 10px;
+    border-radius: 2px;
+    width: calc(100% - 20px);
+  
+    background: #fff;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.platform-ios .card{
+    margin: 12px;
+    border-radius: 2px;
+    width: calc(100% - 24px);
+    
+    background: #fff;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.3);
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+
+}

@@ -1,0 +1,100 @@
+<ion-view view-title="Actividad Comercial">
+  <ion-content>
+    <div class="card animated animated bounceInUp">   
+      <div class="item item-divider situr-header required">
+        <h2> ¿El establecimiento tuvo actividad comercial?</h2>
+      </div>
+        <!--<label class = "item item-input item-select ripple ripple-green" >
+          <div class = "input-label">
+            Elegir
+          </div>                            
+          <select ng-model="actividad">
+            <option selected disabled value="">Elegir</option>
+            <option value="1">Si</option>
+            <option value="2">No</option>
+          </select>
+        </label>-->
+        <button 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="someModel" 
+        options="selectables" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        reset-button="Limpiar" >
+        Elegir: {{someModel}}
+        <div class="option ripple ripple-green">
+            {{option}}
+        </div>  
+      </button>              
+    </div>
+
+    <div class="card animated bounceInUp" ng-if="actividad==1">   
+      <div class="item item-divider situr-header required">
+        <h2> ¿Cúantos días en el mes?</h2>
+      </div>
+
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Número de días</span>
+        <input type="number" placeholder="Número de días" min="1" max="31" required>
+      </label> <br>      
+    </div> 
+    <br><br><br>
+  </ion-content>
+
+  <div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+
+      <a class="popup-menu-item ripple ripple-green" href="#/app/caracterizacionAlojamientos" ng-click="togglePopupMenu()">
+        <i class="ion ion-clipboard"></i>
+        <span>Caracterizacion</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/ofertaAlojamiento" ng-click="togglePopupMenu()">
+        <i class="ion ion-calculator"></i>
+        <span>Oferta</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleoMensual" ng-click="togglePopupMenu()">
+        <i class="ion-ios-people"></i>
+        <span>Empleo mensual</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/numeroEmpleados" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>N° Empleados</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/empleadosCaracterizacion" ng-click="togglePopupMenu();">
+        <i class="ion ion-briefcase"></i>
+        <span>Empleados Caracterización</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="20"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+    </round-progress>
+    <div class="progress-text">
+
+      <span class="progress-percent">20%</span>
+    </div>
+  </div>
+
+</ion-view>
