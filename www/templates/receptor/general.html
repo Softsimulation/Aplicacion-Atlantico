@@ -1,0 +1,541 @@
+<ion-view view-title="Encuesta turismo receptor">
+  <ion-content>
+    <div class="card animated fadeInLeft list" ng-if="errores">
+      <div class="item item-divider situr-header-error">
+          <h2>Corrige los errores</h2>
+      </div>
+      <div class="assertive item" ng-repeat="error in errores">
+        {{error[0]}}
+      </div>
+    </div> 
+    <form role="form" name="forms.DatosForm" novalidate>
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Encuestador</h2>
+        </div>
+
+        <!--encuestador-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuesta.encuestador" 
+          options="encuestadores" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar" 
+          sub-header-class="bar-custom"
+          ng-change="encuesta.Encuestador=encuesta.encuestador.id"
+          name="encuestador"
+          ng-required="true"
+          >
+          Encuestador: {{encuesta.encuestador.asp_net_user.username}}
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.encuestador.$touched">
+              <span ng-show="forms.DatosForm.encuestador.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.asp_net_user.username}}
+          </div>  
+        </a>        	
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Datos de encuesta</h2>
+        </div>
+        <div class="item" >
+          <label class="input-label">Fecha de aplicación</label>
+          <div 
+            class="item date ripple ripple-green" 
+            ion-datetime-picker 
+            ng-model="encuesta.fechaAplicacion"
+            name="fechaAplicacion"
+            ng-required="true"
+            >
+            {{encuesta.fechaAplicacion | date: "yyyy-MM-dd  HH:mm" }}
+          </div>
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.fechaAplicacion.$touched">
+            <span ng-show="forms.DatosForm.fechaAplicacion.$error.required">*</span>
+          </span>
+        </div>
+        <!--lugar de aplicacion-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuesta.Aplicacion" 
+          options="lugares_aplicacion" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar" 
+          sub-header-class="bar-custom"
+          ng-change="encuesta.aplicacion=encuesta.Aplicacion.id"
+          name="aplicacion" 
+          ng-required="true">
+          Lugar de aplicación: {{encuesta.Aplicacion.nombre}}
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.aplicacion.$touched">
+            <span ng-show="forms.DatosForm.aplicacion.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Fecha de viaje</h2>
+        </div>
+        <div class="item">
+          <label class="input-label">Fecha de llegada</label>
+          <div 
+            class="item date ripple ripple-green" 
+            ion-datetime-picker 
+            date 
+            ng-model="encuesta.Llegada" 
+            name="llegada" 
+            ng-required="true"
+            >
+            {{encuesta.Llegada| date: "yyyy-MM-dd" }}
+            
+          </div>
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.llegada.$touched">
+            <span ng-show="forms.DatosForm.llegada.$error.required">*</span>
+          </span>
+        </div>
+
+        <div class="item">
+          <label class="input-label">Fecha de salida</label>
+          <div 
+            class="item date ripple ripple-green" 
+            ion-datetime-picker 
+            date 
+            ng-model="encuesta.Salida"
+            name="salida"
+            ng-required="true">
+            {{encuesta.Salida| date: "yyyy-MM-dd" }}
+            
+          </div>
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.salida.$touched">
+            <span ng-show="forms.DatosForm.salida.$error.required">*</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Información del encuestado</h2>
+        </div>
+        
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Nombre del encuestado</span>
+            <input type="text" placeholder="Nombre del encuestado" ng-model="encuesta.Nombre" name="nombre"  ng-required="true">
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.nombre.$touched">
+              <span  ng-show="forms.DatosForm.nombre.$error.required">*</span>
+            </span>
+          </label>
+
+          <div>
+            <label class="item item-input item-floating-label column-60">
+              <span class="input-label" >Email</span>
+              <input type="Email" placeholder="Email" ng-model="encuesta.Email">
+            </label>
+
+            <label class="item item-input item-floating-label column-40">
+              <span class="input-label" >Edad</span>
+              <input 
+                type="number" 
+                placeholder="Edad" 
+                ng-model="encuesta.Edad" 
+                min="15" 
+                max="150"
+                name="edad"
+                ng-required="true">
+              <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.edad.$touched">
+                <span  ng-show="forms.DatosForm.edad.$error.required">*</span>
+              </span>
+            </label>
+          </div>
+
+          <label class="item">
+            <span class="input-label" >Sexo</span>
+
+            <ion-radio 
+              name="sexo" 
+              ng-model="encuesta.Sexo" 
+              value="true" 
+              class="ripple ripple-green genero" 
+              ng-required="true"
+            >
+              M
+            </ion-radio>
+            <ion-radio 
+              name="sexo" 
+              ng-model="encuesta.Sexo" 
+              value="false" 
+              class="ripple ripple-green genero" 
+              ng-required="true"
+            >
+              F
+            </ion-radio> 
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.sexo.$touched">  
+              <span class="label label-danger" ng-show="forms.DatosForm.sexo.$error.required">*</span>
+            </span>        
+          </label>
+
+          <div>
+            <label class="item item-input item-floating-label column-50">
+              <span class="input-label" >Celular</span>
+              <input type="number" placeholder="Celular" ng-model="encuesta.Celular">
+            </label>
+
+            <label class="item item-input item-floating-label column-50">
+              <span class="input-label" >Télefono</span>
+              <input type="number" placeholder="Télefono" ng-model="encuesta.Telefono">
+            </label>
+          </div>
+
+          <!--Lugar de nacimiento-->
+          <a 
+            class="item item-input item-select ripple ripple-green item-select-block" 
+            modal-select 
+            ng-model="encuesta.nacimiento" 
+            options="lugares" 
+            modal-title="Elegir grupo" 
+            has-search="true" 
+            header-footer-class="bar-custom" 
+            cancel-search-button='X' 
+            search-placeholder="Buscar..." 
+            cancel-button="Cancelar" 
+            reset-button="Limpiar" 
+            sub-header-class="bar-custom"
+            ng-change="encuesta.Nacimiento=encuesta.nacimiento.id"
+            name="nacimiento"
+            ng-required="true"
+            >
+            ¿En dónde nació?: {{encuesta.nacimiento.opciones_lugares_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.nacimiento.$touched">
+                <span ng-show="forms.DatosForm.nacimiento.$error.required">*</span> 
+            </span>
+            <div class="option ripple ripple-green">
+                {{option.opciones_lugares_con_idiomas[0].nombre}}
+            </div>  
+          </a>
+
+          <!--Pais de nacimiento-->
+          <a 
+            class="item item-input item-select ripple ripple-green item-select-block" 
+            modal-select 
+            ng-model="encuesta.pais_nacimiento" 
+            options="paises" 
+            modal-title="Elegir grupo" 
+            has-search="true" 
+            header-footer-class="bar-custom" 
+            cancel-search-button='X' 
+            search-placeholder="Buscar..." 
+            cancel-button="Cancelar" 
+            reset-button="Limpiar" 
+            sub-header-class="bar-custom"
+            ng-change="encuesta.Pais_Nacimiento=encuesta.pais_nacimiento.id"
+            ng-if="encuesta.nacimiento.id==3"
+            name="pais_nacimiento"
+            ng-required="encuesta.Nacimiento == 3"
+            >
+            País de Nacimiento: {{encuesta.pais_nacimiento.paises_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="!forms.DatosForm.$pristine && forms.DatosForm.pais_nacimiento.$error.required">*</span>
+            <div class="option ripple ripple-green">
+                {{option.paises_con_idiomas[0].nombre}}
+            </div>  
+          </a>
+
+          <!--Pais de residencia-->
+          <a 
+            class="item item-input item-select ripple ripple-green item-select-block" 
+            modal-select 
+            ng-model="pais_residencia" 
+            options="paises" 
+            modal-title="Elegir grupo" 
+            has-search="true" 
+            header-footer-class="bar-custom" 
+            cancel-search-button='X' 
+            search-placeholder="Buscar..." 
+            cancel-button="Cancelar" 
+            reset-button="Limpiar" 
+            sub-header-class="bar-custom"
+            ng-change="changedepartamento(pais_residencia.id)"
+            name="pais_residencia"
+            ng-required="true"
+            >
+            País de residencia: {{pais_residencia.paises_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.pais_residencia.$touched">
+                <span ng-show="forms.DatosForm.pais_residencia.$error.required">*</span>
+            </span>
+            <div class="option ripple ripple-green">
+              {{option.paises_con_idiomas[0].nombre}}
+            </div>  
+          </a>
+
+          <!--Dpto de residencia-->
+          <a 
+            class="item item-input item-select ripple ripple-green item-select-block" 
+            modal-select 
+            ng-model="departamento" 
+            options="departamentos" 
+            modal-title="Elegir grupo" 
+            has-search="true" 
+            header-footer-class="bar-custom" 
+            cancel-search-button='X' 
+            search-placeholder="Buscar..." 
+            cancel-button="Cancelar" 
+            reset-button="Limpiar" 
+            sub-header-class="bar-custom"
+            ng-change="changemunicipio(departamento.id)"
+            name="departamento"
+            ng-required="true"
+            >
+            Departamento de residencia: {{departamento.nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.departamento.$touched">
+                <span  ng-show="forms.DatosForm.departamento.$error.required">*</span>
+            </span>
+            <div class="option ripple ripple-green">
+                {{option.nombre}}
+            </div>  
+          </a>
+
+          <!--Municipio de residencia-->
+          <a 
+            class="item item-input item-select ripple ripple-green item-select-block" 
+            modal-select 
+            ng-model="encuesta.municipio" 
+            options="municipios" 
+            modal-title="Elegir grupo" 
+            has-search="true" 
+            header-footer-class="bar-custom" 
+            cancel-search-button='X' 
+            search-placeholder="Buscar..." 
+            cancel-button="Cancelar" 
+            reset-button="Limpiar" 
+            sub-header-class="bar-custom"
+            ng-change="encuesta.Municipio=encuesta.municipio.id"
+            name="ciudad"
+            ng-required="true"
+            >
+            Ciudad de residencia: {{encuesta.municipio.nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.ciudad.$touched">
+                <span ng-show="forms.DatosForm.ciudad.$error.required">*</span>
+            </span>
+            <div class="option ripple ripple-green">
+                {{option.nombre}}
+            </div>  
+          </a>
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="pais_residencia.id != 47">
+        <div class="item item-divider situr-header required">
+          <h2>¿Cuál fue su destino principal en Atlántico?</h2>
+        </div>
+        <!--Dpto destino-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="departamentod" 
+          options="departamentos_colombia" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar" 
+          sub-header-class="bar-custom"
+          ng-required="pais_residencia.id != 47"
+          ng-change="changemunicipiocolombia(departamentod.id)"
+          name="departamento_p"
+          >
+          Departamento: {{departamentod.nombre}}
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.departamento_p.$touched">
+            <span ng-show="forms.DatosForm.departamento_p.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+
+        <!--municipio destino-->  
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuesta.destino" 
+          options="municipios_colombia" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar"
+          sub-header-class="bar-custom"
+          ng-required="pais_residencia != 47"
+          ng-change="encuesta.Destino=encuesta.destino.id"
+          name="destino"
+          >
+          Municipio: {{encuesta.destino.nombre}}
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.destino.$touched">
+              <span ng-show="forms.DatosForm.destino.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>       	
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Cuál fué el motivo principal para venir al departamento del Atlántico?</h2>
+        </div>
+        <label class="item">             	 
+          <ion-radio  
+            ng-repeat="item in motivos" 
+            class="ripple ripple-green" 
+            name="motivo"
+            ng-model="encuesta.Motivo" 
+            value="{{item.id}}" 
+            ng-required="true"
+            ng-change="cambiomotivo()"
+            >
+            {{item.motivos_viaje_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.motivo.$touched">
+              <span ng-show="forms.DatosForm.motivo.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Otro</span>
+            <input type="text" placeholder="Otro" ng-model="encuesta.Otro" ng-change="otro()" ng-required="encuesta.Motivo == 18" name="otro" ng-disabled="encuesta.Motivo != 18">
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.otro.$touched">
+              <span ng-show="forms.DatosForm.otro.$error.required">*</span>
+            </span>
+          </label>
+          <br>
+
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.Motivo==3">
+        <div class="item item-divider situr-header ">
+          <h2>¿Cuántas horas duro/durará la parada mas larga en el Atlántico?</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Número de horas</span>
+          <input 
+            type="number" 
+            placeholder="Número de horas" 
+            ng-model="encuesta.Horas" 
+            ng-required="encuesta.Motivo == 3"
+            name="horas">
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.horas.$touched">
+              <span ng-show="forms.DatosForm.horas.$error.required">*</span>
+          </span>
+        </label>
+        <br>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.Motivo == 5"">
+        <div class="item item-divider situr-header ">
+          <h2>¿La finalidad del servicio médico es?</h2>
+        </div>
+        <div class="item">
+          <ion-radio 
+            value="{{item.id}}" 
+            ng-model="encuesta.Salud"
+            class="ripple ripple-green" 
+            name="medico"
+            ng-required="encuesta.Motivo == 5"
+            ng-repeat="item in medicos"
+            >
+            {{item.tipos_atencion_salud_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.medico.$touched">
+                <span ng-show="forms.DatosForm.medico.$error.required">*</span>
+            </span>
+          </ion-radio>
+        </div>
+      </div>
+
+      <div class="padding">
+        <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block">
+          Guardar
+        </button>
+      </div>
+    </form>
+  <br><br><br>
+  </ion-content>
+
+
+
+  <!--<div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+        <i class="ion ion-information-circled"></i>
+        <span>General</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+        <i class="ion ion-clock"></i>
+        <span>Estancia</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+        <i class="ion ion-model-s"></i>
+        <span>Transporte</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+        <i class="ion ion-ios-people"></i>
+        <span>Grupo</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+        <i class="ion-cash"></i>
+        <span>Gastos</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>Percepción</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+        <i class="ion ion-speakerphone"></i>
+        <span>Redes e internet</span>
+      </a>
+    </div>
+  </div>-->
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="0"
+    color="#387ef5"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+  </round-progress>
+  <div class="progress-text">
+
+    <span class="progress-percent">0%</span>
+  </div>
+</div>
+
+</ion-view>

@@ -1,0 +1,76 @@
+<ion-view view-title="Encuestas">
+  <div class="bar bar-subheader bar-custom item-input-inset">
+    <label class="item-input-wrapper">
+      <i class="icon ion-ios-search placeholder-icon"></i>
+      <input type="text" placeholder="Buscar encuesta..." ng-model="search">
+    </label>
+  </div>
+  <ion-content class="has-subheader">
+    <div class="card">
+      
+      <a 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="filtroEstadoEncuesta" 
+        options="filter" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        sub-header-class="bar-custom"
+        reset-button="Limpiar" >
+        Encuestas: {{filtroEstadoEncuesta.option}}
+        <div class="option ripple ripple-green">
+            {{option.option}}
+        </div>  
+      </a>
+   
+      <a 
+        class="item item-input item-select ripple ripple-green item-select-block" 
+        modal-select 
+        ng-model="campoSelected" 
+        options="campos" 
+        modal-title="Elegir grupo" 
+        has-search="true" 
+        header-footer-class="bar-custom" 
+        cancel-search-button='X' 
+        search-placeholder="Buscar..." 
+        cancel-button="Cancelar" 
+        reset-button="Limpiar" 
+        sub-header-class="bar-custom">
+        Campos: {{campoSelected.option}}
+        <div class="option ripple ripple-green">
+            {{option.option}}
+        </div>  
+      </a>
+
+    </div> 
+    <div class="card list animated fadeInLeft active-card" ng-repeat="item in encuestas | filter:search" >
+      <div class="item">
+        <h2>{{item.nombre}}</h2>
+        <p>{{item.fechallegada  | date:'dd/MM/yyyy'}} - {{item.fechasalida   | date:'dd/MM/yyyy'}}</p>
+        <p>Código encuesta: {{item.codigoencuesta}}</p>
+        <p>Código de grupo: {{item.codigogrupo}}</p>
+        <p>Fecha de digitación: {{item.fechadigitacion | date:'dd/MM/yyyy'}}</p>
+        <p>Encuestador: {{item.username}}</p>
+        <p>Estado: {{item.estado}}</p>
+        <p>Última sección : {{item.ultima}}</p>
+
+        <div class="pull-right">
+          <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editGeneral/{{item.id}}"><i class="ion-edit"></i></a>
+        </div>
+      </div>
+    </div>
+    <br><br><br>
+  </ion-content> 
+
+  <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+    <a href="#/app/general">
+      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+        <i class=" ion-plus"></i>
+      </button>
+    </a>
+  </div> 
+</ion-view>

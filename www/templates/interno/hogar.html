@@ -1,9 +1,9 @@
 <ion-view view-title="Caracterización del hogar">
   <ion-content>
     <div class="card animated fadeInLeft list" ng-if="errores">
-    <div class="item item-divider situr-header-error">
+      <div class="item item-divider situr-header-error">
           <h2>Corrige los errores</h2>
-        </div>
+      </div>
       <div class="assertive item" ng-repeat="error in errores">
         {{error[0]}}
       </div>
@@ -12,7 +12,7 @@
     <form name="forms.DatosForm" novalidate="novalidate">
       <div class="card animated bounceInUp" >
         <div class="item item-divider situr-header required">
-          <h2>Inforrmación de la vivienda</h2>
+          <h2>Información de la vivienda</h2>
         </div>
         
         <div class="item dates">

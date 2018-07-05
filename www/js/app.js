@@ -14,7 +14,9 @@ angular.module('starter', ['ionic',
                            'whimsicalRipple', 
                            'ionic-modal-select',
                            'turismo.interno.services',
-                           'checklist-model'
+                           'turismo.receptor.services',
+                           'checklist-model',
+                           'starter.directives',
 
                            ])
 
@@ -44,33 +46,167 @@ angular.module('starter', ['ionic',
   //$ionicConfigProvider.views.transition('none');
   $stateProvider
 
-    .state('app', {
+  .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
   })
 
-  .state('app.grupo', {
-    url: '/grupo',
+  .state('app.home', {
+    url: '/home',
     views: {
       'menuContent': {
-        templateUrl: 'templates/grupo.html',
-        controller: 'grupoController'
+        templateUrl: 'templates/home.html',
+        controller: 'homeController'
+      }
+    }
+  })
+
+  
+  /***********Turismo receptor Routes**********/
+  
+  .state('app.encuestas', {
+    url: '/encuestas',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/encuestas.html',
+        controller: 'encuestasController'
+      }
+    }
+  })
+
+  .state('app.general', {
+    url: '/general',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/general.html',
+        controller: 'generalController'
+      }
+    }
+  })
+
+  .state('app.editGeneral', {
+    url: '/editGeneral/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/editGeneral.html',
+        controller: 'editGeneralController'
       }
     }
   })
 
   .state('app.estancia', {
-    url: '/estancia',
+    url: '/estancia/:id',
     views: {
       'menuContent': {
-        templateUrl: 'templates/estancia.html',
+        templateUrl: 'templates/receptor/estancia.html',
         controller: 'estanciaController'
       }
     }
   })
 
+  .state('app.transporte', {
+    url: '/transporte/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/transporte.html',
+        controller: 'transporteController'
+      }
+    }
+  })
+
+  .state('app.grupo', {
+    url: '/grupo/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/grupo.html',
+        controller: 'grupoController'
+      }
+    }
+  })
+
+  /*******************************************/
+
+
+  /**********Turismo Interno Routes**********/
+  .state('app.temporadas', {
+    url: '/temporadas',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/temporada.html',
+        controller: 'temporadasController'
+      }
+    }
+  })
+
+  .state('app.verTemporada', {
+    url: '/verTemporada/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/verTemporada.html',
+        controller: 'verTemporadaController'
+      }
+    }
+  })
+
+  .state('app.hogar', {
+    url: '/hogar/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/hogar.html',
+        controller: 'hogarController'
+      }
+    }
+  })
+
+  .state('app.editHogar', {
+    url: '/editHogar/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/hogarEdit.html',
+        controller: 'editHogarController'
+      }
+    }
+  })
+
+  .state('app.viajeRealizado', {
+    url: '/viajeRealizado/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/viajeRealizado.html',
+        controller: 'viajesRealizadoController'
+      }
+    }
+  })
+
+  .state('app.viajePrincipal', {
+    url: '/viajePrincipal/:id/:principal',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/viajePrincipal.html',
+        controller: 'viajePrincipalController'
+      }
+    }
+  })
+
+  .state('app.actividades', {
+    url: '/actividades/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/actividadesRealizadas.html',
+        controller: 'actividadesController'
+      }
+    }
+  })
+
+  /*****************************************/
   .state('app.gastos', {
     url: '/gastos',
     views: {
@@ -80,17 +216,7 @@ angular.module('starter', ['ionic',
       }
     }
   })
-
-  .state('app.general', {
-    url: '/general',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/general.html',
-        controller: 'generalController'
-      }
-    }
-  })
-
+ 
   .state('app.percepcion', {
     url: '/percepcion',
     views: {
@@ -111,15 +237,6 @@ angular.module('starter', ['ionic',
     }
   })
 
-  .state('app.encuestas', {
-    url: '/encuestas',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/encuestas.html',
-        controller: 'encuestasController'
-      }
-    }
-  })
 
   .state('app.listarGrupo', {
     url: '/listarGrupo',
@@ -271,27 +388,6 @@ angular.module('starter', ['ionic',
     }
   })
 
-  .state('app.temporadas', {
-    url: '/temporadas',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/temporada.html',
-        controller: 'temporadasController'
-      }
-    }
-  })
-
-  .state('app.verTemporada', {
-    url: '/verTemporada/:id',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/verTemporada.html',
-        controller: 'verTemporadaController'
-      }
-    }
-  })
-
   .state('app.dane', {
     url: '/dane',
     views: {
@@ -300,83 +396,7 @@ angular.module('starter', ['ionic',
         controller: 'daneController'
       }
     }
-  })
-
-  .state('app.hogar', {
-    url: '/hogar/:id',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/hogar.html',
-        controller: 'hogarController'
-      }
-    }
-  })
-
-  .state('app.editHogar', {
-    url: '/editHogar/:id',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/hogarEdit.html',
-        controller: 'editHogarController'
-      }
-    }
-  })
-
-  .state('app.viajeRealizado', {
-    url: '/viajeRealizado/:id',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/viajeRealizado.html',
-        controller: 'viajesRealizadoController'
-      }
-    }
-  })
-
-  .state('app.viajePrincipal', {
-    url: '/viajePrincipal/:id/:principal',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/viajePrincipal.html',
-        controller: 'viajePrincipalController'
-      }
-    }
-  })
-
-  .state('app.actividades', {
-    url: '/actividades/:id',
-    cache:false,
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/actividadesRealizadas.html',
-        controller: 'actividadesController'
-      }
-    }
-  })
-
-  .state('app.home', {
-    url: '/home',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/home.html',
-        controller: 'homeController'
-      }
-    }
-  })
-
-
-  .state('app.transporte', {
-    url: '/transporte',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/transporte.html',
-        controller: 'transporteController'
-      }
-    }
-  });
+  })  ;
 
 
   // if none of the above states are matched, use this as the fallback

@@ -1,0 +1,266 @@
+<ion-view view-title="Duración de la estancia y lugares visitados">
+  <ion-content>
+    <div class="card animated fadeInLeft list" ng-if="errores">
+      <div class="item item-divider situr-header-error">
+          <h2>Corrige los errores</h2>
+      </div>
+      <div class="assertive item" ng-repeat="error in errores">
+        {{error[0]}}
+      </div>
+    </div>
+    <form role="form" name="forms.EstanciaForm" novalidate>
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Registre los municipios que visitó en el Atlántico</h2>
+        </div>
+        <div class="item">
+          <a ng-click="agregar()" class="button button-small button-outline button-positive ripple ripple-green">
+            <i class="ion-plus"></i>
+          </a>
+        </div>
+        <div class="item" ng-if="encuesta.Estancias.length>0">
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table">
+              <div class="col col-75">Municipio visitado</div>
+              <div class="col col-75">Número de noches</div>
+              <div class="col col-75">Tipo de Alojamiento utilizado</div>
+              <div class="col col-33">Destino Principal</div>
+              <div class="col col-20"></div>
+            </div>
+            <div class="row row-table-col" ng-repeat="es in encuesta.Estancias">
+              <div class="col col-75" >
+                
+                <a 
+                  class="item item-input item-select ripple ripple-green item-select-block" 
+                  modal-select 
+                  ng-model="es.municipio" 
+                  options="Datos.Municipios" 
+                  modal-title="Elegir grupo" 
+                  has-search="true" 
+                  header-footer-class="bar-custom" 
+                  cancel-search-button='X' 
+                  search-placeholder="Buscar..." 
+                  cancel-button="Cancelar" 
+                  reset-button="Limpiar" 
+                  sub-header-class="bar-custom"
+                  name="municipio{{$index}}" 
+                  ng-required="true"
+                  ng-change="es.Municipio=es.municipio.id;cambioselectmunicipio(es);">
+                  {{es.municipio.nombre}}
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.municipio{{$index}}.$touched">
+                      <span ng-show="forms.EstanciaForm.municipio{{$index}}.$error.required">*</span>
+                  </span>
+                  <div class="option ripple ripple-green">
+                      {{option.nombre}}
+                  </div>  
+                </a> 
+              </div>
+
+              <div class="col col-75">
+                <label class="item item-input item-floating-label">
+                  <span class="input-label" >Número de horas</span>
+                  <input 
+                    type="number" 
+                    placeholder="Número de horas"
+                    name="noche{{$index}}" 
+                    ng-change="cambionoches(es)" 
+                    min= "0"
+                    ng-model="es.Noches"
+                    ng-required="true">
+                    <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.noche{{$index}}.$touched">
+                      <span  ng-show="forms.EstanciaForm.noche{{$index}}.$error.required">*</span>
+                    </span>
+                </label>
+                <br>
+              </div>
+
+              <div class="col col-75">
+                
+                <a 
+                  class="item item-input item-select ripple ripple-green item-select-block" 
+                  modal-select 
+                  ng-model="es.alojamiento" 
+                  options="Datos.Alojamientos" 
+                  modal-title="Elegir grupo" 
+                  has-search="true" 
+                  header-footer-class="bar-custom" 
+                  cancel-search-button='X' 
+                  search-placeholder="Buscar..." 
+                  cancel-button="Cancelar" 
+                  reset-button="Limpiar" 
+                  sub-header-class="bar-custom"
+                  name="alojamiento{{$index}}"
+                  ng-required="true"
+                  ng-change="es.Alojamiento=es.alojamiento.id;cambioselectalojamiento(es)">
+                  {{es.alojamiento.tipos_alojamiento_con_idiomas[0].nombre}}
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.alojamiento{{$index}}.$touched">
+                      <span ng-show="forms.EstanciaForm.alojamiento{{$index}}.$error.required">*</span>
+                  </span>
+                  <div class="option ripple ripple-green">
+                      {{option.tipos_alojamiento_con_idiomas[0].nombre}}
+                  </div>  
+                </a>
+              </div>
+
+              <div class="col col-33">
+                <ion-radio  ng-model="encuesta.Principal" ng-value="es.Municipio" class="ripple ripple-green" name="destino" >
+                </ion-radio>
+              </div>
+
+              <div class="col col-20">
+
+                <a type="button" ng-click="quitar(es)" class="button button-small button-outline button-assertive ripple ripple-green">
+                  <i class="ion-close-round"></i>
+                </a>
+              </div>
+            </div>
+          </ion-scroll>
+        </div>   	
+      </div>
+
+      <div class="card animated bounceInUp">
+        <div class="item item-divider situr-header required">
+          <h2>¿Qué actividades realizó en el Atlántico?</h2>
+        </div>
+        <div ng-repeat="activ in Datos.Actividadesrelizadas" style="background-color: transparent; border-color: #ddd;">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            ng-click="toggleSelection(activ);cambioActividadesRealizadas(activ);" 
+            ng-required="true"
+            name="actividadesr"
+            ng-checked="checked_object_id(activ, encuesta.ActividadesRelizadas)"
+            >
+            {{activ.actividades_realizadas_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.actividadesr.$touched || encuesta.ActividadesRelizadas.length > 0">
+              <span ng-show="encuesta.ActividadesRelizadas.length == 0">*</span>
+            </span>
+
+          </ion-checkbox>
+          <label class="item item-input item-floating-label"  ng-if="activ.id == 19" >
+            <span class="input-label" >Otro</span>
+              <input 
+              type="text" 
+              placeholder="Otro" 
+              ng-model="activ.otroActividad" 
+              ng-change="validarOtroActividad(activ)" 
+              ng-required="validarRequeridoOtroActividad()"
+              name="otroActividad">
+              <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.actividadesr.$touched || encuesta.ActividadesRelizadas.length > 0">  
+                  <span ng-show="forms.EstanciaForm.otroActividad.$error.required">*</span>
+              </span>
+          </label>
+        </div>        	          	
+      </div>
+
+      <div class="card animated bounceInUp"  ng-repeat="opcion in encuesta.ActividadesRelizadas" ng-if="opcion.opciones.length > 0">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Cúales? ({{opcion.actividades_realizadas_con_idiomas[0].nombre}})</h2>
+        </div>
+        <div ng-repeat="item in opcion.opciones" style="background-color: transparent; border-color: #ddd;">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            ng-click="toggleSelection2(item.id, opcion.Respuestas)"
+            ng-required="true"
+            name ="opcion_{{opcion.id}}"
+            ng-checked="checked(item.id, opcion.Respuestas)">
+            {{item.opciones_actividades_realizadas_idiomas[0].nombre}}
+
+            <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.opcion_{{opcion.id}}.$touched || opcion.Respuestas.length > 0">
+              <span ng-show="opcion.Respuestas.length == 0 || opcion.Respuestas == undefined">*</span>
+                
+            </span>
+          </ion-checkbox>
+          <label class="item item-input item-floating-label" ng-if="item.id==22 || item.id==26 || item.id==34">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro" 
+              ng-model="opcion.otro" 
+              ng-change="validarOtro(item.id,opcion)" 
+              ng-required="(item.id==22 || item.id==26 || item.id==34) && validarContenido(item.id,opcion)"
+              name="opcionOtro_{{opcion.id}}">
+
+              <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.opcion_{{opcion.id}}.$touched || opcion.Respuestas.length > 0">
+                              
+                <span class="label label-danger" ng-show="forms.EstanciaForm.opcionOtro_{{opcion.id}}.$error.required">*</span>
+              </span>
+          </label>	
+        </div>          	
+      </div>
+      <div class="row">
+        <div class="col col-50">
+          <a href="#/app/editGeneral/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+            Anterior
+          </a>
+        </div>
+        <div class="col col-50">
+          <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+
+  <br><br><br>
+</ion-content>
+
+
+
+<!--<div class="popup-menu">
+  <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+  <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+  <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+    <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+      <i class="ion ion-information-circled"></i>
+      <span>General</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+      <i class="ion ion-clock"></i>
+      <span>Estancia</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+      <i class="ion ion-model-s"></i>
+      <span>Transporte</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+      <i class="ion ion-ios-people"></i>
+      <span>Grupo</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+      <i class="ion-cash"></i>
+      <span>Gastos</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+      <i class="ion ion-person-add"></i>
+      <span>Percepción</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+      <i class="ion ion-speakerphone"></i>
+      <span>Redes e internet</span>
+    </a>
+  </div>
+</div>
+-->
+<div class="progress-container">
+  <round-progress
+  max="100"
+  current="16"
+  color="#16469e"
+  bgcolor="#c9cdff"
+  radius="10"
+  stroke="1"
+  semi="false"
+  rounded="false"
+  clockwise="true"
+  responsive="true"
+  duration="800"
+  animation="easeInOutQuart"
+  animation-delay="2">
+
+  </round-progress>
+  <div class="progress-text">
+    <span class="progress-percent">16%</span>
+  </div>
+</div>
+
+</ion-view>
