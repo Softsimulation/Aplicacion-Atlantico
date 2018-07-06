@@ -12,8 +12,7 @@ angular.module('receptor.controllers', [])
                     {'option':'Cualquier campo', 'value':''},
                     {'option':'Fecha de aplicación', 'value':'fecha'},
                     {'option':'Fecha de llegada', 'value':'fechallegada'},
-
-                  ]
+                  ];
 
   $scope.filtroEstadoEncuesta={'option':'Todas las encuestas', 'value':''};
   $scope.campoSelected={'option':'Cualquier campo', 'value':''};
@@ -98,7 +97,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  }
+  };
 
   $scope.changemunicipio = function (id) {
     $scope.encuesta.Municipio = {};
@@ -125,7 +124,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  }
+  };
 
   $scope.changemunicipiocolombia = function (id) {
     $scope.encuesta.Destino = "";
@@ -144,7 +143,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  } 
+  };
 
   $scope.otro = function () {
     if ($scope.encuesta.Otro == "") {
@@ -152,20 +151,20 @@ angular.module('receptor.controllers', [])
     } else {
       $scope.encuesta.Motivo = 18;
     }
-  }
+  };
 
   $scope.cambiomotivo = function () {
     if ($scope.encuesta.Motivo != 18) {
       $scope.encuesta.Otro = "";  
     }
-  }
+  };
 
   $scope.guardar=function () {
     
 
     if (!$scope.forms.DatosForm.$valid) {
        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-       return
+       return;
     }
     $scope.encuesta.fechaAplicacion=$filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd HH:mm');
     $scope.encuesta.Llegada=$filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd');
@@ -202,10 +201,10 @@ angular.module('receptor.controllers', [])
         okType:'button-stable'
       });
     });
-  } 
+  };
 })
 
-.controller('editGeneralController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+.controller('editGeneralController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
   $scope.encuesta = {};
   $scope.forms={};
   $scope.departamentod = {};
@@ -233,20 +232,20 @@ angular.module('receptor.controllers', [])
       $scope.lugares_aplicacion = data.datos.lugares_aplicacion;
       $scope.departamentos_colombia = data.datos.departamentos;
       $scope.encuesta = data.visitante;
-      $scope.pais_residencia =findSelect(data.visitante.Pais, data.datos.paises);
-      $scope.departamento = findSelect(data.visitante.Departamento, data.departamentosr);
-      $scope.departamentod = findSelect(data.visitante.DepartamentoDestino, data.datos.departamentos);
+      $scope.pais_residencia =factories.findSelect(data.visitante.Pais, data.datos.paises);
+      $scope.departamento = factories.findSelect(data.visitante.Departamento, data.departamentosr);
+      $scope.departamentod = factories.findSelect(data.visitante.DepartamentoDestino, data.datos.departamentos);
       fechal = data.visitante.Llegada.split('-');
       fechas = data.visitante.Salida.split('-');
       $scope.encuesta.Llegada = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2]);
       $scope.encuesta.Salida = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2]);
       
-      $scope.encuesta.encuestador = findSelect(data.visitante.Encuestador, data.datos.encuestadores);
-      $scope.encuesta.Aplicacion = findSelect(data.visitante.aplicacion, data.datos.lugares_aplicacion);
-      $scope.encuesta.nacimiento = findSelect(data.visitante.Nacimiento, data.datos.lugar_nacimiento);
-      $scope.encuesta.pais_nacimiento = findSelect(data.visitante.Pais_Nacimiento, data.datos.paises);
-      $scope.encuesta.municipio = findSelect(data.visitante.Municipio, data.municipiosr);
-      $scope.encuesta.destino = findSelect(data.visitante.Destino, data.municipiosd);
+      $scope.encuesta.encuestador = factories.findSelect(data.visitante.Encuestador, data.datos.encuestadores);
+      $scope.encuesta.Aplicacion = factories.findSelect(data.visitante.aplicacion, data.datos.lugares_aplicacion);
+      $scope.encuesta.nacimiento = factories.findSelect(data.visitante.Nacimiento, data.datos.lugar_nacimiento);
+      $scope.encuesta.pais_nacimiento = factories.findSelect(data.visitante.Pais_Nacimiento, data.datos.paises);
+      $scope.encuesta.municipio = factories.findSelect(data.visitante.Municipio, data.municipiosr);
+      $scope.encuesta.destino = factories.findSelect(data.visitante.Destino, data.municipiosd);
 
 
       if(data.visitante.fechaAplicacion != null){
@@ -290,7 +289,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  }
+  };
 
   $scope.changemunicipio = function (id) {
     $scope.encuesta.Municipio = {};
@@ -317,7 +316,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  }
+  };
 
   $scope.changemunicipiocolombia = function (id) {
     $scope.encuesta.Destino = "";
@@ -336,7 +335,7 @@ angular.module('receptor.controllers', [])
         });
       });
     }
-  } 
+  };
 
   $scope.otro = function () {
     if ($scope.encuesta.Otro == "") {
@@ -344,13 +343,13 @@ angular.module('receptor.controllers', [])
     } else {
       $scope.encuesta.Motivo = 18;
     }
-  }
+  };
 
   $scope.cambiomotivo = function () {
     if ($scope.encuesta.Motivo != 18) {
       $scope.encuesta.Otro = "";  
     }
-  }
+  };
 
   $scope.guardar=function () {
     
@@ -394,19 +393,10 @@ angular.module('receptor.controllers', [])
         okType:'button-stable'
       });
     });
-  } 
-
-  function findSelect(id, array_select, option) {
-    if(option){
-      var result=array_select.find( myObject => myObject.option === id );
-    }else{
-      var result=array_select.find( myObject => myObject.id === id );
-    }
-    return result;
-  }
+  };  
 })
 
-.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
 
   $scope.encuesta = {};
   $scope.encuesta.ActividadesRelizadas=[];
@@ -429,8 +419,8 @@ angular.module('receptor.controllers', [])
       $scope.encuesta = data.encuesta; 
       $scope.encuesta.Estancias.forEach(function(_this) {
         
-        if(!_this.municipio){_this.municipio=findSelect(_this.Municipio,$scope.Datos.Municipios)}
-        if(!_this.alojamiento){_this.alojamiento=findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
+        if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
+        if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
 
 
       });
@@ -474,16 +464,20 @@ angular.module('receptor.controllers', [])
     $scope.encuesta.Estancias.splice($scope.encuesta.Estancias.indexOf(es), 1);
   };
 
-  $scope.toggleSelection = function (item) {
-    
-    var idx = $scope.encuesta.ActividadesRelizadas.indexOf(item);
-    if (idx > -1) {
-      $scope.encuesta.ActividadesRelizadas.splice(idx, 1);
-    }
+  $scope.toggleSelection = function (item, $event) {
+    var dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
 
-    else {
-      $scope.encuesta.ActividadesRelizadas.push(item);
-    }
+	    var idx = factories.index_of(item.id, $scope.encuesta.ActividadesRelizadas);
+	    
+	    if (idx > -1) {
+	      $scope.encuesta.ActividadesRelizadas.splice(idx, 1);
+	    }else {
+	      $scope.encuesta.ActividadesRelizadas.push(item);
+	    }	   
+	  }else{
+	   	return;
+	  } 
   };
 
   $scope.toggleSelection2 = function (id, Respuestas) {
@@ -499,13 +493,12 @@ angular.module('receptor.controllers', [])
   };
 
   $scope.cambioActividadesRealizadas = function (actividad) {
-        actividad.Respuestas = [];
-        actividad.otro = undefined;
-        var resultado = $filter('filter')($scope.encuesta.ActividadesRelizadas, {'id':18}, true);
-        
-        if(resultado.length > 0){
-            $scope.encuesta.ActividadesRelizadas = [resultado[0]];    
-        }     
+    actividad.Respuestas = [];
+    actividad.otro = undefined;
+    var resultado = $filter('filter')($scope.encuesta.ActividadesRelizadas, {'id':18}, true);
+    if(resultado.length > 0){
+        $scope.encuesta.ActividadesRelizadas = [resultado[0]];    
+    }   
   };
 
   $scope.validarContenido = function(id,opcion){
@@ -630,23 +623,14 @@ angular.module('receptor.controllers', [])
     return false;
   };
 
-  $scope.checked_object_id=function(obj, objeto) {
+  $scope.checked_object_id=function(id, objeto) {
     let i=0;
     for(i=0; i<objeto.length; i++){
-      if(obj.id==objeto[i].id){
+      if(id==objeto[i].id){
         return true;
       }
     }
     return false;
-  };
-
-  function findSelect(id, array_select, option) {
-    if(option){
-      var result=array_select.find( myObject => myObject.option === id );
-    }else{
-      var result=array_select.find( myObject => myObject.id === id );
-    }
-    return result;
   };
 })
 
@@ -726,5 +710,145 @@ angular.module('receptor.controllers', [])
         okType:'button-stable'
       });
     });
+  };
+})
+
+.controller('grupoController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+	$scope.grupo = {};
+	$scope.grupo.Personas=[];
+	$scope.forms={};
+  $scope.id=$stateParams.id;
+
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+	turismoReceptor.cargardatosseccionviaje($stateParams.id).then(function (data) {
+    $ionicLoading.hide();
+    $scope.viaje_grupos = data.viaje_grupos;
+    $scope.grupo.Id = $scope.id;  
+    if (data.tam_grupo != null && data.personas != null) {
+	    $scope.grupo.Numero = data.tam_grupo;
+	    $scope.grupo.Personas = data.personas;
+	    $scope.grupo.Otro = data.otro;
+	    $scope.grupo.Numero_otros = data.acompaniantes;
+    }    
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.buscar = function (list, data) {
+    if (list.indexOf(data) !== -1) {
+      return true;
+    } else {
+      return false;
+    }
+	};
+
+	$scope.verifica = function () {
+    if($scope.grupo.Numero < 1 && $scope.grupo.Numero != null){
+      $scope.grupo.Personas = [];
+      $scope.grupo.Otro = null;
+    } else {
+      if ($scope.grupo.Numero == 1) {
+        $scope.grupo.Personas = [1];
+        $scope.grupo.Otro = null;
+	    } else {
+        var i = $scope.grupo.Personas.indexOf(1);
+        if (i != -1) {
+          $scope.grupo.Personas.splice(i, 1);
+        }
+      }
+    }
+  };
+
+  $scope.verificarOtro = function () {
+    var i = $scope.grupo.Personas.indexOf(12);
+    if ($scope.grupo.Otro != null && $scope.grupo.Otro != '') {
+      if (i == -1) {
+        $scope.grupo.Personas.push(12);
+      }
+	  }
+  };
+
+  $scope.vchek = function (id) {
+    if (id == 12) {
+      var i = $scope.grupo.Personas.indexOf(12);
+      if (i !== -1) {
+        $scope.grupo.Otro = null;
+      }
+    }
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.toggleSelection = function (id , $event) {
+    
+    var dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+      var idx = $scope.grupo.Personas.indexOf(id);
+      if (idx > -1) {
+        $scope.grupo.Personas.splice(idx, 1);
+      }
+
+      else {
+        $scope.grupo.Personas.push(id);
+      }
+    }else{
+      return;
+    }
+  };
+
+  $scope.guardar = function () {
+
+    if (!$scope.forms.grupoForm.$valid || $scope.grupo.Personas.length == 0) {
+  		ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+
+    $ionicLoading.show({
+	    template: '<ion-spinner></ion-spinner> Espere por favor...',
+	    animation: 'fade-in',
+	    showBackdrop: true,
+	    maxWidth: 200,
+	    showDelay: 0
+	  });
+    turismoReceptor.guardarseccionviajegrupo($scope.grupo).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        //$location.path("/app/transporte/"+$scope.encuesta.Id);
+        
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });  
   };
 })

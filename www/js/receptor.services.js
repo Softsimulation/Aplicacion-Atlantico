@@ -181,4 +181,37 @@ angular.module('turismo.receptor.services', [])
 
 		return deferred.promise;
   	};
+
+  	this.cargardatosseccionviaje=function (id) {
+    	var deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+            //Authorization:'Bearer{'+user.token+'}'
+      	},
+	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccionviaje/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
+
+  	this.guardarseccionviajegrupo=function (data) {
+	    var deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionviajegrupo',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+
+		return deferred.promise;
+  	};
 });

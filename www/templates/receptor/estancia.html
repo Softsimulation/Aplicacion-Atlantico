@@ -122,13 +122,14 @@
         <div class="item item-divider situr-header required">
           <h2>¿Qué actividades realizó en el Atlántico?</h2>
         </div>
-        <div ng-repeat="activ in Datos.Actividadesrelizadas" style="background-color: transparent; border-color: #ddd;">
+        <div ng-repeat="activ in Datos.Actividadesrelizadas">
           <ion-checkbox 
             class="ripple ripple-green" 
-            ng-click="toggleSelection(activ);cambioActividadesRealizadas(activ);" 
+            ng-click="toggleSelection(activ, $event);cambioActividadesRealizadas(activ);" 
             ng-required="true"
             name="actividadesr"
-            ng-checked="checked_object_id(activ, encuesta.ActividadesRelizadas)"
+            ng-checked="checked_object_id(activ.id, encuesta.ActividadesRelizadas, activ)"
+            ng-disabled="checked_object_id(18, encuesta.ActividadesRelizadas) && activ.id!=18"
             >
             {{activ.actividades_realizadas_con_idiomas[0].nombre}}
             <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.actividadesr.$touched || encuesta.ActividadesRelizadas.length > 0">

@@ -18,9 +18,6 @@ angular.module('starter.controllers', [
 })
 
 
-.controller('grupoController', function($scope, $stateParams) {
-})
-
 .controller('gastosController', function($scope, $stateParams,ionicToast,$ionicModal) {
 
   $scope.selectables = [1,2,3,4,5];

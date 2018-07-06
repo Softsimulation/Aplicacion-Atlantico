@@ -1,89 +1,93 @@
 <ion-view view-title="Viaje en grupo">
   <ion-content>
-    <div class="card animated bounceInUp" >
+  <form role="form" name="forms.grupoForm" novalidate>
+    <div class="card animated fadeInLeft" >
       <div class="item item-divider situr-header required">
         <h2> ¿Cuántas personas incluyéndose usted, realizaron juntos el viaje desde la llegada hasta la salida del Magdalena?</h2>
       </div>
       <label class="item item-input item-floating-label">
         <span class="input-label" >Número de personas</span>
-        <input type="number" placeholder="Número de personas" min="1" ng-init="persons=1" ng-model="persons" required>
-      </label><br>
+        <input 
+          type="number" 
+          placeholder="Número de personas" 
+          min="1"  
+          ng-model="grupo.Numero" 
+          ng-change="verifica()" 
+          ng-required="true">
+        <span class="validated" ng-show="forms.grupoForm.$submitted || forms.grupoForm.numero.$touched">
+            <span ng-show="forms.grupoForm.numero.$error.required">*</span>
+        </span>
+      </label>
     </div>
 
-    <div class="card animated bounceInUp">
+    <div class="card animated fadeInLeft">
       <div class="item item-divider situr-header required">
         <h2>¿Las personas anteriormente mencionadas son:</h2>
       </div>
-      <div class="item">
-        <ion-checkbox class="ripple ripple-green" ng-model="data.solo" ng-checked="persons==1" ng-disabled="persons!=1">
-          Viajé solo
+   
+      <div ng-repeat="item in viaje_grupos">
+        <ion-checkbox class="ripple ripple-green" 
+                      ng-disabled="(grupo.Numero == 1 && item.id != 1) || (grupo.Numero > 1 && item.id == 1) || grupo.Numero == null || grupo.Numero < 1" 
+                      ng-click="toggleSelection(item.id, $event);vchek(item.id)",
+                      ng-checked="checked(item.id, grupo.Personas)">
+          {{item.tipos_acompaniante_con_idiomas[0].nombre}}
+
+          <span class="validated" ng-show="forms.grupoForm.$submitted || forms.grupoForm.personas.$touched">
+            <span ng-show="grupo.Personas.length == 0">*</span>
+          </span>
         </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.pareja" ng-checked="persons!=1 && data.solo"  ng-disabled="persons==1">
-          Mi pareja / Novia(o) / esposa(o)
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.hijos" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1"> 
-          Mis Hijos
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.padres" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1" >
-          Mis Padres
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.familiares" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Otros familiares
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.amigo" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Amigo(s)
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.trabajo" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Compañeros de trabajo
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.estudio" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Compañeros de estudio
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.turistas" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1" >
-          Otros turistas (Incluye todas las personas desconocidas o sin ningún vínculo con usted)
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.estudiantes" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Estudiantes
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.profesores" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Profesores
-        </ion-checkbox>
-
-        <ion-checkbox class="ripple ripple-green" ng-model="data.otro" ng-checked="persons!=1 && data.solo" ng-disabled="persons==1">
-          Otro
-        </ion-checkbox>
-
-        <label class="item item-input item-floating-label">
-         <span class="input-label" >Otro</span>
-         <input type="text" placeholder="Otro" required ng-disabled="!data.otro">
-       </label>
-       <br>
-     </div>        	          	
-   </div>
-
-   <div class="card animated bounceInUp" ng-if="data.turistas">
-    <div class="item item-divider situr-header required">
-      <h2> ¿Cuántos eran los otros turístas?</h2>
+        <label class="item item-input item-floating-label" ng-if="item.id == 12" >
+          <span class="input-label" >Otro</span>
+          <input 
+            type="text" 
+            placeholder="Otro" 
+            ng-model="grupo.Otro" 
+            ng-disabled="grupo.Numero == null || grupo.Numero <= 1" 
+            ng-change="verificarOtro()"  
+            ng-required="grupo.Personas.indexOf(12) != -1">
+            <span class="validated" ng-show="forms.grupoForm.$submitted || forms.grupoForm.personas.$touched">
+              <span ng-show="forms.grupoForm.otro.$error.required">* </span>
+            </span>
+        </label>
+      </div>           	          	
     </div>
-    <label class="item item-input item-floating-label">
-      <span class="input-label" >Número de turistas</span>
-      <input type="number" placeholder="Número de turistas" min="1" ng-init="turistas=1" ng-model="turistas" required>
-    </label><br>
-  </div>
+
+    <div class="card animated fadeInLeft" ng-if="buscar(grupo.Personas, 9)">
+      <div class="item item-divider situr-header required">
+        <h2> ¿Cuántos eran los otros turístas?</h2>
+      </div>
+      <label class="item item-input item-floating-label">
+        <span class="input-label" >Número de turistas</span>
+        <input  
+          type="number" 
+          placeholder="Número de turistas" 
+          name="numero_otros" 
+          min="1" 
+          class="form-control" 
+          ng-model="grupo.Numero_otros"
+          ng-required="grupo.Personas.indexOf(9) != -1">
+          <span class="validated" ng-show="forms.grupoForm.$submitted || forms.grupoForm.numero_otros.$touched">
+            <span ng-show="forms.grupoForm.numero_otros.$error.required">*</span>
+          </span>
+      </label>
+    </div>
+    <div class="row">
+      <div class="col col-50">
+        <a href="#/app/transporte/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+          Anterior
+        </a>
+      </div>
+      <div class="col col-50">
+        <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </form>
   <br><br><br>
 </ion-content>
 
-<div class="popup-menu">
+<!--<div class="popup-menu">
   <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
   <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
   <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
@@ -116,7 +120,7 @@
       <span>Redes e internet</span>
     </a>
   </div>
-</div>
+</div>-->
 
 <div class="progress-container">
   <round-progress

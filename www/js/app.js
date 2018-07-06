@@ -17,6 +17,7 @@ angular.module('starter', ['ionic',
                            'turismo.receptor.services',
                            'checklist-model',
                            'starter.directives',
+                           'factories'
 
                            ])
 
