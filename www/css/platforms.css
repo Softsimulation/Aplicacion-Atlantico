@@ -224,15 +224,19 @@
 }
 .platform-android .ion-badges{
   border-radius: 4px;
-  background-color: #08501d;
+  background-color: #16469e;
   color: #fff;
-  margin: 9px 8px 9px 0;
+  margin: 2px;
+  padding: 5px;
+  font-weight: 600;
 }
 .platform-ios .ion-badges{
   border-radius: 10px;
-  background-color: #08501d;
-    color: #fff;
-    margin: 2px;
+  background-color: #16469e;
+  color: #fff;
+  margin: 2px;
+  padding: 5px;
+  font-weight: 600;
 }
 
 .platform-android .item-floating-label:after {
@@ -574,141 +578,49 @@ background: #F7F7F7;
   
 }*/
 
-/* ANDROID SCALE UP SCALE DOWN POP TRANSITION */
-
-/*@-webkit-keyframes scaleDown {
-    to {
-        opacity: 0;
-        -webkit-transform: scale(.8);
-    }
-}
-@-moz-keyframes scaleDown {
-    to {
-        opacity: 0;
-        -moz-transform: scale(.8);
-    }
-}
-@keyframes scaleDown {
-    to {
-        opacity: 0;
-        transform: scale(.8);
-    }
-}
-@-webkit-keyframes scaleUp {
-    from {
-        opacity: 0;
-        -webkit-transform: scale(.8);
-    }
-}
-@-moz-keyframes scaleUp {
-    from {
-        opacity: 0;
-        -moz-transform: scale(.8);
-    }
-}
-@keyframes scaleUp {
-    from {
-        opacity: 0;
-        transform: scale(.8);
-    }
-}
-.platform-android ion-nav-view [nav-view-direction="forward"] {
-    left: 0;
-    z-index: 2;
-    -webkit-animation: scaleUp .2s ease both;
-    -moz-animation: scaleUp .2s ease both;
-    animation: scaleUp .2s ease both;
-    -webkit-transform: translate3d(0, 0, 0);
+/*.platform-android ion-nav-view [nav-view-direction="forward"] {     
+  left: 0;     
+  z-index: 2;     
+  -webkit-animation: scaleUp .2s ease both;     
+  -moz-animation: scaleUp .2s ease both;     
+  animation: scaleUp .2s ease both;     
+  -webkit-transform: translate3d(0, 0, 0); 
 }
 
-
-/*.platform-android ion-nav-view [nav-view-direction="back"] {     
+.platform-android ion-nav-view [nav-view-direction="back"] {     
   left: 0;     
   z-index: 2;     
   -webkit-animation: scaleDown .2s ease both;     
   -moz-animation: scaleDown .2s ease both;     
   animation: scaleDown .2s ease both; 
-}  */
-
-
-
-
-/*
-.platform-android ion-nav-view [nav-view="active"] {
-    -webkit-animation: scaleUp .2s ease both;
-    -moz-animation: scaleUp .2s ease both;
-    animation: scaleUp .2s ease both;
-}
-.platform-android ion-nav-view [nav-view="cached"] {
-    left: 0;
-    z-index: 2;
-    -webkit-animation: scaleDown .2s ease both;
-    -moz-animation: scaleDown .2s ease both;
-    animation: scaleDown .2s ease both;
-}
-*/
-
-
-/*
-ion-nav-view [nav-view-direction="back"] {
-    left: 0;
-    z-index: 1;
-}
-*/
-
-
-/*
-ion-nav-view [nav-view-direction="forward"] {
-    left: 0;
-    z-index: 1;
-}
-*/
-
-/*.scale-in {
-  -webkit-transform: scale(0.0);
-    transform: scale(0.0);
-    opacity: 0;
-}
-.scale-in.ng-enter,
-.scale-in > .ng-enter {
-  -webkit-transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
-  transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
 }
 
-.scale-in.ng-enter-active,
-.scale-in > .ng-enter-active {
-  -webkit-transform: scale(1);
-  transform: scale(1);
-  opacity: 1;
+@-webkit-keyframes scaleDown {
+  to { opacity: 0; -webkit-transform: scale(.8); }
+}
+@-moz-keyframes scaleDown {
+  to { opacity: 0; -moz-transform: scale(.8); }
+}
+@keyframes scaleDown {
+  to { opacity: 0; transform: scale(.8); }
 }
 
-.scale-in.ng-leave,
-.scale-in > .ng-leave {
-  -webkit-transition: all ease-in-out 250ms;
-  transition: all ease-in-out 250ms;
+@-webkit-keyframes scaleUp {
+  from { opacity: 0; -webkit-transform: scale(.8); }
 }
+@-moz-keyframes scaleUp {
+  from { opacity: 0; -moz-transform: scale(.8); }
+}
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(.8); }
+}*/
 
-.slide-in-right {
-  -webkit-transform: translateX(100%);
-    transform: translateX(100%); }
-
-.slide-in-right.ng-enter, .slide-in-right > .ng-enter {
-  -webkit-transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms;
-  transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms; }
-
-.slide-in-right.ng-enter-active, .slide-in-right > .ng-enter-active {
-  -webkit-transform: translateX(0);
-    transform: translateX(0); }
-
-.slide-in-right.ng-leave, .slide-in-right > .ng-leave {
-  -webkit-transition: all ease-in-out 250ms;
-  transition: all ease-in-out 250ms; }*/
 
 .platform-android .card{
-    margin: 10px;
-    border-radius: 2px;
-    width: calc(100% - 20px);
-  
+    margin: 10px 5px;
+    border-radius: 2px !important;
+    /*width: calc(100% - 20px);
+    */
     background: #fff;
     -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
@@ -724,3 +636,4 @@ ion-nav-view [nav-view-direction="forward"] {
     box-shadow: 0 1px 2px rgba(0,0,0,.3);
 
 }
+

@@ -127,6 +127,16 @@ angular.module('starter', ['ionic',
     }
   })
 
+  .state('app.gastos', {
+    url: '/gastos/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/gastos.html',
+        controller: 'gastosController'
+      }
+    }
+  })
+
   /*******************************************/
 
 
@@ -208,15 +218,7 @@ angular.module('starter', ['ionic',
   })
 
   /*****************************************/
-  .state('app.gastos', {
-    url: '/gastos',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/gastos.html',
-        controller: 'gastosController'
-      }
-    }
-  })
+  
  
   .state('app.percepcion', {
     url: '/percepcion',

@@ -399,7 +399,7 @@
         <div class="item item-divider situr-header required">
           <h2>¿Cuál fué el motivo principal para venir al departamento del Atlántico?</h2>
         </div>
-        <label class="item">             	 
+        <label>             	 
           <ion-radio  
             ng-repeat="item in motivos" 
             class="ripple ripple-green" 
@@ -423,7 +423,7 @@
               <span ng-show="forms.DatosForm.otro.$error.required">*</span>
             </span>
           </label>
-          <br>
+          
 
         </label>
       </div>
@@ -445,7 +445,6 @@
               <span ng-show="forms.DatosForm.horas.$error.required">*</span>
           </span>
         </label>
-        <br>
       </div>
 
       <div class="card animated fadeInLeft" ng-if="encuesta.Motivo == 5"">

@@ -6,7 +6,7 @@
     </label>
   </div>
   <ion-content class="has-subheader">
-    <div class="card">
+    <div class="card animated fadeInLeft">
       
       <a 
         class="item item-input item-select ripple ripple-green item-select-block" 
@@ -47,7 +47,29 @@
       </a>
 
     </div> 
-    <div class="card list animated fadeInLeft active-card" ng-repeat="item in encuestas | filter:search" >
+
+    <div class="card padding">
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green" 
+        ng-disabled="currentPage == 0" 
+        ng-click="currentPage=currentPage-1">
+        <i class="icon ion-ios-arrow-back"></i>
+      
+      </button>
+      <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green"
+        ng-disabled="currentPage >= (encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+        ng-click="currentPage=currentPage+1">
+
+        <i class="icon ion-ios-arrow-forward"></i>
+      </button>
+      <span class="ion-badges" style="float: right;">
+        {{(encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+      </span>
+    </div>
+    <div class="card list animated fadeInLeft active-card" 
+        ng-repeat="item in encuestas | filter:search | filter:filtroEstadoEncuesta.value | filter:campoSelected.value | firstPage:currentPage*pageSize | limitTo:pageSize" >
       <div class="item">
         <h2>{{item.nombre}}</h2>
         <p>{{item.fechallegada  | date:'dd/MM/yyyy'}} - {{item.fechasalida   | date:'dd/MM/yyyy'}}</p>
@@ -56,19 +78,40 @@
         <p>Fecha de digitación: {{item.fechadigitacion | date:'dd/MM/yyyy'}}</p>
         <p>Encuestador: {{item.username}}</p>
         <p>Estado: {{item.estado}}</p>
-        <p>Última sección : {{item.ultima}}</p>
+        <p>Última sección : {{item.ultima}}</p>      
 
         <div class="pull-right">
           <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editGeneral/{{item.id}}"><i class="ion-edit"></i></a>
         </div>
       </div>
     </div>
+    
+    <div class="card padding">
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green" 
+        ng-disabled="currentPage == 0" 
+        ng-click="currentPage=currentPage-1">
+        <i class="icon ion-ios-arrow-back"></i>
+      
+      </button>
+      <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green"
+        ng-disabled="currentPage >= (encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+        ng-click="currentPage=currentPage+1">
+
+        <i class="icon ion-ios-arrow-forward"></i>
+      </button>
+      <span class="ion-badges" style="float: right;">
+        {{(encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+      </span>
+    </div>
     <br><br><br>
   </ion-content> 
 
   <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
     <a href="#/app/general">
-      <button class="botonF1 button ripple ripple-light button-balanced animated zoomIn">
+      <button class="botonF1 button ripple ripple-light button-positive animated zoomIn">
         <i class=" ion-plus"></i>
       </button>
     </a>

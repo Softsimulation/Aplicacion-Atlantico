@@ -214,4 +214,20 @@ angular.module('turismo.receptor.services', [])
 
 		return deferred.promise;
   	};
+
+  	this.infogasto=function (id) {
+    	var deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+            //Authorization:'Bearer{'+user.token+'}'
+      	},
+	      	url: CONFIG.APIURL+'turismoreceptoroapi/infogasto/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
 });

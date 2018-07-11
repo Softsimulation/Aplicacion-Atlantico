@@ -18,38 +18,6 @@ angular.module('starter.controllers', [
 })
 
 
-.controller('gastosController', function($scope, $stateParams,ionicToast,$ionicModal) {
-
-  $scope.selectables = [1,2,3,4,5];
-  $scope.planChange=function (plan) {
-    $scope.planes=plan;
-  }
-
-  $scope.municipioChange=function (municipio) {
-    $scope.municipios=municipio;
-  }
-
-  $scope.compradoChange=function (comprado) {
-    $scope.comprado=comprado;
-  }
-
-  $scope.infoChange=function (info) {
-    $scope.info=info;
-
-    if(info==2){
-      ionicToast.show('Si indico que realizo gastos, debe ingresar algun gasto hecho (si viajo como paquete turístico o al menos un gasto adicional).', 'middle', false, 10000);
-    }
-  }
-
-
-  $ionicModal.fromTemplateUrl('templates/modalDatos.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-
-  });
-})
-
 .controller('percepcionController', function($scope, $stateParams) {
 })
 

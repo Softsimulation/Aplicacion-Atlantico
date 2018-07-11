@@ -1,7 +1,10 @@
 angular.module('receptor.controllers', [])
 
 .controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup) {
-  
+  $scope.currentPage = 0;
+  $scope.pageSize = 5;           
+  $scope.encuestas=[];
+
   $scope.filter = [
                     {'option':'Todas las encuestas', 'value':''}, 
                     {'option':'Calculadas', 'value':'calculadas'},
@@ -28,6 +31,13 @@ angular.module('receptor.controllers', [])
   turismoReceptor.encuestas().then(function (data) {
       $ionicLoading.hide();
       $scope.encuestas=data;
+      for (var i = 0; i < $scope.encuestas.length; i++) {
+          if ($scope.encuestas[i].estadoid > 0 && $scope.encuestas[i].estadoid < 7) {
+              $scope.encuestas[i].Filtro = 'sincalcular';
+          } else {
+              $scope.encuestas[i].Filtro = 'calculadas';
+          }
+      }
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -37,6 +47,10 @@ angular.module('receptor.controllers', [])
         okType:'button-stable'
     });
   });
+
+  $scope.numberOfPages=function(encuestas){
+    return Math.ceil(encuestas.length/$scope.pageSize);                
+  };
 })
 
 .controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location) {
@@ -834,7 +848,7 @@ angular.module('receptor.controllers', [])
       $ionicLoading.hide();
       if (data.success == true) {
         ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        //$location.path("/app/transporte/"+$scope.encuesta.Id);
+        $location.path("/app/gastos/"+$scope.id);
         
       } else {
         $ionicScrollDelegate.scrollTop(true);
@@ -851,4 +865,200 @@ angular.module('receptor.controllers', [])
       });
     });  
   };
+})
+
+.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+
+  $scope.id=$stateParams.id;
+  $scope.encuestaReceptor = {};
+  $scope.abrirAlquiler = false;
+  $scope.abrirTerrestre = false;
+  $scope.abrirRopa = false;
+  $scope.encuestaReceptor.Municipios=[];
+  $scope.encuestaReceptor.ServiciosIncluidos=[];
+
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+
+  turismoReceptor.infogasto($stateParams.id).then(function (data) {
+    $ionicLoading.hide();
+    $scope.divisas = data.divisas;
+    $scope.financiadores = data.financiadores;
+    $scope.municipios = data.municipios;
+    $scope.opciones = data.opciones;
+    $scope.servicios = data.servicios;
+    $scope.tipos = data.tipos;
+    $scope.rubros = data.rubros;
+    $scope.encuestaReceptor = data.encuesta;
+    if(!$scope.encuestaReceptor.ServiciosIncluidos){
+      $scope.encuestaReceptor.ServiciosIncluidos=[];
+    }
+    if(!$scope.encuestaReceptor.Municipios){
+      $scope.encuestaReceptor.Municipios=[];
+    }
+    if(!$scope.encuestaReceptor.Financiadores){
+      $scope.encuestaReceptor.Financiadores=[];
+    }
+    for(var i = 0; i<$scope.rubros.length;i++){
+        $scope.cambiarAlquiler($scope.rubros[i]);
+    }   
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.cambiarAlquiler = function(rub){
+        
+    if(rub.gastos_visitantes.length==0){
+        return;
+    }
+        
+    if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_magdalena!= null && rub.gastos_visitantes[0].cantidad_pagada_magdalena != null){
+      switch (rub.id) {
+        case 3:
+          $scope.abrirTerrestre = true;
+          break;
+        case 5:
+          $scope.abrirAlquiler = true;
+          break;
+        case 12:
+          $scope.abrirRopa = true;
+          break;
+        default:
+        break;
+      }
+    }
+        
+    if($scope.abrirTerrestre){
+      if( rub.id ==3 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+        $scope.abrirTerrestre = false;
+      }
+    }
+    if($scope.abrirAlquiler){
+      if( rub.id == 5 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+        $scope.abrirAlquiler = false;
+      }
+    }
+    if($scope.abrirRopa){
+      if( rub.id == 12 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+        $scope.abrirRopa = false;
+      }
+    }      
+  };
+
+  $scope.limpiarPaquete = function(){
+    if($scope.encuestaReceptor.ViajoDepartamento == 0){
+      var aux = [];
+      aux = $scope.encuestaReceptor.Financiadores;
+      $scope.encuestaReceptor = {}
+      $scope.encuestaReceptor.Financiadores = aux;
+      $scope.encuestaReceptor.RealizoGasto = 1;
+      $scope.encuestaReceptor.ViajoDepartamento = 0
+    }
+  };
+
+  $scope.limpiarMunicipios = function(){
+    if($scope.encuestaReceptor.IncluyoOtros == 0 ){
+      $scope.encuestaReceptor.Municipios = [];
+      $scope.encuestaReceptor.municipios = [];
+    }
+  };
+
+  $scope.municipios_id=function (municipios) {
+    $scope.encuestaReceptor.Municipios=[];
+    for(var i=0; i<municipios.length; i++){
+      $scope.encuestaReceptor.Municipios.push(municipios[i].id);
+    }
+  };
+
+  $scope.limpiarLocalizacion = function(){
+    if($scope.encuestaReceptor.Proveedor != 1 && $scope.encuestaReceptor.LugarAgencia != undefined ){
+      $scope.encuestaReceptor.LugarAgencia = undefined;
+    }
+  };
+
+  $scope.limpiarMatriz = function(){
+    if($scope.encuestaReceptor.poderLLenar){
+     for(var i = 0; i<$scope.rubros.length;i++){
+        if($scope.rubros[i].gastos_visitantes[0] != null){
+          $scope.rubros[i].gastos_visitantes[0] = null;
+        }
+      }
+      $scope.abrirTerrestre = false;
+      $scope.abrirAlquiler = false;
+      $scope.abrirRopa = false; 
+    }
+  };
+    
+  $scope.toggleSelection = function (id) {
+    var idx = $scope.encuestaReceptor.ServiciosIncluidos.indexOf(id);
+    
+    if (idx > -1) {
+      $scope.encuestaReceptor.ServiciosIncluidos.splice(idx, 1);
+    }
+    else {
+      $scope.encuestaReceptor.ServiciosIncluidos.push(id);
+    }
+  };
+
+  $scope.toggleSelection2 = function (id) {
+    var idx = $scope.encuestaReceptor.Financiadores.indexOf(id);
+    
+    if (idx > -1) {
+      $scope.encuestaReceptor.Financiadores.splice(idx, 1);
+    }
+    else {
+      $scope.encuestaReceptor.Financiadores.push(id);
+    }
+    console.log($scope.encuestaReceptor.Financiadores);
+  };
+
+  $scope.verificarOtro = function () {
+        
+    var i = $scope.encuestaReceptor.Financiadores.indexOf(11)
+    if ($scope.encuestaReceptor.Otro != null && $scope.encuestaReceptor.Otro != '') {
+      if (i == -1) {
+        $scope.encuestaReceptor.Financiadores.push(11);
+        $scope.bandera = true;
+      }
+    } else {
+      if (i != -1) {
+        $scope.encuestaReceptor.Financiadores.splice(i, 1);
+        $scope.bandera = false;
+      }
+    }
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.toggleGroup = function(group) {
+    if ($scope.isGroupShown(group)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = group;
+    }
+  };
+
+  $scope.isGroupShown = function(group) {
+    return $scope.shownGroup === group;
+  };
+
 })
