@@ -69,6 +69,7 @@ angular.module('starter', ['ionic',
   
   .state('app.encuestas', {
     url: '/encuestas',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/encuestas.html',
@@ -79,6 +80,7 @@ angular.module('starter', ['ionic',
 
   .state('app.general', {
     url: '/general',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/general.html',
@@ -89,6 +91,7 @@ angular.module('starter', ['ionic',
 
   .state('app.editGeneral', {
     url: '/editGeneral/:id',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/editGeneral.html',
@@ -99,6 +102,7 @@ angular.module('starter', ['ionic',
 
   .state('app.estancia', {
     url: '/estancia/:id',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/estancia.html',
@@ -109,6 +113,7 @@ angular.module('starter', ['ionic',
 
   .state('app.transporte', {
     url: '/transporte/:id',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/transporte.html',
@@ -119,6 +124,7 @@ angular.module('starter', ['ionic',
 
   .state('app.grupo', {
     url: '/grupo/:id',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/grupo.html',
@@ -129,10 +135,33 @@ angular.module('starter', ['ionic',
 
   .state('app.gastos', {
     url: '/gastos/:id',
+    cache:false,
     views: {
       'menuContent': {
         templateUrl: 'templates/receptor/gastos.html',
         controller: 'gastosController'
+      }
+    }
+  })
+
+  .state('app.percepcion', {
+    url: '/percepcion/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/percepcion.html',
+        controller: 'percepcionController'
+      }
+    }
+  })
+
+  .state('app.enteran', {
+    url: '/enteran/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/receptor/enteran.html',
+        controller: 'enteranController'
       }
     }
   })
@@ -220,25 +249,9 @@ angular.module('starter', ['ionic',
   /*****************************************/
   
  
-  .state('app.percepcion', {
-    url: '/percepcion',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/percepcion.html',
-        controller: 'percepcionController'
-      }
-    }
-  })
+  
 
-  .state('app.enteran', {
-    url: '/enteran',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/enteran.html',
-        controller: 'enteranController'
-      }
-    }
-  })
+  
 
 
   .state('app.listarGrupo', {

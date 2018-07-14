@@ -1,6 +1,8 @@
 angular.module('receptor.controllers', [])
 
-.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup) {
+.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, $ionicHistory) {
+  $ionicHistory.clearHistory();
+  $ionicHistory.clearCache();
   $scope.currentPage = 0;
   $scope.pageSize = 5;           
   $scope.encuestas=[];
@@ -833,8 +835,8 @@ angular.module('receptor.controllers', [])
   $scope.guardar = function () {
 
     if (!$scope.forms.grupoForm.$valid || $scope.grupo.Personas.length == 0) {
-  		ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
-      return;
+  		  ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+        return;
     }
 
     $ionicLoading.show({
@@ -867,7 +869,7 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
 
   $scope.id=$stateParams.id;
   $scope.encuestaReceptor = {};
@@ -876,6 +878,7 @@ angular.module('receptor.controllers', [])
   $scope.abrirRopa = false;
   $scope.encuestaReceptor.Municipios=[];
   $scope.encuestaReceptor.ServiciosIncluidos=[];
+  $scope.forms={};
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -895,17 +898,28 @@ angular.module('receptor.controllers', [])
     $scope.tipos = data.tipos;
     $scope.rubros = data.rubros;
     $scope.encuestaReceptor = data.encuesta;
+
+    $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
     if(!$scope.encuestaReceptor.ServiciosIncluidos){
       $scope.encuestaReceptor.ServiciosIncluidos=[];
     }
+
     if(!$scope.encuestaReceptor.Municipios){
       $scope.encuestaReceptor.Municipios=[];
+    }else{
+      $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
     }
+
     if(!$scope.encuestaReceptor.Financiadores){
       $scope.encuestaReceptor.Financiadores=[];
     }
+   
     for(var i = 0; i<$scope.rubros.length;i++){
-        $scope.cambiarAlquiler($scope.rubros[i]);
+      $scope.cambiarAlquiler($scope.rubros[i]);
+
+      if($scope.rubros[i].gastos_visitantes[0]){
+        $scope.rubros[i].gastos_visitantes[0].divisas_Atlántico_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_Atlántico,data.divisas)
+      }
     }   
   }, 
   function (error, data) {
@@ -923,7 +937,7 @@ angular.module('receptor.controllers', [])
         return;
     }
         
-    if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_magdalena!= null && rub.gastos_visitantes[0].cantidad_pagada_magdalena != null){
+    if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_Atlántico!= null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico != null){
       switch (rub.id) {
         case 3:
           $scope.abrirTerrestre = true;
@@ -940,17 +954,17 @@ angular.module('receptor.controllers', [])
     }
         
     if($scope.abrirTerrestre){
-      if( rub.id ==3 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+      if( rub.id ==3 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
         $scope.abrirTerrestre = false;
       }
     }
     if($scope.abrirAlquiler){
-      if( rub.id == 5 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+      if( rub.id == 5 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
         $scope.abrirAlquiler = false;
       }
     }
     if($scope.abrirRopa){
-      if( rub.id == 12 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
+      if( rub.id == 12 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
         $scope.abrirRopa = false;
       }
     }      
@@ -1020,7 +1034,6 @@ angular.module('receptor.controllers', [])
     else {
       $scope.encuestaReceptor.Financiadores.push(id);
     }
-    console.log($scope.encuestaReceptor.Financiadores);
   };
 
   $scope.verificarOtro = function () {
@@ -1060,5 +1073,489 @@ angular.module('receptor.controllers', [])
   $scope.isGroupShown = function(group) {
     return $scope.shownGroup === group;
   };
+
+  $scope.guardar = function(){
+        
+    if(!$scope.forms.GastoForm.$valid){
+      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+    
+    if($scope.encuestaReceptor.ViajoDepartamento ==1){    
+      if($scope.encuestaReceptor.ServiciosIncluidos.length==0){
+        return;   
+      }
+    }
+    
+    $scope.encuestaReceptor.Rubros = [];
+    for(var i = 0 ;i<$scope.rubros.length;i++){
+      if($scope.rubros[i].gastos_visitantes.length>0){
+        if($scope.rubros[i].gastos_visitantes[0] != null){
+          if((($scope.rubros[i].gastos_visitantes[0].cantidad_pagada_Atlántico != null && $scope.rubros[i].gastos_visitantes[0].divisas_Atlántico != null) && $scope.rubros[i].gastos_visitantes[0].personas_cubiertas != null)|| $scope.rubros[i].gastos_visitantes[0].gastos_asumidos_otros != undefined  ){
+            $scope.encuestaReceptor.Rubros.push($scope.rubros[i]);
+          }
+        }          
+      }
+    }
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+    $scope.encuestaReceptor.id = $scope.id
+    turismoReceptor.guardargastos($scope.encuestaReceptor).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/percepcion/"+$scope.id);        
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });      
+  }
+})
+
+.controller('percepcionController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+  $scope.id=$stateParams.id;
+  $scope.bandera = false;
+  $scope.estadoEncuesta = null;
+  $scope.calificacion = {'Elementos': [] };
+  $scope.cal = {};
+  $scope.calificacion.Evaluacion = [];
+  $scope.forms={}
+  $scope.aspectos = {'Items': [],'radios': {}};
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+
+  turismoReceptor.cargardatospercepcion($stateParams.id).then(function (data) {
+    $ionicLoading.hide();
+    $scope.aspectos = $scope.convertirObjeto(data.percepcion);
+    $scope.elementos = data.elementos;
+    $scope.veces = data.veces;
+    $scope.actividades = data.actividades;
+          
+    if (data.respuestaElementos != undefined && data.valoracion == null) {
+      if(data.respuestaElementos.length == 0){
+        $scope.estadoEncuesta = 0;    
+      }
+    } else {
+      $scope.calificacion.Alojamiento = data.alojamiento;
+        
+      if($scope.calificacion.Infra == 1){
+        document.getElementById("infraestructuraSi").getElementsByTagName( 'input' )[0].checked = true;
+      }else{
+        document.getElementById("infraestructuraNo").getElementsByTagName( 'input' )[0].checked= true;
+      }
+      $scope.calificacion.Restaurante = data.restaurante;
+      $scope.calificacion.Elementos = data.respuestaElementos;
+      $scope.calificacion.Recomendaciones = data.valoracion.Recomendacion;
+      $scope.calificacion.Calificacion = data.valoracion.Calificacion;
+      $scope.calificacion.Volveria = data.valoracion.Volveria;
+      $scope.calificacion.Recomienda = data.valoracion.Recomienda;
+      $scope.calificacion.VecesVisitadas = data.valoracion.Veces;
+      $scope.calificacion.OtroElementos = data.otroElemento;
+      $scope.calificacion.Flora = data.flora;
+      $scope.calificacion.Sostenibilidad = data.sost;
+      $scope.estadoEncuesta = 1;
+      if (data.restaurante == -1) {
+        $scope.calificacion.Restaurante = 0;
+      }
+      if (data.alojamiento == -1) {
+        $scope.calificacion.Alojamiento = 0;
+      }
+      if (data.OtroElemento != null) {
+        $scope.calificacion.OtroElementos = data.OtroElemento;
+      }
+    }
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.convertirObjeto = function(arreglo){
+    if(arreglo != undefined){
+      for(var i = 0; i < arreglo.length; i++){
+        for(var j = 0; j < arreglo[i].items_evaluars.length; j++){
+          if(arreglo[i].items_evaluars[j].calificacions.length > 0){
+            arreglo[i].items_evaluars[j].radios = {
+              Id : arreglo[i].items_evaluars[j].calificacions[0].item_evaluar_id,
+              Valor : arreglo[i].items_evaluars[j].calificacions[0].calificacion
+            };    
+          }
+        }
+      }    
+    }
+    return arreglo;
+  };
+
+  $scope.limpiar = function (control,inicio,fin) {
+    if (control == 0) {
+      for (var i = 0; i < $scope.aspectos.length; i++) {
+        for (var j = 0; j < $scope.aspectos[i].items_evaluars.length; j++) {    
+          if ($scope.aspectos[i].items_evaluars[j].radios!=null) {
+            for (var k = inicio; k <= fin; k++) {
+              if ($scope.aspectos[i].items_evaluars[j].radios.Id == k) {
+                $scope.aspectos[i].items_evaluars[j].radios = null;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  $scope.checkedRadio = function (id, obj, selected) {
+
+    if ($scope.estadoEncuesta == 1) {
+      if (obj == selected) {
+        if(document.getElementById(id)){
+          document.getElementById(id).getElementsByTagName( 'input' )[0].checked=true;
+        }
+      }
+    }
+  };
+
+  $scope.limpiarFila = function(it, selected){
+    for (var i = 0; i < $scope.aspectos.length; i++) {
+      for (var j = 0; j < $scope.aspectos[i].items_evaluars.length; j++) {
+        if ($scope.aspectos[i].items_evaluars[j].radios != null) {
+          if ($scope.aspectos[i].items_evaluars[j].radios.Id == it) {
+            $scope.aspectos[i].items_evaluars[j].radios = null;
+
+            if(document.getElementById(selected)){
+              document.getElementById(selected).getElementsByTagName( 'input' )[0].checked=true;
+            }
+            break;
+          } 
+        }
+      }
+    }
+  };
+
+  $scope.toggleSelection = function (item, $event) {
+
+    var dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+
+      var idx = $scope.calificacion.Elementos.indexOf(item);
+      
+      if (idx > -1) {
+        $scope.calificacion.Elementos.splice(idx, 1);
+      }else {
+        $scope.calificacion.Elementos.push(item);
+      } 
+
+    }else{
+      return;
+    } 
+  };
+
+  $scope.verificarOtro = function () {
+        
+    var i = $scope.calificacion.Elementos.indexOf(12)
+    if ($scope.calificacion.OtroElementos != null && $scope.calificacion.OtroElementos != '') {
+      if (i == -1) {
+        $scope.calificacion.Elementos.push(12);
+        $scope.bandera = true;
+      }
+    } else {
+      if (i !== -1) {
+        $scope.calificacion.Elementos.splice(i, 1);
+        $scope.bandera = false;
+      }
+    }
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.guardar = function () {
+
+    if(!$scope.forms.PercepcionForm.$valid){
+      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+
+    $scope.calificacion.Evaluacion = [];
+    for (var i = 0; i < $scope.aspectos.length; i++) {
+      for (var j = 0; j < $scope.aspectos[i].items_evaluars.length; j++) {
+        if ($scope.aspectos[i].items_evaluars[j].radios!=null) {
+          $scope.calificacion.Evaluacion.push($scope.aspectos[i].items_evaluars[j].radios);
+        }
+      }
+    }
+    
+    $scope.calificacion.Id = $scope.id;
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+    
+
+    turismoReceptor.guardarseccionpercepcion($scope.calificacion).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/enteran/"+$scope.id);        
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });
+  };
+})
+
+.controller('enteranController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+  $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
+  $scope.control = {};
+  $scope.errores = null;
+  $scope.err = null;
+  $scope.forms={};
+  $scope.id=$stateParams.id;
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+  turismoReceptor.cargardatosseccioninformacion($stateParams.id).then(function (data) {
+    $ionicLoading.hide();
+    $scope.fuentesAntes = data.fuentesAntes;
+    $scope.fuentesDurante = data.fuentesDurante;
+    $scope.redes = data.redes;
+    $scope.enteran.Id = $scope.id;
+
+    if (data.invitacion_correo != null) {
+      $scope.enteran.FuentesAntes = data.fuentes_antes;
+      $scope.enteran.FuentesDurante = data.fuentes_durante;
+      $scope.enteran.Redes = data.compar_redes;
+      $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes;
+      $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante;
+      $scope.enteran.Correo = data.invitacion_correo;
+      $scope.enteran.Invitacion = data.invitacion;
+      $scope.enteran.NombreFacebook = data.facebook;
+      $scope.enteran.NombreTwitter = data.twitter;
+      $scope.enteran.facilidad = data.facilidad;
+      $scope.enteran.conoce_marca = data.conoce_marca;
+      $scope.enteran.acepta_autorizacion = data.acepta_autorizacion;
+      $scope.enteran.acepta_tratamiento = data.acepta_tratamiento;
+      $scope.enteran.otroRed = data.otroRed;
+    }  
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.validar = function (sw, id) {
+    if (sw == 0) {
+      if (id == 13) {
+        var i = $scope.enteran.FuentesDurante.indexOf(13);
+        if (i == -1) {
+          $scope.enteran.OtroFuenteDurante = null;
+        }
+      } else {
+        if (id == 14) {
+          var i = $scope.enteran.FuentesDurante.indexOf(14);
+          if (i != -1) {
+            $scope.enteran.OtroFuenteDurante = null;
+          }
+        }
+      }
+    } else if (sw == 1) {
+      if (id == 1) {
+        var i = $scope.enteran.Redes.indexOf(1);
+        if (i == -1) {
+          $scope.enteran.otroRed = null;
+        }
+      }
+    } else {
+      if (id == 14) {
+        var i = $scope.enteran.FuentesAntes.indexOf(14);
+        if (i != -1) {
+          $scope.enteran.OtroFuenteAntes = null;
+        }
+      }
+    }
+  };
+
+  $scope.toggleSelection = function (item) {
+    var idx = $scope.enteran.FuentesAntes.indexOf(item);
+    if (idx > -1) {
+      $scope.enteran.FuentesAntes.splice(idx, 1);
+    }else {
+      $scope.enteran.FuentesAntes.push(item);
+    } 
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.validarOtro = function (sw) {
+    if (sw == 0) {
+      var i = $scope.enteran.FuentesAntes.indexOf(14);
+      if ($scope.enteran.OtroFuenteAntes != null && $scope.enteran.OtroFuenteAntes != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesAntes.push(14);
+        }
+      } 
+    } else if(sw == 1) {
+      var i = $scope.enteran.FuentesDurante.indexOf(14);
+      if ($scope.enteran.OtroFuenteDurante != null && $scope.enteran.OtroFuenteDurante != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesDurante.push(14);
+        }
+      } 
+    } else if(sw == 2) {
+      var i = $scope.enteran.Redes.indexOf(12);
+      if ($scope.enteran.otroRed != null && $scope.enteran.otroRed != '') {
+        if (i == -1) {
+          $scope.enteran.Redes.push(12);
+        }
+      } 
+    }
+  };
+  
+  $scope.toggleSelection2 = function (item,$event) {
+    var dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+      var idx = $scope.enteran.FuentesDurante.indexOf(item);
+
+      if (idx > -1) {
+        $scope.enteran.FuentesDurante.splice(idx, 1);
+      }else {
+        if(item==13){
+          $scope.enteran.FuentesDurante=[];
+        }
+        $scope.enteran.FuentesDurante.push(item);
+      }
+    }else{
+      return;
+    }
+  };
+
+  $scope.toggleSelection3 = function (item,$event) {
+    var dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+      var idx = $scope.enteran.Redes.indexOf(item);
+
+      if (idx > -1) {
+        $scope.enteran.Redes.splice(idx, 1);
+      }else {
+        if(item==1){
+          $scope.enteran.Redes=[];
+        }
+        $scope.enteran.Redes.push(item);
+      }
+    }else{
+      return;
+    }
+  };
+
+  $scope.guardar = function () {
+
+    if (!$scope.forms.inForm.$valid) {       
+      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+
+    if ($scope.enteran.FuentesAntes.length == 0 || $scope.enteran.FuentesDurante.length == 0 || $scope.enteran.Redes.length == 0 || $scope.enteran.Correo == null) {
+      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+
+    if ($scope.enteran.FuentesAntes.indexOf(14) == -1) {
+        $scope.enteran.OtroFuenteAntes = null;
+    }
+
+    if ($scope.enteran.FuentesDurante.indexOf(14) == -1) {
+        $scope.enteran.OtroFuenteDurante = null;
+    }
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+    $scope.enteran.Id=$scope.id;
+   
+    turismoReceptor.guardarseccioninformacion($scope.enteran).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la totalidad de la encuesta "+ data.codigo +" exitosamente",'top', false, 5000);
+        $location.path("/app/encuestas");        
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });    
+  }; 
 
 })

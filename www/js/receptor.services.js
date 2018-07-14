@@ -230,4 +230,89 @@ angular.module('turismo.receptor.services', [])
 	    }); 
     	return deferred.promise;  
   	};
+
+  	this.guardargastos=function (data) {
+	    var deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismoreceptoroapi/guardargastos',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+
+		return deferred.promise;
+  	};
+
+
+  	this.cargardatospercepcion=function (id) {
+    	var deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+            //Authorization:'Bearer{'+user.token+'}'
+      	},
+	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatospercepcion/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
+
+  	this.guardarseccionpercepcion=function (data) {
+	    var deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionpercepcion',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+
+		return deferred.promise;
+  	};
+
+  	this.cargardatosseccioninformacion=function (id) {
+    	var deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+            //Authorization:'Bearer{'+user.token+'}'
+      	},
+	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccioninformacion/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
+
+  	this.guardarseccioninformacion=function (data) {
+	    var deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccioninformacion',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+
+		return deferred.promise;
+  	};
+
 });

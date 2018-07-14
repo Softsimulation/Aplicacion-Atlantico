@@ -1,0 +1,521 @@
+<ion-view view-title="Percepción del viaje al departamento del Atlántico">
+  <ion-content>
+    <div class="card animated fadeInLeft list" ng-if="errores">
+      <div class="item item-divider situr-header-error">
+          <h2>Corrige los errores</h2>
+      </div>
+      <div class="assertive item" ng-repeat="error in errores">
+        {{error[0]}}
+      </div>
+    </div>
+
+    <form role="form" name="forms.PercepcionForm" novalidate>
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Durante su viaje utilizó servicio de alojamiento?</h2>
+        </div>
+         <ion-radio 
+          value="1" 
+          name="alojamiento"  
+          ng-required="true" 
+          ng-model="calificacion.Alojamiento">
+          Si
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.alojamiento.$touched">
+            <span  ng-show="forms.PercepcionForm.alojamiento.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          name="alojamiento" 
+          ng-required="true" 
+          ng-change="limpiar(calificacion.Alojamiento,1,7)"
+          value="0" 
+          ng-model="calificacion.Alojamiento">
+          No
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.alojamiento.$touched">
+            <span  ng-show="forms.PercepcionForm.alojamiento.$error.required">*</span>
+          </span>
+        </ion-radio> 
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="calificacion.Alojamiento==1">
+        <div class="item item-divider situr-header">
+          <h2>Calificación del servicio de alojamiento</h2>
+        </div>
+
+        <div class="item" >
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table-col" >
+              <div class="col col-75">{{aspectos[0].aspectos_evaluados_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
+              <div class="col col-20" >NR</div>
+            </div>
+
+            <div class="row row-table-col" ng-repeat="it in aspectos[0].items_evaluars">
+              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:11">
+                <ion-radio 
+                  id="alojamiento_{{it.id}}_{{$index}}"
+                  name="alojamiento_{{it.id}}"  
+                  ng-model="it.radios" 
+                  ng-checked="checkedRadio('alojamiento_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-if="!$last">
+                </ion-radio>
+
+                <ion-radio 
+                  id="alojamiento_{{it.id}}_{{$index}}"
+                  ng-checked="it.radios==null" 
+                  ng-click="limpiarFila(it.id, 'alojamiento_{{it.id}}_{{$index}}')" 
+                  name="alojamiento_{{it.id}}" 
+                  value="0"
+                  ng-init='checkStatus=0'
+                  ng-model="checkStatus"
+                  ng-if="$last"
+                  >
+                </ion-radio>
+              </div>
+            </div>
+          </ion-scroll>
+        </div>    
+      </div>
+
+      <div class="card animated fadeInLeft" >
+        <div class="item item-divider situr-header required">
+          <h2> ¿Durante su viaje utilizó servicios de restaurante?</h2>
+        </div>   
+        <ion-radio 
+          id="restauranteSi" 
+          value="1" 
+          name="restaurante" 
+          ng-required="true" 
+          ng-model="calificacion.Restaurante">
+          Si
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.restaurante.$touched">
+            <span ng-show="forms.PercepcionForm.restaurante.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          id="restauranteNo" 
+          name="restaurante" 
+          ng-required="true" 
+          ng-change="limpiar(calificacion.Restaurante,8,12)" 
+          value="0" 
+          ng-model="calificacion.Restaurante">
+          No
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.restaurante.$touched">
+            <span ng-show="forms.PercepcionForm.restaurante.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="calificacion.Restaurante==1">
+        <div class="item item-divider situr-header">
+          <h2>Calificación del servicio de restaurante</h2>
+        </div>
+
+        <div class="item" >
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table-col">
+              <div class="col col-75">{{aspectos[1].aspectos_evaluados_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
+              <div class="col col-20" >NR</div>
+            </div>
+
+            <div class="row row-table-col" ng-repeat="it in aspectos[1].items_evaluars">
+              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:11">
+                <ion-radio 
+                  id="restaurante_{{it.id}}_{{$index}}" 
+                  name="restaurante_{{it.id}}" 
+                  ng-checked="checkedRadio('restaurante_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+                  ng-model="it.radios" 
+                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-if="!$last">
+                </ion-radio>
+                <ion-radio 
+                  id="restaurante_{{it.id}}_{{$index}}"
+                  ng-checked="it.radios==null" 
+                  ng-click="limpiarFila(it.id, restaurante_{{it.id}}_{{$index}})"
+                  name="restaurante_{{it.id}}" 
+                  value="0"
+                  ng-init='checkStatus=0'
+                  ng-model="checkStatus"
+                  ng-if="$last"
+                  >
+                </ion-radio>
+              </div>
+            </div>
+
+            
+          </ion-scroll>
+        </div>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2>Factores Ambientales</h2>
+        </div>
+
+
+        <div class="item" >
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table-col">
+              <div class="col col-75">{{aspectos[2].aspectos_evaluados_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
+              <div class="col col-20" >NR</div>
+            </div>
+
+            <div class="row row-table-col" ng-repeat="it in aspectos[2].items_evaluars">
+              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:11">
+                <ion-radio
+                name="factores_{{it.id}}" 
+                id="factores_{{it.id}}_{{$index}}" 
+                ng-checked="checkedRadio('factores_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+                ng-model="it.radios" 
+                ng-value="{Id:it.id,Valor:{{$index}}}"
+                ng-if="!$last" 
+                >
+                </ion-radio>
+                <ion-radio 
+                  id="factores_{{it.id}}_{{$index}}"
+                  ng-checked="it.radios==null" 
+                  ng-click="limpiarFila(it.id, factores_{{it.id}}_{{$index}})"
+                  name="factores_{{it.id}}" 
+                  value="0"
+                  ng-init='checkStatus=0'
+                  ng-model="checkStatus"
+                  ng-if="$last"
+                  >
+                </ion-radio>
+              </div>
+            </div>
+
+          </ion-scroll>
+        </div>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2>Ocio, recreación y tiempo libre</h2>
+        </div>
+
+        <div class="item" >
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table-col">
+              <div class="col col-75">{{aspectos[3].aspectos_evaluados_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
+              <div class="col col-20" >NR</div>
+            </div>
+
+            <div class="row row-table-col" ng-repeat="it in aspectos[3].items_evaluars">
+              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:11">
+                <ion-radio 
+                  name="ocio_{{it.id}}" 
+                  ng-model="it.radios" 
+                  id="ocio_{{it.id}}_{{$index}}" 
+                  ng-checked="checkedRadio('ocio_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-if="!$last">
+                </ion-radio>
+                <ion-radio 
+                  id="ocio_{{it.id}}_{{$index}}"
+                  ng-checked="it.radios==null" 
+                  ng-click="limpiarFila(it.id, ocio_{{it.id}}_{{$index}})"
+                  name="ocio_{{it.id}}" 
+                  value="0"
+                  ng-init='checkStatus=0'
+                  ng-model="checkStatus"
+                  ng-if="$last"
+                  >
+                </ion-radio>
+
+              </div>
+            </div>
+
+          </ion-scroll>
+        </div>
+     </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2>Infraestructura</h2>
+        </div>
+
+        <div class="item" >
+          <ion-scroll direction="x" id="scroll-x">
+            <div class="row row-table-col">
+              <div class="col col-75">{{aspectos[4].aspectos_evaluados_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
+              <div class="col col-20" >NR</div>
+            </div>
+
+            <div class="row row-table-col" ng-repeat="it in aspectos[4].items_evaluars">
+              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+              <div class="col col-20" ng-repeat="n in [] | range:11">
+                <ion-radio 
+                  name="infraestructura_{{it.id}}" 
+                  id="infraestructura_{{it.id}}_{{$index}}" 
+                  ng-checked="checkedRadio('infraestructura_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" 
+                  ng-model="it.radios" 
+                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-if="!$last">
+                </ion-radio>
+
+                <ion-radio 
+                  id="infraestructura_{{it.id}}_{{$index}}"
+                  ng-checked="it.radios==null" 
+                  ng-click="limpiarFila(it.id, infraestructura_{{it.id}}_{{$index}})"
+                  name="infraestructura_{{it.id}}" 
+                  value="0"
+                  ng-init='checkStatus=0'
+                  ng-model="checkStatus"
+                  ng-if="$last"
+                  >
+                </ion-radio>
+              </div>
+            </div>          
+          </ion-scroll>
+        </div>
+     </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required ">
+          <h2>Sostenibilidad ¿Realizó alguna de las siguientes actividades para ayudar a la conservación del medio ambiente en Atlántico?</h2>
+        </div>
+        <div ng-repeat="item in actividades">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            ng-disabled="bandera==false && item.id==12" 
+            ng-click="toggleSelection(item.id, $event);"
+            ng-checked="checked(item.id, calificacion.Elementos)">
+            {{item.nombre}}
+          </ion-checkbox>
+
+          <label class="item item-input item-floating-label" ng-if="item.id==12">
+            <span class="input-label" >Otro</span>
+            <input type="text" placeholder="Otro" ng-model="calificacion.OtroElementos" ng-change="verificarOtro()">
+          </label>
+        </div>                      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2> ¿Fue informado sobre las normas y cuidados que debe tener el visitante con la flora y fauna de Atlántico?</h2>
+        </div>
+         <ion-radio 
+            id="infraestructuraSi" 
+            value="1" 
+            name="infraestructura"  
+            ng-model="calificacion.Flora">
+          Si
+        </ion-radio>
+
+        <ion-radio 
+          id="infraestructuraNo" 
+          name="infraestructura"  
+          value="0" 
+          ng-model="calificacion.Flora">
+          No
+        </ion-radio> 
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2>¿Qué recomendaría para lograr atraer más visitantes al Atlántico? (Resalte en detalle aspectos que realmente le disgustaron)</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Escriba aquí su recomendación</span>
+          <textarea 
+            id="recomendaciones" 
+            name="recomendaciones" 
+            ng-model="calificacion.Recomendaciones" 
+            placeholder="Escriba aquí su recomendación" 
+            rows="5">
+            
+          </textarea>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header">
+          <h2>Sostenibilidad</h2>
+        </div>             
+        <ion-radio 
+           name="sotenibilidada_{{it.Id}}" 
+           ng-model="calificacion.Sostenibilidad" 
+           value="{{$index}}" 
+           ng-repeat="n in [] | range:10">
+          {{$index+1}}
+        </ion-radio>
+     </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2> Experiencia de viaje</h2>
+        </div>              
+        <ion-radio 
+          name="experiencia_{{it.Id}}" 
+          ng-model="calificacion.Calificacion" 
+          value="{{$index}}"
+          ng-repeat="n in [] | range:10"
+          ng-required="true"
+          >
+          {{$index+1}}
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.experiencia_{{it.Id}}.$touched">
+            <span ng-show="forms.PercepcionForm.experiencia_{{it.Id}}.$error.required">*</span>         
+          </span>
+        </ion-radio>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Volvería a visitar el departamento del Atlántico?</h2>
+        </div>               
+        <ion-radio 
+          id="veces_{{it.id}}" 
+          value="{{it.id}}" 
+          name="radioVolveria" 
+          ng-required="true" 
+          ng-model="calificacion.Volveria"
+          ng-repeat="it in veces">
+          {{it.volveria_visitar_con_idiomas[0].nombre}}
+          <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.radioVolveria.$touched">
+            <span ng-show="forms.PercepcionForm.radioVolveria.$error.required">*</span>
+          </span>
+        </ion-radio>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Recomendaría visitar el departamento del Atlántico?</h2>
+        </div>
+                       
+          <ion-radio 
+            id="recomenda_{{it.id}}" 
+            value="{{it.id}}" 
+            name="radioRecomienda" 
+            ng-required="true" 
+            ng-model="calificacion.Recomienda" 
+            ng-repeat="it in veces">
+            {{it.volveria_visitar_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.radioRecomienda.$touched">
+              <span ng-show="forms.PercepcionForm.radioRecomienda.$error.required">*</span>
+            </span>
+          </ion-radio>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Cuántas veces ha venido al Atlántico en los últimos dos años?</h2>
+        </div>
+        <div ng-repeat="n in [] | range:11" >     
+          <ion-radio  
+            class="ripple ripple-green" 
+            ng-model="calificacion.VecesVisitadas" 
+            ng-required="true" 
+            ng-value="{{$index+1}}"
+            name="selectVeces"
+            ng-if="!$last">
+            {{$index}}
+            <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.selectVeces.$touched">
+              <span ng-show="forms.PercepcionForm.selectVeces.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio  
+            class="ripple ripple-green" 
+            ng-model="calificacion.VecesVisitadas" 
+            ng-required="true" 
+            ng-value="'10+'"
+            name="selectVeces"
+            ng-if="$last">
+            10+
+            <span class="validated" ng-show="forms.PercepcionForm.$submitted || forms.PercepcionForm.selectVeces.$touched">
+              <span ng-show="forms.PercepcionForm.selectVeces.$error.required">*</span>
+            </span>
+          </ion-radio>
+          
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col col-50">
+          <a href="#/app/gastos/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+            Anterior
+          </a>
+        </div>
+        <div class="col col-50">
+          <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+    <br><br><br>
+  </ion-content>
+
+
+
+  <!--<div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+        <i class="ion ion-information-circled"></i>
+        <span>General</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+        <i class="ion ion-clock"></i>
+        <span>Estancia</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+        <i class="ion ion-model-s"></i>
+        <span>Transporte</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+        <i class="ion ion-ios-people"></i>
+        <span>Grupo</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+        <i class="ion-cash"></i>
+        <span>Gastos</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>Percepción</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+        <i class="ion ion-speakerphone"></i>
+        <span>Redes e internet</span>
+      </a>
+    </div>
+  </div>-->
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="83"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+    </round-progress>
+    <div class="progress-text">
+
+      <span class="progress-percent">83%</span>
+    </div>
+  </div>
+
+</ion-view>

@@ -18,11 +18,7 @@ angular.module('starter.controllers', [
 })
 
 
-.controller('percepcionController', function($scope, $stateParams) {
-})
 
-.controller('enteranController', function($scope, $stateParams) {
-})
 
 .controller('listarGrupoController', function($scope, $stateParams) {
 })

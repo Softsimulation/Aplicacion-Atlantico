@@ -1,0 +1,412 @@
+<ion-view view-title="Como se enteran los visitantes sobre el departamento del Atlántico">
+  <ion-content>
+    <form role="form" name="forms.inForm" novalidate>
+      <div class="card animated fadeInLeft list" ng-if="errores">
+        <div class="item item-divider situr-header-error">
+            <h2>Corrige los errores</h2>
+        </div>
+        <div class="assertive item" ng-repeat="error in errores">
+          {{error[0]}}
+        </div>
+      </div>
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Antes de venir al departamento del Atlántico, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
+        </div>
+        <div  ng-repeat="it in fuentesAntes | orderBy:'id'">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="fuentesAntes" 
+            ng-click="toggleSelection(it.id);validar(2, it.id)"
+            ng-checked="checked(it.id, enteran.FuentesAntes)">
+            {{it.fuente_informacion_antes_viaje_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+              <span ng-show="enteran.FuentesAntes.length == 0">*</span>
+            </span>
+          </ion-checkbox>
+          <label class="item item-input item-floating-label" ng-if="it.id==14">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro" 
+              name="otroFantes"  
+              id="inputOtro_atrativo"  
+              ng-model="enteran.OtroFuenteAntes" 
+              ng-change="validarOtro(0)" 
+              ng-required="enteran.FuentesAntes.indexOf(14) !== -1">
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+                <span ng-show="forms.inForm.otroFantes.$error.required">*</span>
+              </span>
+          </label>
+        </div>                      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Durante la permanencia en el Atlántico, de qué forma usted buscó más forms.información sobre destinos turísticos?</h2>
+        </div>
+        <div  ng-repeat="it in fuentesDurante | orderBy:'id'">
+
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="fuentesDurante" 
+            ng-disabled="(enteran.FuentesDurante.indexOf(13) > -1 && it.id!=13)" 
+            ng-click="toggleSelection2(it.id,$event);validar(0, it.id)"
+            ng-checked="checked(it.id, enteran.FuentesDurante)">
+            {{it.fuentes_informacion_durante_viaje_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesDurante.$touched">
+              <span ng-show="enteran.FuentesDurante.length == 0">*</span>
+            </span>
+          </ion-checkbox>
+          
+          <label class="item item-input item-floating-label"  ng-if="it.id==14">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro" 
+              name="otroDurante" 
+              class="form-control" 
+              id="inputOtro_atrativo"
+              ng-disabled="enteran.FuentesDurante.indexOf(13) > -1 " 
+              ng-model="enteran.OtroFuenteDurante" 
+              ng-change="validarOtro(1)" 
+              ng-required="enteran.FuentesDurante.indexOf(14) != -1">
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesDurante.$touched">
+                <span ng-show="forms.inForm.otroDurante.$error.required">*</span>
+              </span>
+          </label>
+        </div>                      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Sostenibilidad ¿Fue fácil encontrar los servicios, productos y atractivos de Atlántico?</h2>
+        </div>               
+        <ion-radio 
+          name="facilidad" 
+          id="facilidad" 
+          ng-required="true" 
+          value="1" 
+          ng-model="enteran.facilidad">
+          Si
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.facilidad.$touched">
+            <span ng-show="forms.inForm.facilidad.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          name="facilidad" 
+          id="facilidad" 
+          ng-required="true" 
+          value="-1" 
+          ng-model="enteran.facilidad">
+          No
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.facilidad.$touched">
+            <span ng-show="forms.inForm.facilidad.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Después del viaje al Atlántico en qué redes sociales compartió su experiencia de viaje (Comentarios, fotos, etc)?</h2>
+        </div>
+        <div ng-repeat="it in redes">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="redes" 
+            ng-disabled="enteran.Redes.indexOf(1) > -1 && it.Id != 1" 
+            ng-checked="checked(it.Id, enteran.Redes)"
+            ng-click="toggleSelection3(it.Id,$event);validar(1, it.Id)">
+            {{it.Nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.redes.$touched">
+              <span ng-show="enteran.Redes.length == 0">*</span>
+            </span>
+          </ion-checkbox> 
+
+          
+          <label class="item item-input item-floating-label"  ng-if="it.Id==12">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro"  
+              name="otroRed" 
+              class="form-control" 
+              id="otroRed" 
+              ng-disabled="enteran.Redes.indexOf(1) != -1 " 
+              ng-model="enteran.otroRed" 
+              ng-change="validarOtro(2)" 
+              ng-required="enteran.Redes.indexOf(12) != -1" >
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.redes.$touched">
+                <span ng-show="forms.inForm.otroRed.$error.required">*</span>
+              </span>
+          </label>
+   
+        </div>                      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Le gustaría que le enviáramos forms.información sobre el Atlántico a su correo electrónico?</h2>
+        </div>               
+        <ion-radio 
+          value="1" 
+          ng-model="enteran.Correo" 
+          class="ripple ripple-green" 
+          name="info"
+          ng-required="true">
+          Si
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.info.$touched">
+            <span ng-show="forms.inForm.info.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          value="-1" 
+          ng-model="enteran.Correo" 
+          class="ripple ripple-green" 
+          name="info"
+          ng-required="true">
+          No
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.info.$touched">
+            <span ng-show="forms.inForm.info.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Le gustaría que le enviáramos una invitación por redes sociales para seguir al Atlántico?</h2>
+        </div>               
+          <ion-radio 
+            value="1" 
+            ng-model="enteran.Invitacion"
+            class="ripple ripple-green" 
+            name="networks"
+            ng-required="true">
+            Si
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.networks.$touched">
+              <span ng-show="forms.inForm.networks.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio 
+            value="-1" 
+            ng-model="enteran.Invitacion" 
+            class="ripple ripple-green" 
+            name="networks"
+            ng-required="true">
+            No
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.networks.$touched">
+              <span ng-show="forms.inForm.networks.$error.required">*</span>
+            </span>
+          </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Cómo podemos buscarlo en facebook?</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Escriba su cuenta de Facebook</span>
+          <input 
+            type="text" 
+            placeholder="Escriba su cuenta de Facebook" 
+            ng-required="enteran.Invitacion==1"  
+            ng-model="enteran.NombreFacebook"
+            name="facebook">
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.facebook.$touched">
+              <span ng-show="forms.inForm.facebook.$error.required">*</span>
+            </span>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
+        <div class="item item-divider situr-header required">
+          <h2> ¿Cómo podemos buscarlo en Twitter?</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Escriba su cuenta de Twitter</span>
+          <input 
+            type="text" 
+            placeholder="Escriba su cuenta de Twitter" 
+            ng-required="enteran.Invitacion==1"  
+            ng-model="enteran.NombreTwitter"
+            name="twitter">
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.twitter.$touched">
+              <span ng-show="forms.inForm.twitter.$error.required">*</span>
+            </span>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Conoce la marca que acaba de ver?</h2>
+        </div>               
+          <ion-radio 
+            class="ripple ripple-green" 
+            name="conoce_marca" 
+            id="conoce_marca" 
+            ng-required="true" 
+            value="1" 
+            ng-model="enteran.conoce_marca">
+            Si
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.conoce_marca.$touched">
+              <span ng-show="forms.inForm.conoce_marca.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio  
+            class="ripple ripple-green" 
+            name="conoce_marca" 
+            id="conoce_marca" 
+            value="-1" 
+            ng-required="true"
+            ng-model="enteran.conoce_marca">
+            No
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.conoce_marca.$touched">
+              <span ng-show="forms.inForm.conoce_marca.$error.required">*</span>
+            </span>
+          </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Dando cumplimiento a la ley de Protección de datos personales, solicito su autorización para que pueda contactarlo nuevamente. ¿Está usted de acuerdo?</h2>
+        </div>               
+          <ion-radio 
+            class="ripple ripple-green" 
+            name="acepta_autorizacion" 
+            id="acepta_autorizacion" 
+            ng-required="true" 
+            value="1" 
+            ng-model="enteran.acepta_autorizacion">
+            Si
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_autorizacion.$touched">
+              <span ng-show="forms.inForm.acepta_autorizacion.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio 
+            class="ripple ripple-green" 
+            name="acepta_autorizacion" 
+            id="acepta_autorizacion" 
+            ng-required="true" 
+            value="-1" 
+            ng-model="enteran.acepta_autorizacion">
+            No
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_autorizacion.$touched">
+              <span ng-show="forms.inForm.acepta_autorizacion.$error.required">*</span>
+            </span>
+          </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Ya para terminar, le solicito su autorización para que SITUR ATLÁNTICO comparta sus respuestas con las entidades que contrataron el proyecto, ¿Está usted de acuerdo?</h2>
+        </div>               
+          <ion-radio 
+            class="ripple ripple-green" 
+            name="acepta_tratamiento" 
+            id="acepta_tratamiento" 
+            ng-required="true" 
+            value="1" 
+            ng-model="enteran.acepta_tratamiento">
+            Si
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_tratamiento.$touched">
+              <span ng-show="forms.inForm.acepta_tratamiento.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio 
+            value="-1" 
+            class="ripple ripple-green" 
+            name="acepta_tratamiento" 
+            id="acepta_tratamiento" 
+            ng-required="true" 
+            value="-1" 
+            ng-model="enteran.acepta_tratamiento">
+            No
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_tratamiento.$touched">
+              <span ng-show="forms.inForm.acepta_tratamiento.$error.required">*</span>
+            </span>
+          </ion-radio>  
+      </div>
+
+      <div class="row">
+        <div class="col col-50">
+          <a href="#/app/percepcion/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+            Anterior
+          </a>
+        </div>
+        <div class="col col-50">
+          <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>  
+    <br><br><br>
+  </ion-content>
+
+  <!--<div class="popup-menu">
+    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
+        <i class="ion ion-forms.information-circled"></i>
+        <span>General</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
+        <i class="ion ion-clock"></i>
+        <span>Estancia</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
+        <i class="ion ion-model-s"></i>
+        <span>Transporte</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
+        <i class="ion ion-ios-people"></i>
+        <span>Grupo</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
+        <i class="ion-cash"></i>
+        <span>Gastos</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
+        <i class="ion ion-person-add"></i>
+        <span>Percepción</span>
+      </a>
+      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
+        <i class="ion ion-speakerphone"></i>
+        <span>Redes e internet</span>
+      </a>
+    </div>
+  </div>-->
+
+  <div class="progress-container">
+    <round-progress
+    max="100"
+    current="100"
+    color="#16469e"
+    bgcolor="#c9cdff"
+    radius="10"
+    stroke="1"
+    semi="false"
+    rounded="false"
+    clockwise="true"
+    responsive="true"
+    duration="800"
+    animation="easeInOutQuart"
+    animation-delay="2">
+
+    </round-progress>
+    <div class="progress-text">
+
+      <span class="progress-percent">100%</span>
+    </div>
+  </div>
+
+</ion-view>

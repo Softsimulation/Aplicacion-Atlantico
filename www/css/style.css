@@ -456,6 +456,7 @@ body{
 
 .row-table-col .col{
     border-bottom: 1px solid #eee;
+    text-align: center;
 }
 /*.sidemenu-div-item-0 span, .sidemenu-div-item-1 span{
     color:blue;

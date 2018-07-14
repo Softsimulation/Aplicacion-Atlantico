@@ -3,16 +3,17 @@ angular.module('factories', [])
 .factory("factories",[function () {
 	return{
 		findSelect:function(id, array_select, option) {
+		    let result;
 		    if(option){
-		      var result=array_select.find( myObject => myObject.option === id );
+		       result=array_select.find( myObject => myObject.option === id );
 		    }else{
-		      var result=array_select.find( myObject => myObject.id === id );
+		       result=array_select.find( myObject => myObject.id === id );
 		    }
 		    return result;
 		},
 
 		index_of:function (id, myObject) {
-			var i=0, idx=-1;
+			let i=0, idx=-1;
 			for(i=0; i<myObject.length; i++){
 				if(myObject[i].id==id){
 					idx=i;
@@ -20,7 +21,18 @@ angular.module('factories', [])
 				}
 			}
 			return idx;
-			
+		},
+
+		findSelectMultiple: function (array_id, array_object) {
+			let i=0;
+			let result=[];
+			for(i=0; i<array_id.length; i++){
+				if(array_object.find( myObject => myObject.id === array_id[i])){
+					result.push(array_object.find( myObject => myObject.id === array_id[i]));
+				}
+			}
+			return result;
+
 		}
 	}
 }])
