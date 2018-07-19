@@ -536,3 +536,8 @@ hr{
 .ion-badges-grand{
     line-height: 30px ;
 }
+
+.errors{
+    text-overflow: initial;
+    white-space: normal;
+}

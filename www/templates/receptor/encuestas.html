@@ -48,7 +48,7 @@
 
     </div> 
 
-    <div class="card padding">
+    <div class="card padding animated fadeInLeft">
       <button 
         class="button button-positive button-small button-outline ripple ripple-green" 
         ng-disabled="currentPage == 0" 
@@ -68,6 +68,7 @@
         {{(encuestas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
       </span>
     </div>
+
     <div class="card list animated fadeInLeft active-card" 
         ng-repeat="item in encuestas | filter:search | filter:filtroEstadoEncuesta.value | filter:campoSelected.value | firstPage:currentPage*pageSize | limitTo:pageSize" >
       <div class="item">
@@ -86,7 +87,7 @@
       </div>
     </div>
     
-    <div class="card padding">
+    <div class="card padding animated fadeInLeft">
       <button 
         class="button button-positive button-small button-outline ripple ripple-green" 
         ng-disabled="currentPage == 0" 

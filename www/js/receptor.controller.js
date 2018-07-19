@@ -372,7 +372,13 @@ angular.module('receptor.controllers', [])
 
     if (!$scope.forms.DatosForm.$valid) {
        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-       return
+       return;
+    }
+
+    if($filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd') <  $filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd')){
+      ionicToast.show("La fecha de aplicacion no puede ser menor a la fecha de llegada",'middle', false, 5000);
+      $ionicScrollDelegate.scrollTop(true);
+      return;
     }
     $scope.encuesta.fechaAplicacion=$filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd HH:mm');
     $scope.encuesta.Llegada=$filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd');

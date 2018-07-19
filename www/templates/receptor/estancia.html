@@ -4,7 +4,7 @@
       <div class="item item-divider situr-header-error">
           <h2>Corrige los errores</h2>
       </div>
-      <div class="assertive item" ng-repeat="error in errores">
+      <div class="assertive item errors" ng-repeat="error in errores">
         {{error[0]}}
       </div>
     </div>
@@ -58,10 +58,10 @@
 
               <div class="col col-75">
                 <label class="item item-input item-floating-label">
-                  <span class="input-label" >Número de horas</span>
+                  <span class="input-label" >Número de noches</span>
                   <input 
                     type="number" 
-                    placeholder="Número de horas"
+                    placeholder="Número de noches"
                     name="noche{{$index}}" 
                     ng-change="cambionoches(es)" 
                     min= "0"
