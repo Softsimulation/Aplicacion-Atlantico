@@ -1,6 +1,6 @@
 angular.module('receptor.controllers', [])
 
-.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, $ionicHistory) {
+.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, $ionicHistory, $rootScope) {
   $ionicHistory.clearHistory();
   $ionicHistory.clearCache();
   $scope.currentPage = 0;
@@ -55,11 +55,16 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location) {
+.controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $rootScope) {
   
   $scope.encuesta = {};
   $scope.forms={};
 
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -70,6 +75,10 @@ angular.module('receptor.controllers', [])
   });
 
   turismoReceptor.informaciondatoscrear().then(function (data) {
+      if(!$rootScope.loader_receptor.general){
+        $rootScope.loader_receptor.general=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
       $ionicLoading.hide();
       $scope.grupos = data.grupos;
       $scope.encuestadores = data.encuestadores;
@@ -220,10 +229,16 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('editGeneralController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+.controller('editGeneralController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
   $scope.encuesta = {};
   $scope.forms={};
   $scope.departamentod = {};
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -236,6 +251,11 @@ angular.module('receptor.controllers', [])
   turismoReceptor.cargareditardatos($stateParams.id).then(function (data) {
       $ionicLoading.hide();
       //data.datos = data.datos;
+      /*if(!$rootScope.loader_receptor.editGeneral){
+        $rootScope.loader_receptor.editGeneral=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }*/
+
       $scope.departamentos = data.departamentosr;
       $scope.municipios = data.municipiosr;
       $scope.municipios_colombia = data.municipiosd;
@@ -255,13 +275,15 @@ angular.module('receptor.controllers', [])
       fechas = data.visitante.Salida.split('-');
       $scope.encuesta.Llegada = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2]);
       $scope.encuesta.Salida = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2]);
-      
+
       $scope.encuesta.encuestador = factories.findSelect(data.visitante.Encuestador, data.datos.encuestadores);
       $scope.encuesta.Aplicacion = factories.findSelect(data.visitante.aplicacion, data.datos.lugares_aplicacion);
       $scope.encuesta.nacimiento = factories.findSelect(data.visitante.Nacimiento, data.datos.lugar_nacimiento);
       $scope.encuesta.pais_nacimiento = factories.findSelect(data.visitante.Pais_Nacimiento, data.datos.paises);
       $scope.encuesta.municipio = factories.findSelect(data.visitante.Municipio, data.municipiosr);
-      $scope.encuesta.destino = factories.findSelect(data.visitante.Destino, data.municipiosd);
+      if(data.visitante.Destino){
+        $scope.encuesta.destino = factories.findSelect(data.visitante.Destino, data.municipiosd);
+      }
 
 
       if(data.visitante.fechaAplicacion != null){
@@ -418,13 +440,19 @@ angular.module('receptor.controllers', [])
   };  
 })
 
-.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
 
   $scope.encuesta = {};
   $scope.encuesta.ActividadesRelizadas=[];
   $scope.encuesta.Estancias = [];
   $scope.forms={};
   $scope.id=$stateParams.id;
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -436,6 +464,11 @@ angular.module('receptor.controllers', [])
 
   turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
     $ionicLoading.hide();
+    if(!$rootScope.loader_receptor.estancia){
+        $rootScope.loader_receptor.estancia=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
+    
     $scope.Datos = data.Enlaces;
     if(data.encuesta != undefined){
       $scope.encuesta = data.encuesta; 
@@ -656,10 +689,16 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('transporteController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+.controller('transporteController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope) {
   $scope.transporte = {};
   $scope.forms={};
   $scope.id=$stateParams.id;
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -671,19 +710,24 @@ angular.module('receptor.controllers', [])
 
   turismoReceptor.cargardatostransporte($stateParams.id).then(function (data) {
     $ionicLoading.hide();
-     $scope.transportes = data.transporte_llegar;
-      $scope.lugares = data.lugares;
-      $scope.transporte.Id = $scope.id;
+    if(!$rootScope.loader_receptor.transporte){
+        $rootScope.loader_receptor.transporte=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
+    
+    $scope.transportes = data.transporte_llegar;
+    $scope.lugares = data.lugares;
+    $scope.transporte.Id = $scope.id;
       
-      if (data.mover != null && data.llegar != null) {
-          $scope.transporte.Llegar = data.llegar;
-          $scope.transporte.Mover = data.mover;
-          $scope.transporte.otroLlegar = data.otroLlegar;
-          $scope.transporte.otroMover = data.otroMover;
-          $scope.transporte.Alquiler = data.opcion_lugar;
-          $scope.transporte.Empresa = data.empresa;
-          $scope.transporte.Calificacion = data.calificacion;
-      }   
+    if (data.mover != null && data.llegar != null) {
+      $scope.transporte.Llegar = data.llegar;
+      $scope.transporte.Mover = data.mover;
+      $scope.transporte.otroLlegar = data.otroLlegar;
+      $scope.transporte.otroMover = data.otroMover;
+      $scope.transporte.Alquiler = data.opcion_lugar;
+      $scope.transporte.Empresa = data.empresa;
+      $scope.transporte.Calificacion = data.calificacion;
+    }   
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -735,11 +779,17 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('grupoController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams) {
+.controller('grupoController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope) {
 	$scope.grupo = {};
 	$scope.grupo.Personas=[];
 	$scope.forms={};
   $scope.id=$stateParams.id;
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -750,6 +800,10 @@ angular.module('receptor.controllers', [])
   });
 	turismoReceptor.cargardatosseccionviaje($stateParams.id).then(function (data) {
     $ionicLoading.hide();
+    if(!$rootScope.loader_receptor.grupo){
+      $rootScope.loader_receptor.grupo=data;
+      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
     $scope.viaje_grupos = data.viaje_grupos;
     $scope.grupo.Id = $scope.id;  
     if (data.tam_grupo != null && data.personas != null) {
@@ -875,7 +929,7 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
 
   $scope.id=$stateParams.id;
   $scope.encuestaReceptor = {};
@@ -885,6 +939,12 @@ angular.module('receptor.controllers', [])
   $scope.encuestaReceptor.Municipios=[];
   $scope.encuestaReceptor.ServiciosIncluidos=[];
   $scope.forms={};
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -896,6 +956,10 @@ angular.module('receptor.controllers', [])
 
   turismoReceptor.infogasto($stateParams.id).then(function (data) {
     $ionicLoading.hide();
+    if(!$rootScope.loader_receptor.gastos){
+      $rootScope.loader_receptor.gastos=data;
+      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
     $scope.divisas = data.divisas;
     $scope.financiadores = data.financiadores;
     $scope.municipios = data.municipios;
@@ -924,7 +988,7 @@ angular.module('receptor.controllers', [])
       $scope.cambiarAlquiler($scope.rubros[i]);
 
       if($scope.rubros[i].gastos_visitantes[0]){
-        $scope.rubros[i].gastos_visitantes[0].divisas_Atlántico_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_Atlántico,data.divisas)
+        $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
       }
     }   
   }, 
@@ -943,7 +1007,7 @@ angular.module('receptor.controllers', [])
         return;
     }
         
-    if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_Atlántico!= null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico != null){
+    if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_magdalena!= null && rub.gastos_visitantes[0].cantidad_pagada_magdalena != null){
       switch (rub.id) {
         case 3:
           $scope.abrirTerrestre = true;
@@ -960,17 +1024,17 @@ angular.module('receptor.controllers', [])
     }
         
     if($scope.abrirTerrestre){
-      if( rub.id ==3 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
+      if( rub.id ==3 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
         $scope.abrirTerrestre = false;
       }
     }
     if($scope.abrirAlquiler){
-      if( rub.id == 5 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
+      if( rub.id == 5 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
         $scope.abrirAlquiler = false;
       }
     }
     if($scope.abrirRopa){
-      if( rub.id == 12 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_Atlántico == null && rub.gastos_visitantes[0].cantidad_pagada_Atlántico==null){
+      if( rub.id == 12 && rub.gastos_visitantes[0].personas_cubiertas == null && rub.gastos_visitantes[0].divisas_magdalena == null && rub.gastos_visitantes[0].cantidad_pagada_magdalena==null){
         $scope.abrirRopa = false;
       }
     }      
@@ -1097,7 +1161,7 @@ angular.module('receptor.controllers', [])
     for(var i = 0 ;i<$scope.rubros.length;i++){
       if($scope.rubros[i].gastos_visitantes.length>0){
         if($scope.rubros[i].gastos_visitantes[0] != null){
-          if((($scope.rubros[i].gastos_visitantes[0].cantidad_pagada_Atlántico != null && $scope.rubros[i].gastos_visitantes[0].divisas_Atlántico != null) && $scope.rubros[i].gastos_visitantes[0].personas_cubiertas != null)|| $scope.rubros[i].gastos_visitantes[0].gastos_asumidos_otros != undefined  ){
+          if((($scope.rubros[i].gastos_visitantes[0].cantidad_pagada_magdalena != null && $scope.rubros[i].gastos_visitantes[0].divisas_magdalena != null) && $scope.rubros[i].gastos_visitantes[0].personas_cubiertas != null)|| $scope.rubros[i].gastos_visitantes[0].gastos_asumidos_otros != undefined  ){
             $scope.encuestaReceptor.Rubros.push($scope.rubros[i]);
           }
         }          
@@ -1134,7 +1198,7 @@ angular.module('receptor.controllers', [])
   }
 })
 
-.controller('percepcionController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+.controller('percepcionController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
   $scope.id=$stateParams.id;
   $scope.bandera = false;
   $scope.estadoEncuesta = null;
@@ -1143,6 +1207,11 @@ angular.module('receptor.controllers', [])
   $scope.calificacion.Evaluacion = [];
   $scope.forms={}
   $scope.aspectos = {'Items': [],'radios': {}};
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -1153,6 +1222,10 @@ angular.module('receptor.controllers', [])
 
   turismoReceptor.cargardatospercepcion($stateParams.id).then(function (data) {
     $ionicLoading.hide();
+    if(!$rootScope.loader_receptor.percepcion){
+      $rootScope.loader_receptor.percepcion=data;
+      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
     $scope.aspectos = $scope.convertirObjeto(data.percepcion);
     $scope.elementos = data.elementos;
     $scope.veces = data.veces;
@@ -1355,13 +1428,18 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('enteranController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories) {
+.controller('enteranController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
   $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
   $scope.control = {};
   $scope.errores = null;
   $scope.err = null;
   $scope.forms={};
   $scope.id=$stateParams.id;
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -1375,7 +1453,10 @@ angular.module('receptor.controllers', [])
     $scope.fuentesDurante = data.fuentesDurante;
     $scope.redes = data.redes;
     $scope.enteran.Id = $scope.id;
-
+    if(!$rootScope.loader_receptor.enteran){
+      $rootScope.loader_receptor.enteran=data;
+      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+    }
     if (data.invitacion_correo != null) {
       $scope.enteran.FuentesAntes = data.fuentes_antes;
       $scope.enteran.FuentesDurante = data.fuentes_durante;
@@ -1563,5 +1644,4 @@ angular.module('receptor.controllers', [])
       });
     });    
   }; 
-
 })

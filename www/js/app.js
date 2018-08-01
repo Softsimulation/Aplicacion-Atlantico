@@ -25,7 +25,7 @@ angular.module('starter', ['ionic',
   APIURL: "https://situr-jeferbustamante.c9users.io/situr/public/",
 })
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -38,8 +38,18 @@ angular.module('starter', ['ionic',
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.overlaysWebView(false);
-      StatusBar.styleDefault();
+      //StatusBar.styleDefault();
     }
+
+    if (window.Connection) {
+        if (navigator.connection.type == Connection.NONE || navigator.connection.type == Connection.UNKNOWN) {
+          $ionicPopup.alert({
+            title: "No hay conexión a internet",
+            content: "Todas las tareas que realice sin conexión serán sincronizadas cuando tenga internet, recuerde no cerrar sesión para no perder el trabajo realizado"
+          }) 
+        }
+      }
+
   });
 })
 

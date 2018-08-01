@@ -251,7 +251,7 @@
                 name="otroRubros" 
                 ng-model="rub.gastos_visitantes[0].otro"   
                 ng-disabled="encuestaReceptor.poderLLenar" 
-                ng-required="rub.gastos_visitantes[0].cantidad_pagada_Atlántico != null && rub.gastos_visitantes[0].divisas_Atlántico != null && rub.gastos_visitantes[0].personas_cubiertas != null">
+                ng-required="rub.gastos_visitantes[0].cantidad_pagada_magdalena != null && rub.gastos_visitantes[0].divisas_magdalena != null && rub.gastos_visitantes[0].personas_cubiertas != null">
               <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.otroRubros.$touched">
                 <span ng-show="forms.GastoForm.otroRubros.$error.required">*</span>
               </span>
@@ -265,9 +265,9 @@
                 name="cantDentro{{$index}}" 
                 min="1" 
                 ng-blur="cambiarAlquiler(rub)" 
-                ng-model="rub.gastos_visitantes[0].cantidad_pagada_Atlántico"
+                ng-model="rub.gastos_visitantes[0].cantidad_pagada_magdalena"
                 ng-disabled="encuestaReceptor.poderLLenar" 
-                ng-required ="rub.gastos_visitantes[0].divisas_Atlántico != null || rub.gastos_visitantes[0].personas_cubiertas != null">
+                ng-required ="rub.gastos_visitantes[0].divisas_magdalena != null || rub.gastos_visitantes[0].personas_cubiertas != null">
               <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.cantDentro{{$index}}.$touched">
                 <span  ng-show="forms.GastoForm.cantDentr{{$index}}.$error.required">*</span>
               </span>
@@ -286,14 +286,14 @@
               cancel-button="Cancelar" 
               sub-header-class="bar-custom"
               reset-button="Limpiar" 
-              ng-change="rub.gastos_visitantes[0].divisas_Atlántico=rub.gastos_visitantes[0].divisas_Atlántico_obj.id"
+              ng-change="rub.gastos_visitantes[0].divisas_magdalena=rub.gastos_visitantes[0].divisas_magdalena_obj.id"
               name="divisaDentro{{$index}}" 
               ng-blur="cambiarAlquiler(rub)" 
-              ng-model="rub.gastos_visitantes[0].divisas_Atlántico_obj" 
+              ng-model="rub.gastos_visitantes[0].divisas_magdalena_obj" 
               ng-disabled="encuestaReceptor.poderLLenar" 
-              ng-required="rub.gastos_visitantes[0].cantidad_pagada_Atlántico != null || rub.gastos_visitantes[0].personas_cubiertas != null"
+              ng-required="rub.gastos_visitantes[0].cantidad_pagada_magdalena != null || rub.gastos_visitantes[0].personas_cubiertas != null"
               >
-              Divisa : {{rub.gastos_visitantes[0].divisas_Atlántico_obj.nombre}}
+              Divisa : {{rub.gastos_visitantes[0].divisas_magdalena_obj.nombre}}
               <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.divisaDentro{{$index}}.$touched">
                 <span ng-show="forms.GastoForm.divisaDentro{{$index}}.$error.required">*</span>
               </span>
@@ -312,7 +312,7 @@
                 ng-blur="cambiarAlquiler(rub)" 
                 ng-disabled="encuestaReceptor.poderLLenar" 
                 placeholder="0" 
-                ng-required="rub.gastos_visitantes[0].cantidad_pagada_Atlántico != null || rub.gastos_visitantes[0].divisas_Atlántico != null">
+                ng-required="rub.gastos_visitantes[0].cantidad_pagada_magdalena != null || rub.gastos_visitantes[0].divisas_magdalena != null">
                 <span ng-show="forms.GastoForm.$submitted || forms.GastoForm.personas{{$index}}.$touched">
                   <span class="label label-danger" ng-show="forms.GastoForm.personas{{$index}}.$error.required">*</span>
                 </span>

@@ -3,22 +3,8 @@ angular.module('starter.controllers', [
                                       'interno.controllers'
                                       ])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover) {
-
-  $ionicPopover.fromTemplateUrl('templates/lang-popover.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(popover) {
-    $scope.popover = popover;
-  });
-
-  $scope.togglePopupMenu = function() {
-    return $scope.menu_is_open = !$scope.menu_is_open;
-  };
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover, $rootScope) {
 })
-
-
-
 
 .controller('listarGrupoController', function($scope, $stateParams) {
 })

@@ -611,41 +611,43 @@ angular.module('interno.controllers', [])
     if (!$scope.forms.EstanciaForm.$valid) {
       ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
       return
-    }else{
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
-
-      $scope.errores = null
-      if ($scope.encuesta.Id == null){
-        $scope.encuesta.Id = $scope.id;
-        $scope.encuesta.Crear = true;
-      }
-
-      turismoInterno.createviaje($scope.encuesta).then(function (data) {
-        $ionicLoading.hide();
-        $scope.data=data;
-        if (data.success == true) {
-          $state.reload();          
-        }else{
-          $ionicScrollDelegate.scrollTop(true);
-          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-          $scope.errores = data.errores;
-        }
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
-          title: '¡Error!',
-          template: 'Ha ocurrido un error. Intenta nuevamente',
-          okType:'button-stable'
-        });
-      });
     }
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    $scope.errores = null
+    if ($scope.encuesta.Id == null){
+      $scope.encuesta.Id = $scope.id;
+      $scope.encuesta.Crear = true;
+    }
+
+    
+    turismoInterno.createviaje($scope.encuesta).then(function (data) {
+      $ionicLoading.hide();
+      $scope.data=data;
+      if (data.success == true) {
+        $state.reload();          
+      }else{
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });
+    
   };
 
   $scope.editar = function (es) {
@@ -767,6 +769,9 @@ angular.module('interno.controllers', [])
         $scope.encuesta.Id = $scope.id;
         $scope.encuesta.Crear = true;
     }
+    $scope.env = {};
+    $scope.env.id = $scope.id; 
+    $scope.env.principal = $scope.PrincipalViaje.id;
 
     turismoInterno.siguienteviaje($scope.env).then(function (data) {
       $ionicLoading.hide();
