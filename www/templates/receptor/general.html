@@ -54,6 +54,8 @@
             ng-model="encuesta.fechaAplicacion"
             name="fechaAplicacion"
             ng-required="true"
+            only-valid="{'before': 'today', 'inclusive': true}"
+
             >
             {{encuesta.fechaAplicacion | date: "yyyy-MM-dd  HH:mm" }}
           </div>
@@ -101,6 +103,8 @@
             ng-model="encuesta.Llegada" 
             name="llegada" 
             ng-required="true"
+            only-valid="{'before': 'today', 'inclusive': true}"
+            
             >
             {{encuesta.Llegada| date: "yyyy-MM-dd" }}
             
@@ -118,7 +122,9 @@
             date 
             ng-model="encuesta.Salida"
             name="salida"
-            ng-required="true">
+            ng-required="true"
+            only-valid="{'before': 'today', 'inclusive': true}"
+            >
             {{encuesta.Salida| date: "yyyy-MM-dd" }}
             
           </div>

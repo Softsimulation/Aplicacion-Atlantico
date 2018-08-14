@@ -55,15 +55,22 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $rootScope) {
+.controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $rootScope, $cordovaNetwork, factories) {
   
   $scope.encuesta = {};
   $scope.forms={};
+  $scope.is_offline=0;
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
   }else{
     $rootScope.loader_receptor={};
+  }
+
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
   }
 
   $ionicLoading.show({
@@ -73,13 +80,16 @@ angular.module('receptor.controllers', [])
     maxWidth: 200,
     showDelay: 0
   });
+    
+  if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+    $scope.is_offline=1;
+    $ionicLoading.hide();
 
-  turismoReceptor.informaciondatoscrear().then(function (data) {
-      if(!$rootScope.loader_receptor.general){
-        $rootScope.loader_receptor.general=data;
-        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
-      $ionicLoading.hide();
+    if(localStorage.getItem("loader_receptor")==null){
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
+    }else{
+      ionicToast.show("No tiene conexion, pero hay elementos precargados, puede continuar",'middle', false, 5000);
+      let data= $rootScope.loader_receptor.general;
       $scope.grupos = data.grupos;
       $scope.encuestadores = data.encuestadores;
       $scope.lugares = data.lugar_nacimiento;
@@ -88,85 +98,129 @@ angular.module('receptor.controllers', [])
       $scope.medicos = data.medicos;
       $scope.departamentos_colombia = data.departamentos;
       $scope.lugares_aplicacion = data.lugares_aplicacion;
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+      $scope.all_departamentos = data.all_departamentos;
+      $scope.all_municipios = data.all_municipios;
+    }  
+  }else{
+
+    turismoReceptor.informaciondatoscrear().then(function (data) {
+        if(!$rootScope.loader_receptor.general){
+          $rootScope.loader_receptor.general=data;
+          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+        }
+        $ionicLoading.hide();
+        $scope.grupos = data.grupos;
+        $scope.encuestadores = data.encuestadores;
+        $scope.lugares = data.lugar_nacimiento;
+        $scope.paises = data.paises;
+        $scope.motivos = data.motivos;
+        $scope.medicos = data.medicos;
+        $scope.departamentos_colombia = data.departamentos;
+        $scope.lugares_aplicacion = data.lugares_aplicacion;
+        $scope.all_departamentos = data.all_departamentos;
+        $scope.all_municipios = data.all_municipios;
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
     });
-  });
+  }
+
 
   $scope.changedepartamento = function (id) {
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
     $scope.departamento = {};
-    $scope.departamentos = [];
-    if (id != null) {
-      turismoReceptor.departamento(id).then(function (data) {
-          $ionicLoading.hide();
-          $scope.departamentos = data;
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error.',
-            okType:'button-stable'
-        });
+    if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+      $scope.departamentos=factories.findSelectMultipleId(id,  $scope.all_departamentos);
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
+      
+      $scope.departamentos = [];
+      if (id != null) {
+        turismoReceptor.departamento(id).then(function (data) {
+            $ionicLoading.hide();
+            $scope.departamentos = data;
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          var alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error.',
+              okType:'button-stable'
+          });
+        });
+      }
     }
   };
 
   $scope.changemunicipio = function (id) {
-    $scope.encuesta.Municipio = {};
+    $scope.encuesta.Municipio = "";
     $scope.municipios = [];
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    if (id != null) { 
-      turismoReceptor.municipio(id).then(function (data) {
-        $ionicLoading.hide();
-        $scope.municipios = data;
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error.',
-            okType:'button-stable'
-        });
+    if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+      $scope.municipios = factories.findSelectMultipleDpts(id, $scope.all_municipios);
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
+
+      if (id != null) { 
+        turismoReceptor.municipio(id).then(function (data) {
+          $ionicLoading.hide();
+          $scope.municipios = data;
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          var alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error.',
+              okType:'button-stable'
+          });
+        });
+      }
     }
   };
 
   $scope.changemunicipiocolombia = function (id) {
     $scope.encuesta.Destino = "";
     $scope.municipios_colombia = [];
-    if (id != null) { 
-      turismoReceptor.municipio(id).then(function (data) {
-        $ionicLoading.hide();
-        $scope.municipios_colombia = data;
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error.',
-            okType:'button-stable'
-        });
+    if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+      $scope.municipios = factories.findSelectMultipleDpts(id, $scope.all_municipios);
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
+      if (id != null) { 
+        turismoReceptor.municipio(id).then(function (data) {
+          $ionicLoading.hide();
+          
+          $scope.municipios_colombia = data;
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          var alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error.',
+              okType:'button-stable'
+          });
+        });
+      }
     }
   };
 
@@ -191,41 +245,60 @@ angular.module('receptor.controllers', [])
        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
        return;
     }
+    if($filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd') <  $filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd')){
+      ionicToast.show("La fecha de aplicacion no puede ser menor a la fecha de llegada",'middle', false, 5000);
+      $ionicScrollDelegate.scrollTop(true);
+      return;
+    }
+
+    if($filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd') <  $filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd')){
+      ionicToast.show("La fecha de Salida no puede ser menor a la fecha de llegada",'middle', false, 5000);
+      $ionicScrollDelegate.scrollTop(true);
+      return;
+    }
+
     $scope.encuesta.fechaAplicacion=$filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd HH:mm');
     $scope.encuesta.Llegada=$filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd');
     $scope.encuesta.Salida=$filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd');
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoReceptor.guardardatos($scope.encuesta).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        if (data.terminada == 1) {
-          $location.path("/app/encuestas/");
-        } else {
-          $location.path("/app/estancia/"+data.id);
-        }
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    $scope.encuesta.is_offline=$scope.is_offline;
+    $rootScope.receptor_off.push({'section_1':$scope.encuesta})
+    if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/estancia/"+($rootScope.receptor_off.length-1)+"/"+$scope.is_offline)
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });
+
+      turismoReceptor.guardardatos($scope.encuesta).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          if (data.terminada == 1) {
+            $location.path("/app/encuestas");
+          } else {
+            $location.path("/app/estancia/"+data.id+"/"+$scope.is_offline);
+          }
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
   };
 })
 
@@ -233,12 +306,8 @@ angular.module('receptor.controllers', [])
   $scope.encuesta = {};
   $scope.forms={};
   $scope.departamentod = {};
-
-  if(localStorage.getItem("loader_receptor")!=null){
-    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
-  }else{
-    $rootScope.loader_receptor={};
-  }
+  $scope.is_offline=0;
+ 
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -311,7 +380,7 @@ angular.module('receptor.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
-    $scope.departamento = {};
+    $scope.departamento = "";
     $scope.departamentos = [];
     if (id != null) {
       turismoReceptor.departamento(id).then(function (data) {
@@ -330,7 +399,7 @@ angular.module('receptor.controllers', [])
   };
 
   $scope.changemunicipio = function (id) {
-    $scope.encuesta.Municipio = {};
+    $scope.encuesta.Municipio = "";
     $scope.municipios = [];
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -402,6 +471,13 @@ angular.module('receptor.controllers', [])
       $ionicScrollDelegate.scrollTop(true);
       return;
     }
+
+    if($filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd') <  $filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd')){
+      ionicToast.show("La fecha de Salida no puede ser menor a la fecha de llegada",'middle', false, 5000);
+      $ionicScrollDelegate.scrollTop(true);
+      return;
+    }
+
     $scope.encuesta.fechaAplicacion=$filter('date')($scope.encuesta.fechaAplicacion, 'yyyy-MM-dd HH:mm');
     $scope.encuesta.Llegada=$filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd');
     $scope.encuesta.Salida=$filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd');
@@ -419,9 +495,10 @@ angular.module('receptor.controllers', [])
       if (data.success == true) {
         ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
         if (data.terminada == 1) {
-          $location.path("/app/encuestas/");
+          $location.path("/app/encuestas");
         } else {
-          $location.path("/app/estancia/"+$stateParams.id);
+          $location.path("/app/estancia/"+$stateParams.id+"/"+$scope.is_offline);
+          
         }
       } else {
         $ionicScrollDelegate.scrollTop(true);
@@ -440,59 +517,72 @@ angular.module('receptor.controllers', [])
   };  
 })
 
-.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
+.controller('estanciaController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope, $cordovaNetwork) {
 
   $scope.encuesta = {};
   $scope.encuesta.ActividadesRelizadas=[];
   $scope.encuesta.Estancias = [];
   $scope.forms={};
   $scope.id=$stateParams.id;
+  $scope.is_offline=$stateParams.isOff;
+
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
   }else{
     $rootScope.loader_receptor={};
   }
+  
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-
-  turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    if(!$rootScope.loader_receptor.estancia){
-        $rootScope.loader_receptor.estancia=data;
-        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
-    
-    $scope.Datos = data.Enlaces;
-    if(data.encuesta != undefined){
-      $scope.encuesta = data.encuesta; 
-      $scope.encuesta.Estancias.forEach(function(_this) {
-        
-        if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
-        if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
-
-
-      });
-      if (data.encuesta.Estancias == null) {
-        $scope.agregar();
-      }
-    }
-    $scope.encuesta.Id = $scope.id;
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data= $rootScope.loader_receptor.estancia;
+    $scope.Datos = data;
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+
+    turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      if(!$rootScope.loader_receptor.estancia){
+          $rootScope.loader_receptor.estancia=data.Enlaces;
+          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
+      
+      $scope.Datos = data.Enlaces;
+      if(data.encuesta != undefined){
+        $scope.encuesta = data.encuesta; 
+        $scope.encuesta.Estancias.forEach(function(_this) {
+          
+          if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
+          if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
+
+
+        });
+        if (data.encuesta.Estancias == null) {
+          $scope.agregar();
+        }
+      }
+      $scope.encuesta.Id = $scope.id;
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 
   $scope.agregar = function () {
     $scope.estancia = new Object();
@@ -636,36 +726,42 @@ angular.module('receptor.controllers', [])
       ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
       return
     }
-      
-    $scope.errores = null
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoReceptor.crearestancia($scope.encuesta).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/transporte/"+$scope.encuesta.Id);
-        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    
+    if($scope.is_offline==1){
+      $rootScope.receptor_off[$stateParams.id].section_2=$scope.encuesta;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/transporte/"+$stateParams.id+"/"+$scope.is_offline);
+    }else{
+      $scope.errores = null
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });  
+
+      turismoReceptor.crearestancia($scope.encuesta).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/transporte/"+$scope.encuesta.Id+"/"+$scope.is_offline);
+          
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    } 
   };
 
   $scope.checked=function(id, objeto) {
@@ -689,10 +785,11 @@ angular.module('receptor.controllers', [])
   };
 })
 
-.controller('transporteController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope) {
+.controller('transporteController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope, $cordovaNetwork) {
   $scope.transporte = {};
   $scope.forms={};
   $scope.id=$stateParams.id;
+  $scope.is_offline=$stateParams.isOff;
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -700,53 +797,17 @@ angular.module('receptor.controllers', [])
     $rootScope.loader_receptor={};
   }
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
 
-  turismoReceptor.cargardatostransporte($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    if(!$rootScope.loader_receptor.transporte){
-        $rootScope.loader_receptor.transporte=data;
-        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
-    
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data= $rootScope.loader_receptor.transporte;
     $scope.transportes = data.transporte_llegar;
     $scope.lugares = data.lugares;
-    $scope.transporte.Id = $scope.id;
-      
-    if (data.mover != null && data.llegar != null) {
-      $scope.transporte.Llegar = data.llegar;
-      $scope.transporte.Mover = data.mover;
-      $scope.transporte.otroLlegar = data.otroLlegar;
-      $scope.transporte.otroMover = data.otroMover;
-      $scope.transporte.Alquiler = data.opcion_lugar;
-      $scope.transporte.Empresa = data.empresa;
-      $scope.transporte.Calificacion = data.calificacion;
-    }   
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
-
-  $scope.guardar = function () {
-
-    if (!$scope.forms.transForm.$valid) {
-      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
-      return;
-    }
-
-    $scope.errores = null
-
+  }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
       animation: 'fade-in',
@@ -755,35 +816,90 @@ angular.module('receptor.controllers', [])
       showDelay: 0
     });
 
-    turismoReceptor.guardarsecciontransporte($scope.transporte).then(function (data) {
+    turismoReceptor.cargardatostransporte($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/grupo/"+$scope.id);
-        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
+      if(!$rootScope.loader_receptor.transporte){
+          $rootScope.loader_receptor.transporte=data;
+          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
       }
+      
+      $scope.transportes = data.transporte_llegar;
+      $scope.lugares = data.lugares;
+      $scope.transporte.Id = $scope.id;
+        
+      if (data.mover != null && data.llegar != null) {
+        $scope.transporte.Llegar = data.llegar;
+        $scope.transporte.Mover = data.mover;
+        $scope.transporte.otroLlegar = data.otroLlegar;
+        $scope.transporte.otroMover = data.otroMover;
+        $scope.transporte.Alquiler = data.opcion_lugar;
+        $scope.transporte.Empresa = data.empresa;
+        $scope.transporte.Calificacion = data.calificacion;
+      }   
     }, 
     function (error, data) {
       $ionicLoading.hide();
       var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
       });
     });
+  }
+
+  $scope.guardar = function () {
+
+    if (!$scope.forms.transForm.$valid) {
+      ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
+      return;
+    }
+
+    if($scope.is_offline==1){
+      $rootScope.receptor_off[$stateParams.id].section_3=$scope.transporte;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline);
+    }else{
+      $scope.errores = null
+
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+
+      turismoReceptor.guardarsecciontransporte($scope.transporte).then(function (data) {
+        $ionicLoading.hide();
+
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline);
+          
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
   };
 })
 
-.controller('grupoController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope) {
+.controller('grupoController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope, $cordovaNetwork) {
 	$scope.grupo = {};
 	$scope.grupo.Personas=[];
 	$scope.forms={};
   $scope.id=$stateParams.id;
+  $scope.is_offline=$stateParams.isOff;
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -791,36 +907,47 @@ angular.module('receptor.controllers', [])
     $rootScope.loader_receptor={};
   }
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-	turismoReceptor.cargardatosseccionviaje($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    if(!$rootScope.loader_receptor.grupo){
-      $rootScope.loader_receptor.grupo=data;
-      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
+
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data = $rootScope.loader_receptor.grupo;
     $scope.viaje_grupos = data.viaje_grupos;
-    $scope.grupo.Id = $scope.id;  
-    if (data.tam_grupo != null && data.personas != null) {
-	    $scope.grupo.Numero = data.tam_grupo;
-	    $scope.grupo.Personas = data.personas;
-	    $scope.grupo.Otro = data.otro;
-	    $scope.grupo.Numero_otros = data.acompaniantes;
-    }    
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+  	turismoReceptor.cargardatosseccionviaje($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      if(!$rootScope.loader_receptor.grupo){
+        $rootScope.loader_receptor.grupo=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
+      $scope.viaje_grupos = data.viaje_grupos;
+      $scope.grupo.Id = $scope.id;  
+      if (data.tam_grupo != null && data.personas != null) {
+  	    $scope.grupo.Numero = data.tam_grupo;
+  	    $scope.grupo.Personas = data.personas;
+  	    $scope.grupo.Otro = data.otro;
+  	    $scope.grupo.Numero_otros = data.acompaniantes;
+      }    
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 
   $scope.buscar = function (list, data) {
     if (list.indexOf(data) !== -1) {
@@ -899,37 +1026,44 @@ angular.module('receptor.controllers', [])
         return;
     }
 
-    $ionicLoading.show({
-	    template: '<ion-spinner></ion-spinner> Espere por favor...',
-	    animation: 'fade-in',
-	    showBackdrop: true,
-	    maxWidth: 200,
-	    showDelay: 0
-	  });
-    turismoReceptor.guardarseccionviajegrupo($scope.grupo).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/gastos/"+$scope.id);
-        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    if($scope.is_offline==1){
+      $rootScope.receptor_off[$stateParams.id].section_4=$scope.grupo;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline);
+    }else{
+
+      $ionicLoading.show({
+  	    template: '<ion-spinner></ion-spinner> Espere por favor...',
+  	    animation: 'fade-in',
+  	    showBackdrop: true,
+  	    maxWidth: 200,
+  	    showDelay: 0
+  	  });
+      turismoReceptor.guardarseccionviajegrupo($scope.grupo).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline);
+          
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
       });
-    });  
+    } 
   };
 })
 
-.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
+.controller('gastosController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope, $cordovaNetwork) {
 
   $scope.id=$stateParams.id;
   $scope.encuestaReceptor = {};
@@ -939,6 +1073,8 @@ angular.module('receptor.controllers', [])
   $scope.encuestaReceptor.Municipios=[];
   $scope.encuestaReceptor.ServiciosIncluidos=[];
   $scope.forms={};
+  $scope.is_offline=$stateParams.isOff;
+
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -946,60 +1082,11 @@ angular.module('receptor.controllers', [])
     $rootScope.loader_receptor={};
   }
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-
-  turismoReceptor.infogasto($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    if(!$rootScope.loader_receptor.gastos){
-      $rootScope.loader_receptor.gastos=data;
-      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
-    $scope.divisas = data.divisas;
-    $scope.financiadores = data.financiadores;
-    $scope.municipios = data.municipios;
-    $scope.opciones = data.opciones;
-    $scope.servicios = data.servicios;
-    $scope.tipos = data.tipos;
-    $scope.rubros = data.rubros;
-    $scope.encuestaReceptor = data.encuesta;
-
-    $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
-    if(!$scope.encuestaReceptor.ServiciosIncluidos){
-      $scope.encuestaReceptor.ServiciosIncluidos=[];
-    }
-
-    if(!$scope.encuestaReceptor.Municipios){
-      $scope.encuestaReceptor.Municipios=[];
-    }else{
-      $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
-    }
-
-    if(!$scope.encuestaReceptor.Financiadores){
-      $scope.encuestaReceptor.Financiadores=[];
-    }
-   
-    for(var i = 0; i<$scope.rubros.length;i++){
-      $scope.cambiarAlquiler($scope.rubros[i]);
-
-      if($scope.rubros[i].gastos_visitantes[0]){
-        $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
-      }
-    }   
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
 
   $scope.cambiarAlquiler = function(rub){
         
@@ -1144,6 +1231,97 @@ angular.module('receptor.controllers', [])
     return $scope.shownGroup === group;
   };
 
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data = $rootScope.loader_receptor.gastos;
+    $scope.divisas = data.divisas;
+    $scope.financiadores = data.financiadores;
+    $scope.municipios = data.municipios;
+    $scope.opciones = data.opciones;
+    $scope.servicios = data.servicios;
+    $scope.tipos = data.tipos;
+    $scope.rubros = data.rubros;
+    $scope.encuestaReceptor = data.encuesta;
+
+    $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
+    if(!$scope.encuestaReceptor.ServiciosIncluidos){
+      $scope.encuestaReceptor.ServiciosIncluidos=[];
+    }
+
+    if(!$scope.encuestaReceptor.Municipios){
+      $scope.encuestaReceptor.Municipios=[];
+    }else{
+      $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
+    }
+
+    if(!$scope.encuestaReceptor.Financiadores){
+      $scope.encuestaReceptor.Financiadores=[];
+    }
+    
+    for(let i = 0; i<$scope.rubros.length;i++){
+      $scope.cambiarAlquiler($scope.rubros[i]);
+
+      if($scope.rubros[i].gastos_visitantes[0]){
+        $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
+      }
+    }
+  }else{
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoReceptor.infogasto($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      if(!$rootScope.loader_receptor.gastos){
+        $rootScope.loader_receptor.gastos=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
+      $scope.divisas = data.divisas;
+      $scope.financiadores = data.financiadores;
+      $scope.municipios = data.municipios;
+      $scope.opciones = data.opciones;
+      $scope.servicios = data.servicios;
+      $scope.tipos = data.tipos;
+      $scope.rubros = data.rubros;
+      $scope.encuestaReceptor = data.encuesta;
+
+      $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
+      if(!$scope.encuestaReceptor.ServiciosIncluidos){
+        $scope.encuestaReceptor.ServiciosIncluidos=[];
+      }
+
+      if(!$scope.encuestaReceptor.Municipios){
+        $scope.encuestaReceptor.Municipios=[];
+      }else{
+        $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
+      }
+
+      if(!$scope.encuestaReceptor.Financiadores){
+        $scope.encuestaReceptor.Financiadores=[];
+      }
+     
+      for(let i = 0; i<$scope.rubros.length;i++){
+        $scope.cambiarAlquiler($scope.rubros[i]);
+
+        if($scope.rubros[i].gastos_visitantes[0]){
+          $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
+        }
+      }   
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
+
   $scope.guardar = function(){
         
     if(!$scope.forms.GastoForm.$valid){
@@ -1153,6 +1331,7 @@ angular.module('receptor.controllers', [])
     
     if($scope.encuestaReceptor.ViajoDepartamento ==1){    
       if($scope.encuestaReceptor.ServiciosIncluidos.length==0){
+        ionicToast.show("Hay errores en el formulario, corrigelo",'middle', false, 2000);
         return;   
       }
     }
@@ -1168,37 +1347,46 @@ angular.module('receptor.controllers', [])
       }
     }
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-    $scope.encuestaReceptor.id = $scope.id
-    turismoReceptor.guardargastos($scope.encuestaReceptor).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/percepcion/"+$scope.id);        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    if($scope.is_offline==1){
+  
+      delete $scope.encuestaReceptor.id;
+      $rootScope.receptor_off[$stateParams.id].section_5=$scope.encuestaReceptor;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/percepcion/"+$stateParams.id+"/"+$scope.is_offline);
+    }else{
+
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });      
+      $scope.encuestaReceptor.id = $scope.id
+      turismoReceptor.guardargastos($scope.encuestaReceptor).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/percepcion/"+$scope.id);        
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });      
+    }
   }
 })
 
-.controller('percepcionController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
+.controller('percepcionController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope, $cordovaNetwork) {
   $scope.id=$stateParams.id;
   $scope.bandera = false;
   $scope.estadoEncuesta = null;
@@ -1207,72 +1395,19 @@ angular.module('receptor.controllers', [])
   $scope.calificacion.Evaluacion = [];
   $scope.forms={}
   $scope.aspectos = {'Items': [],'radios': {}};
+  $scope.is_offline=$stateParams.isOff;
+
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
   }else{
     $rootScope.loader_receptor={};
   }
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
 
-  turismoReceptor.cargardatospercepcion($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    if(!$rootScope.loader_receptor.percepcion){
-      $rootScope.loader_receptor.percepcion=data;
-      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
-    $scope.aspectos = $scope.convertirObjeto(data.percepcion);
-    $scope.elementos = data.elementos;
-    $scope.veces = data.veces;
-    $scope.actividades = data.actividades;
-          
-    if (data.respuestaElementos != undefined && data.valoracion == null) {
-      if(data.respuestaElementos.length == 0){
-        $scope.estadoEncuesta = 0;    
-      }
-    } else {
-      $scope.calificacion.Alojamiento = data.alojamiento;
-        
-      if($scope.calificacion.Infra == 1){
-        document.getElementById("infraestructuraSi").getElementsByTagName( 'input' )[0].checked = true;
-      }else{
-        document.getElementById("infraestructuraNo").getElementsByTagName( 'input' )[0].checked= true;
-      }
-      $scope.calificacion.Restaurante = data.restaurante;
-      $scope.calificacion.Elementos = data.respuestaElementos;
-      $scope.calificacion.Recomendaciones = data.valoracion.Recomendacion;
-      $scope.calificacion.Calificacion = data.valoracion.Calificacion;
-      $scope.calificacion.Volveria = data.valoracion.Volveria;
-      $scope.calificacion.Recomienda = data.valoracion.Recomienda;
-      $scope.calificacion.VecesVisitadas = data.valoracion.Veces;
-      $scope.calificacion.OtroElementos = data.otroElemento;
-      $scope.calificacion.Flora = data.flora;
-      $scope.calificacion.Sostenibilidad = data.sost;
-      $scope.estadoEncuesta = 1;
-      if (data.restaurante == -1) {
-        $scope.calificacion.Restaurante = 0;
-      }
-      if (data.alojamiento == -1) {
-        $scope.calificacion.Alojamiento = 0;
-      }
-      if (data.OtroElemento != null) {
-        $scope.calificacion.OtroElementos = data.OtroElemento;
-      }
-    }
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
 
   $scope.convertirObjeto = function(arreglo){
     if(arreglo != undefined){
@@ -1379,6 +1514,77 @@ angular.module('receptor.controllers', [])
     return false;
   };
 
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data = $rootScope.loader_receptor.percepcion;
+    $scope.aspectos = $scope.convertirObjeto(data.percepcion);
+    $scope.elementos = data.elementos;
+    $scope.veces = data.veces;
+    $scope.actividades = data.actividades;
+  }else{
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoReceptor.cargardatospercepcion($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      if(!$rootScope.loader_receptor.percepcion){
+        $rootScope.loader_receptor.percepcion=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
+      $scope.aspectos = $scope.convertirObjeto(data.percepcion);
+      $scope.elementos = data.elementos;
+      $scope.veces = data.veces;
+      $scope.actividades = data.actividades;
+            
+      if (data.respuestaElementos != undefined && data.valoracion == null) {
+        if(data.respuestaElementos.length == 0){
+          $scope.estadoEncuesta = 0;    
+        }
+      } else {
+        $scope.calificacion.Alojamiento = data.alojamiento;
+          
+        if($scope.calificacion.Infra == 1){
+          document.getElementById("infraestructuraSi").getElementsByTagName( 'input' )[0].checked = true;
+        }else{
+          document.getElementById("infraestructuraNo").getElementsByTagName( 'input' )[0].checked= true;
+        }
+        $scope.calificacion.Restaurante = data.restaurante;
+        $scope.calificacion.Elementos = data.respuestaElementos;
+        $scope.calificacion.Recomendaciones = data.valoracion.Recomendacion;
+        $scope.calificacion.Calificacion = data.valoracion.Calificacion;
+        $scope.calificacion.Volveria = data.valoracion.Volveria;
+        $scope.calificacion.Recomienda = data.valoracion.Recomienda;
+        $scope.calificacion.VecesVisitadas = data.valoracion.Veces;
+        $scope.calificacion.OtroElementos = data.otroElemento;
+        $scope.calificacion.Flora = data.flora;
+        $scope.calificacion.Sostenibilidad = data.sost;
+        $scope.estadoEncuesta = 1;
+        if (data.restaurante == -1) {
+          $scope.calificacion.Restaurante = 0;
+        }
+        if (data.alojamiento == -1) {
+          $scope.calificacion.Alojamiento = 0;
+        }
+        if (data.OtroElemento != null) {
+          $scope.calificacion.OtroElementos = data.OtroElemento;
+        }
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
+  
   $scope.guardar = function () {
 
     if(!$scope.forms.PercepcionForm.$valid){
@@ -1394,9 +1600,74 @@ angular.module('receptor.controllers', [])
         }
       }
     }
-    
-    $scope.calificacion.Id = $scope.id;
+    if($scope.is_offline==1){
+      $rootScope.receptor_off[$stateParams.id].section_6=$scope.calificacion;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline);
+    }else{
+      
+      $scope.calificacion.Id = $scope.id;
 
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+      
+
+      turismoReceptor.guardarseccionpercepcion($scope.calificacion).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline);      
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
+  };
+})
+
+.controller('enteranController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope, $cordovaNetwork) {
+  $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
+  $scope.control = {};
+  $scope.errores = null;
+  $scope.err = null;
+  $scope.forms={};
+  $scope.id=$stateParams.id;
+  $scope.is_offline=$stateParams.isOff;
+
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
+
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
+
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    let data = $rootScope.loader_receptor.enteran
+    $scope.fuentesAntes = data.fuentesAntes;
+    $scope.fuentesDurante = data.fuentesDurante;
+    $scope.redes = data.redes;
+    $scope.enteran.Id = $scope.id;
+  }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
       animation: 'fade-in',
@@ -1404,84 +1675,42 @@ angular.module('receptor.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
-    
-
-    turismoReceptor.guardarseccionpercepcion($scope.calificacion).then(function (data) {
+    turismoReceptor.cargardatosseccioninformacion($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/enteran/"+$scope.id);        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
+      $scope.fuentesAntes = data.fuentesAntes;
+      $scope.fuentesDurante = data.fuentesDurante;
+      $scope.redes = data.redes;
+      $scope.enteran.Id = $scope.id;
+      if(!$rootScope.loader_receptor.enteran){
+        $rootScope.loader_receptor.enteran=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
       }
+      if (data.invitacion_correo != null) {
+        $scope.enteran.FuentesAntes = data.fuentes_antes;
+        $scope.enteran.FuentesDurante = data.fuentes_durante;
+        $scope.enteran.Redes = data.compar_redes;
+        $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes;
+        $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante;
+        $scope.enteran.Correo = data.invitacion_correo;
+        $scope.enteran.Invitacion = data.invitacion;
+        $scope.enteran.NombreFacebook = data.facebook;
+        $scope.enteran.NombreTwitter = data.twitter;
+        $scope.enteran.facilidad = data.facilidad;
+        $scope.enteran.conoce_marca = data.conoce_marca;
+        $scope.enteran.acepta_autorizacion = data.acepta_autorizacion;
+        $scope.enteran.acepta_tratamiento = data.acepta_tratamiento;
+        $scope.enteran.otroRed = data.otroRed;
+      }  
     }, 
     function (error, data) {
       $ionicLoading.hide();
       var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
       });
     });
-  };
-})
-
-.controller('enteranController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, factories, $rootScope) {
-  $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
-  $scope.control = {};
-  $scope.errores = null;
-  $scope.err = null;
-  $scope.forms={};
-  $scope.id=$stateParams.id;
-  if(localStorage.getItem("loader_receptor")!=null){
-    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
-  }else{
-    $rootScope.loader_receptor={};
   }
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-  turismoReceptor.cargardatosseccioninformacion($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    $scope.fuentesAntes = data.fuentesAntes;
-    $scope.fuentesDurante = data.fuentesDurante;
-    $scope.redes = data.redes;
-    $scope.enteran.Id = $scope.id;
-    if(!$rootScope.loader_receptor.enteran){
-      $rootScope.loader_receptor.enteran=data;
-      localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-    }
-    if (data.invitacion_correo != null) {
-      $scope.enteran.FuentesAntes = data.fuentes_antes;
-      $scope.enteran.FuentesDurante = data.fuentes_durante;
-      $scope.enteran.Redes = data.compar_redes;
-      $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes;
-      $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante;
-      $scope.enteran.Correo = data.invitacion_correo;
-      $scope.enteran.Invitacion = data.invitacion;
-      $scope.enteran.NombreFacebook = data.facebook;
-      $scope.enteran.NombreTwitter = data.twitter;
-      $scope.enteran.facilidad = data.facilidad;
-      $scope.enteran.conoce_marca = data.conoce_marca;
-      $scope.enteran.acepta_autorizacion = data.acepta_autorizacion;
-      $scope.enteran.acepta_tratamiento = data.acepta_tratamiento;
-      $scope.enteran.otroRed = data.otroRed;
-    }  
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
 
   $scope.validar = function (sw, id) {
     if (sw == 0) {
@@ -1615,33 +1844,40 @@ angular.module('receptor.controllers', [])
         $scope.enteran.OtroFuenteDurante = null;
     }
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-    $scope.enteran.Id=$scope.id;
-   
-    turismoReceptor.guardarseccioninformacion($scope.enteran).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la totalidad de la encuesta "+ data.codigo +" exitosamente",'top', false, 5000);
-        $location.path("/app/encuestas");        
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    if($scope.is_offline==1){
+      $rootScope.receptor_off[$stateParams.id].section_7=$scope.enteran;
+      localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+      $location.path("/app/encuestas"); 
+    }else{
+
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });    
+      $scope.enteran.Id=$scope.id;
+     
+      turismoReceptor.guardarseccioninformacion($scope.enteran).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la totalidad de la encuesta "+ data.codigo +" exitosamente",'top', false, 5000);
+          $location.path("/app/encuestas");        
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        var alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });   
+    } 
   }; 
 })

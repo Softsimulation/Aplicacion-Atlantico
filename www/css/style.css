@@ -541,3 +541,8 @@ hr{
     text-overflow: initial;
     white-space: normal;
 }
+
+.ion-datetime-picker .calendar .day.disabled, .ion-datetime-picker .calendar .day.disabled:hover, .ion-datetime-picker .calendar .day.disabled.activated {
+    background-color: #eee !important;
+    color: #aaa;
+}

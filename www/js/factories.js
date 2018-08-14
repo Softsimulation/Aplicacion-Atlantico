@@ -33,6 +33,29 @@ angular.module('factories', [])
 			}
 			return result;
 
+		},
+
+		findSelectMultipleId: function (id, array_object) {
+			let result=[];
+			let i=0;
+			for(i=0;i<array_object.length;i++){
+				if(array_object[i].pais_id==id){
+					result.push(array_object[i]);
+				}
+			}
+			return result;
+		},
+
+		findSelectMultipleDpts: function (id, array_object) {
+			let result=[];
+			let i=0;
+			for(i=0;i<array_object.length;i++){
+				if(array_object[i].departamento_id==id){
+					result.push(array_object[i]);
+				}
+			}
+
+			return result;
 		}
 	}
 }])

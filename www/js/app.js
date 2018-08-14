@@ -17,7 +17,8 @@ angular.module('starter', ['ionic',
                            'turismo.receptor.services',
                            'checklist-model',
                            'starter.directives',
-                           'factories'
+                           'factories',
+                           'ngCordova'
 
                            ])
 
@@ -25,10 +26,16 @@ angular.module('starter', ['ionic',
   APIURL: "https://situr-jeferbustamante.c9users.io/situr/public/",
 })
 
-.run(function($ionicPlatform, $ionicPopup, $rootScope) {
+.run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicPickerI18n) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+    $ionicPickerI18n.weekdays = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
+    $ionicPickerI18n.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    $ionicPickerI18n.ok = "Ok";
+    $ionicPickerI18n.cancel = "Cancelar";
+    $ionicPickerI18n.okClass = "button-stable ripple";
+    $ionicPickerI18n.cancelClass = "button-stable ripple";
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -42,19 +49,21 @@ angular.module('starter', ['ionic',
     }
 
     if (window.Connection) {
-        if (navigator.connection.type == Connection.NONE || navigator.connection.type == Connection.UNKNOWN) {
-          $ionicPopup.alert({
-            title: "No hay conexión a internet",
-            content: "Todas las tareas que realice sin conexión serán sincronizadas cuando tenga internet, recuerde no cerrar sesión para no perder el trabajo realizado"
-          }) 
-        }
+      
+      if (navigator.connection.type == Connection.NONE || navigator.connection.type == Connection.UNKNOWN) {
+        $ionicPopup.alert({
+          title: "No hay conexión a internet",
+          content: "Todas las tareas que realice sin conexión serán sincronizadas cuando tenga internet, recuerde no cerrar sesión para no perder el trabajo realizado"
+        }) 
       }
-
+    }
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
   //$ionicConfigProvider.views.transition('none');
+  $httpProvider.useApplyAsync(true);
+
   $stateProvider
 
   .state('app', {
@@ -111,7 +120,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.estancia', {
-    url: '/estancia/:id',
+    url: '/estancia/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -122,7 +131,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.transporte', {
-    url: '/transporte/:id',
+    url: '/transporte/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -133,7 +142,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.grupo', {
-    url: '/grupo/:id',
+    url: '/grupo/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -144,7 +153,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.gastos', {
-    url: '/gastos/:id',
+    url: '/gastos/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -155,7 +164,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.percepcion', {
-    url: '/percepcion/:id',
+    url: '/percepcion/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -166,7 +175,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.enteran', {
-    url: '/enteran/:id',
+    url: '/enteran/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {

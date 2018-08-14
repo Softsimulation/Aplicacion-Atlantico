@@ -114,7 +114,7 @@
           class="ripple ripple-green">
           Si
           <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.opt5.$touched">
-            <span class="label label-danger" ng-show="forms.GastoForm.opt5.$error.required">*</span>
+            <span ng-show="forms.GastoForm.opt5.$error.required">*</span>
           </span>
         </ion-radio>
 
@@ -127,7 +127,7 @@
           class="ripple ripple-green">
           No
           <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.opt5.$touched">
-            <span class="label label-danger" ng-show="forms.GastoForm.opt5.$error.required">*</span>
+            <span ng-show="forms.GastoForm.opt5.$error.required">*</span>
           </span>
         </ion-radio>  
       </div>
@@ -200,7 +200,7 @@
           class="ripple ripple-green">
           {{opc.nombre}}
           <span class="validated" ng-show="forms.GastoForm.$submitted">
-            <span class="label label-danger" ng-show="forms.GastoForm.proveedor.$error.required">*</span>
+            <span ng-show="forms.GastoForm.proveedor.$error.required">*</span>
           </span>
         </ion-radio>
       </div>
@@ -313,8 +313,8 @@
                 ng-disabled="encuestaReceptor.poderLLenar" 
                 placeholder="0" 
                 ng-required="rub.gastos_visitantes[0].cantidad_pagada_magdalena != null || rub.gastos_visitantes[0].divisas_magdalena != null">
-                <span ng-show="forms.GastoForm.$submitted || forms.GastoForm.personas{{$index}}.$touched">
-                  <span class="label label-danger" ng-show="forms.GastoForm.personas{{$index}}.$error.required">*</span>
+                <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.personas{{$index}}.$touched">
+                  <span ng-show="forms.GastoForm.personas{{$index}}.$error.required">*</span>
                 </span>
             </label>
 
@@ -343,7 +343,7 @@
             ng-required="abrirTerrestre"
             max="150">
             <span  class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.empresa.$touched">     
-              <span class="label label-danger" ng-show="forms.GastoForm.empresa.$error.required">* </span>
+              <span ng-show="forms.GastoForm.empresa.$error.required">* </span>
             </span>
         </label>                       
       </div>
@@ -362,7 +362,7 @@
           ng-if="item.id!=3">
           {{item.nombre}}
           <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.alquiler.$touched">
-            <span class="label label-danger" ng-show="forms.GastoForm.alquiler.$error.required">* </span>
+            <span ng-show="forms.GastoForm.alquiler.$error.required">* </span>
           </span>
         </ion-radio>                          
       </div>
