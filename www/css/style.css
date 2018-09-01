@@ -353,6 +353,10 @@ body{
 .item-complex a{
     padding-left: 35px !important;
 }
+.sidemenu-div-item-0 > .item-complex a{
+    padding-left: 16px !important;
+}
+
 
 .botonF1{
   width:52px;
@@ -546,3 +550,4 @@ hr{
     background-color: #eee !important;
     color: #aaa;
 }
+

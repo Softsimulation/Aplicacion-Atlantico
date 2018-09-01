@@ -82,7 +82,7 @@
         <p>Última sección : {{item.ultima}}</p>      
 
         <div class="pull-right">
-          <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editGeneral/{{item.id}}"><i class="ion-edit"></i></a>
+          <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editGeneral/{{item.id}}/0"><i class="ion-edit"></i></a>
         </div>
       </div>
     </div>
@@ -116,5 +116,10 @@
         <i class=" ion-plus"></i>
       </button>
     </a>
+  </div> 
+  <div class="fixed-action-btn" style="bottom: 55px; right: 0px;" ng-if="receptor_off.length>0">
+    <button class="botonF1 button ripple ripple-green button-dark animated zoomIn" ng-click="modal.show()">
+      <i class="ion-clipboard"></i>
+    </button>
   </div> 
 </ion-view>

@@ -15,7 +15,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -43,7 +43,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -79,7 +79,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -89,7 +89,7 @@ angular.module('interno.controllers', [])
   $scope.selectBarrios=function(id) {
 
     if(id){
-      var data={};
+      let data={};
       data.id=id;
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -105,7 +105,7 @@ angular.module('interno.controllers', [])
       }, 
       function (error, data) {
         $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
+        let alertPopup =$ionicPopup.alert({
             title: '¡Error!',
             template: 'Ha ocurrido un error.',
             okType:'button-stable'
@@ -186,7 +186,7 @@ angular.module('interno.controllers', [])
       }, 
       function (error, data) {
         $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
+        let alertPopup =$ionicPopup.alert({
             title: '¡Error!',
             template: 'Ha ocurrido un error. Intenta nuevamente',
             okType:'button-stable'
@@ -247,7 +247,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -255,7 +255,7 @@ angular.module('interno.controllers', [])
   });
 
   function cambiar(array){
-    for(var i=0;i<array.length;i++){
+    for(let i=0;i<array.length;i++){
       array[i].Nombre=String(array[i].nombre);
       array[i].Sexo=String(array[i].sexo);
       array[i].Edad=array[i].edad;
@@ -282,7 +282,7 @@ angular.module('interno.controllers', [])
 
   $scope.cambiar = function (index) {
 
-    for (var j = 0; j < $scope.encuesta.integrantes.length; j++) {
+    for (let j = 0; j < $scope.encuesta.integrantes.length; j++) {
         if (j == index) {
             $scope.encuesta.integrantes[j].jefe_hogar = 'true';
         } else {
@@ -294,7 +294,7 @@ angular.module('interno.controllers', [])
 
   $scope.selectBarrios=function(id) {
     if(id){
-      var data={};
+      let data={};
       data.id=id;
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -310,7 +310,7 @@ angular.module('interno.controllers', [])
       }, 
       function (error, data) {
         $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
+        let alertPopup =$ionicPopup.alert({
             title: '¡Error!',
             template: 'Ha ocurrido un error.',
             okType:'button-stable'
@@ -384,7 +384,7 @@ angular.module('interno.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
-    var data = {}
+    let data = {}
     data.id=$scope.encuesta.integrantes[indice].id
     turismoInterno.eliminarpersona(data).then(function (data) {
         $ionicLoading.hide();
@@ -403,7 +403,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
           title: '¡Error!',
           template: 'Ha ocurrido un error. Intenta nuevamente',
           okType:'button-stable'
@@ -443,7 +443,7 @@ angular.module('interno.controllers', [])
       }, 
       function (error, data) {
         $ionicLoading.hide();
-        var alertPopup =$ionicPopup.alert({
+        let alertPopup =$ionicPopup.alert({
             title: '¡Error!',
             template: 'Ha ocurrido un error. Intenta nuevamente',
             okType:'button-stable'
@@ -484,7 +484,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -573,9 +573,9 @@ angular.module('interno.controllers', [])
 
   $scope.toggleSelection = function (id , $event) {
     
-    var dataValue = angular.element($event.target).attr("disabled");;
+    let dataValue = angular.element($event.target).attr("disabled");;
     if(dataValue!=="disabled"){
-      var idx = $scope.encuesta.Personas.indexOf(id);
+      let idx = $scope.encuesta.Personas.indexOf(id);
       if (idx > -1) {
         $scope.encuesta.Personas.splice(idx, 1);
       }
@@ -641,7 +641,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error. Intenta nuevamente',
         okType:'button-stable'
@@ -696,7 +696,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error. Intenta nuevamente',
         okType:'button-stable'
@@ -742,7 +742,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error. Intenta nuevamente',
         okType:'button-stable'
@@ -786,7 +786,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error. Intenta nuevamente',
         okType:'button-stable'
@@ -836,7 +836,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'
@@ -893,7 +893,7 @@ angular.module('interno.controllers', [])
         $scope.encuesta.NumerohogarSinGasto = null;
         $scope.encuesta.Numerotros = null;
       } else {
-        var i = $scope.encuesta.Personas.indexOf(1)
+        let i = $scope.encuesta.Personas.indexOf(1)
         if (i != -1) {
             $scope.encuesta.Personas.splice(i, 1)
         }
@@ -903,9 +903,9 @@ angular.module('interno.controllers', [])
 
   $scope.toggleSelection = function (id , $event) {
     
-    var dataValue = angular.element($event.target).attr("disabled");;
+    let dataValue = angular.element($event.target).attr("disabled");;
     if(dataValue!=="disabled"){
-      var idx = $scope.encuesta.Personas.indexOf(id);
+      let idx = $scope.encuesta.Personas.indexOf(id);
       if (idx > -1) {
         $scope.encuesta.Personas.splice(idx, 1);
       }
@@ -1013,7 +1013,7 @@ angular.module('interno.controllers', [])
     }, 
     function (error, data) {
       $ionicLoading.hide();
-      var alertPopup =$ionicPopup.alert({
+      let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error. Intenta nuevamente',
         okType:'button-stable'
@@ -1041,7 +1041,7 @@ angular.module('interno.controllers', [])
   }, 
   function (error, data) {
     $ionicLoading.hide();
-    var alertPopup =$ionicPopup.alert({
+    let alertPopup =$ionicPopup.alert({
         title: '¡Error!',
         template: 'Ha ocurrido un error.',
         okType:'button-stable'

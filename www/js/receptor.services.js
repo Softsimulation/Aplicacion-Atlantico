@@ -3,23 +3,28 @@ angular.module('turismo.receptor.services', [])
 .service('turismoReceptor', function ($http, $q, CONFIG) {
 
 	this.encuestas=function () {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
+    	
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
             //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/encuestas',
+	      	async:true,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
 	    }).error(function(status, error, data) {
 	        deferred.reject(error);
 	    }); 
+	    
     	return deferred.promise;  
+
+    	
   	}; 
 
   	this.informaciondatoscrear=function () {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -35,7 +40,7 @@ angular.module('turismo.receptor.services', [])
   	}; 
 
   	this.departamento=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -51,7 +56,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.municipio=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -67,7 +72,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardardatos=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -84,7 +89,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.cargareditardatos=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -100,7 +105,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardareditardatos=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -117,7 +122,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.cargardatosseccionestancia=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -133,7 +138,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.crearestancia=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -150,7 +155,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
    	this.cargardatostransporte=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -166,7 +171,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardarsecciontransporte=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -183,7 +188,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.cargardatosseccionviaje=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -199,7 +204,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardarseccionviajegrupo=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -216,7 +221,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.infogasto=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -232,7 +237,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardargastos=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -248,9 +253,8 @@ angular.module('turismo.receptor.services', [])
 		return deferred.promise;
   	};
 
-
   	this.cargardatospercepcion=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -266,7 +270,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardarseccionpercepcion=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -283,7 +287,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.cargardatosseccioninformacion=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -299,7 +303,7 @@ angular.module('turismo.receptor.services', [])
   	};
 
   	this.guardarseccioninformacion=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -314,5 +318,7 @@ angular.module('turismo.receptor.services', [])
 
 		return deferred.promise;
   	};
+
+  	
 
 });

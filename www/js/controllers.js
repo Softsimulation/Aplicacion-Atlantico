@@ -126,9 +126,17 @@ angular.module('starter.controllers', [
 
 .controller('SideMenuCtrl', function($scope) {
   $scope.theme = 'ionic-sidemenu-stable';
-  ;
+
   $scope.tree =
     [{
+      id:0,
+      level:0,
+      name:'Inicio',
+      icon:'ion-home',
+      state:'app.home',
+      items:null
+    },
+    {
       id: 1,
       level: 0,
       name: 'Encuestas Receptor',
@@ -207,6 +215,12 @@ angular.module('starter.controllers', [
     }];
 })
 
-.controller('homeController', function($scope, $stateParams) {
- 
+.controller('homeController', function($scope, $stateParams, $ionicPopup) {
+  $scope.show=function () {
+    $ionicPopup.alert({
+          title: '¡Información!',
+          template: 'Esta aplicación contiene módulos para la carga de encuestas realizadas vía offline. <br><br>Te recomendamos realizar una encuesta online para que queden pre-cargadas las opciones en el télefono, y puedas realizar tus encuestas sin conexión',
+          okType:'button-stable'
+      });
+  };
 });

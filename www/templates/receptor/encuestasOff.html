@@ -1,0 +1,98 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark bar-custom">
+      	<h1 class="title"><i class="ion-clipboard"></i> Encuestas Offline</h1>
+      	<button class="button button-clear button-primary" ng-click="modal.hide()"><i class="ion-close-circled"></i></button>
+    </ion-header-bar>
+    <div class="bar bar-subheader bar-custom item-input-inset">
+	    <label class="item-input-wrapper">
+	      <i class="icon ion-ios-search placeholder-icon"></i>
+	      <input type="text" placeholder="Buscar encuesta..." ng-model="search2">
+	    </label>
+	  </div>
+
+    <ion-content class="has-subheader" style="background-color: #f4f4f7">
+	   	<div class="card padding">
+	   		<button 
+	        	class="button button-positive button-small button-outline ripple ripple-green" 
+	        	ng-disabled="currentPage == 0" 
+	        	ng-click="currentPage=currentPage-1">
+	        	<i class="icon ion-ios-arrow-back"></i>
+	      	</button>
+		  	<span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((receptor_off | filter:search2))}}</span>
+		  <button 
+		    class="button button-positive button-small button-outline ripple ripple-green"
+		    ng-disabled="currentPage >= (receptor_off| filter:search2).length/pageSize - 1" 
+		    ng-click="currentPage=currentPage+1">
+
+		    <i class="icon ion-ios-arrow-forward"></i>
+		  </button>
+		</div>
+	    <div class="card list animated fadeInLeft active-card" 
+	        ng-repeat="item in receptor_off | filter:search2  | firstPage:currentPage*pageSize | limitTo:pageSize" >
+		     	<div class="item">
+		        <h2>{{item.section_1.Nombre}}</h2>
+		        <p>{{item.section_1.Llegada | date:'dd/MM/yyyy'}} - {{item.section_1.Salida | date:'dd/MM/yyyy'}}</p>
+		        <p>Encuestador: {{item.section_1.encuestador.asp_net_user.username}}</p>
+		        <p>Estado: 
+		        	<span ng-if="!item.lastLoad">No cargado</span> 
+		        	<span ng-if="item.lastLoad<7">En proceso</span>
+		        	<span ng-if="item.lastLoad==7">Cargada</span>
+		        </p>
+		        <p>Última sección (cargada) : {{item.lastLoad}}</p>     
+		        <span class="validated" 
+		        	  ng-show="item.section_1.errores || 
+		        	  item.section_2.errores ||
+		        	  item.section_3.errores ||
+		        	  item.section_4.errores ||
+		        	  item.section_5.errores ||
+		        	  item.section_6.errores ||
+		        	  item.section_7.errores 
+		        	  ">
+                      <span>*</span>
+                </span>
+                
+		        <div class="pull-right">
+		        	<a href="#/app/editGeneral/{{$index}}/0" class="ripple ripple-green button button-outline button-positive button-small" ng-if="item.lastLoad!=7">
+		          		<i class="ion-edit"></i>
+		          	</a>
+		          	<!--<button class="ripple ripple-green button button-outline button-royal button-small">
+		          		<i class="ion-upload"></i>
+		          	</button>-->
+		          	<button class="ripple ripple-green button button-outline button-assertive button-small" ng-click="deleted(currentPage*pageSize+$index)">
+		          		<i class="ion-trash-b"></i>
+		          	</button>
+		        </div>
+	      	</div>
+	    </div>
+	    <div class="card padding">
+	   		<button 
+	        	class="button button-positive button-small button-outline ripple ripple-green" 
+	        	ng-disabled="currentPage == 0" 
+	        	ng-click="currentPage=currentPage-1">
+	        	<i class="icon ion-ios-arrow-back"></i>
+	      	</button>
+		  	<span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((receptor_off | filter:search2))}}</span>
+		  <button 
+		    class="button button-positive button-small button-outline ripple ripple-green"
+		    ng-disabled="currentPage >= (receptor_off| filter:search2).length/pageSize - 1" 
+		    ng-click="currentPage=currentPage+1">
+
+		    <i class="icon ion-ios-arrow-forward"></i>
+		  </button>
+		</div>
+
+    	<br><br><br>
+    </ion-content>
+
+    <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+      	<button class="botonF1 button ripple ripple-light button-positive animated zoomIn" ng-click="sincronizar()">
+        	<i class="ion-loop"></i>
+      	</button>
+	</div>
+	<div class="fixed-action-btn" style="bottom: 55px; right: 0px;">
+      	<button class="botonF1 button ripple ripple-light button-assertive animated zoomIn" ng-click="eliminar()">
+        	<i class="ion-trash-a"></i>
+      	</button>
+	</div>
+
+  </ion-modal-view>

@@ -1,38 +1,38 @@
 .platform-android .popup{
 
-    border-radius: 2px;
-    max-width: 280px;
-    background-color: #fafafa;
-    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+  border-radius: 2px;
+  max-width: 280px;
+  background-color: #fafafa;
+  box-shadow: 0 16px 20px rgba(0,0,0,.4);
 }
 
 .platform-android .popup-head {
 
-    text-align: left;
-    text-align: start;
-    padding: 24px 24px 20px;
-    border-bottom: 0px;
-  
+  text-align: left;
+  text-align: start;
+  padding: 24px 24px 20px;
+  border-bottom: 0px;
+
 }
 
 .platform-android .popup-head,.platform-android .popup-title{
-    color: black;
-    font-size: 22px;
-    
+  color: black;
+  font-size: 22px;
+
 }
 
 .platform-android .popup-body {
-    padding: 0 24px 24px 24px;
-    color: rgba(0, 0, 0, 0.5);
-    max-height: 240px;
-    font-size: 15px;
+  padding: 0 24px 24px 24px;
+  color: rgba(0, 0, 0, 0.5);
+  max-height: 240px;
+  font-size: 15px;
 }
 
 .platform-android .popup-buttons{
-	
-	display:block;
-    padding: 8px 8px 8px 24px;
-    text-align: right;
+
+  display:block;
+  padding: 8px 8px 8px 24px;
+  text-align: right;
 }
 
 
@@ -42,105 +42,105 @@
 .platform-android .popup-buttons .button-stable,
 .platform-android .popup-buttons .ng-binding,
 .platform-android .popup-buttons .button-positive{
-	/*text-align: right;
-    text-align: end;*/
-    border-radius: 2px;
-    position: relative;
-    overflow: hidden;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: #16947f;
-    background-color: transparent;
-    padding: 10px;
-    margin-right: 4px;
-    border:0px;
-   	-webkit-box-flex: 0;
-    -webkit-flex: 0;
-    -moz-box-flex: 0;
-    -moz-flex: 0;
-    -ms-flex: 0;
-    flex: 0;
-   	display: inline-block;
-    font-weight: bold;
- 
+/*text-align: right;
+text-align: end;*/
+border-radius: 2px;
+position: relative;
+overflow: hidden;
+font-weight: 500;
+text-transform: uppercase;
+color: #16947f;
+background-color: transparent;
+padding: 10px;
+margin-right: 4px;
+border:0px;
+-webkit-box-flex: 0;
+-webkit-flex: 0;
+-moz-box-flex: 0;
+-moz-flex: 0;
+-ms-flex: 0;
+flex: 0;
+display: inline-block;
+font-weight: bold;
+
 }
 
 
 .platform-android .popup-buttons button:hover{
- 	color: #16947f;
- 	background:#d1d3d6;
- 	border:none;
- 	box-shadow: none;
+  color: #16947f;
+  background:#d1d3d6;
+  border:none;
+  box-shadow: none;
 }
 
 .platform-android .popup-buttons .button:after {
-    position: initial !important;
-    top: 0px !important;
-    right: 0px !important;
-    bottom: 0px !important;
-    left: 0px !important;
-    padding: 0px !important;
-    
+  position: initial !important;
+  top: 0px !important;
+  right: 0px !important;
+  bottom: 0px !important;
+  left: 0px !important;
+  padding: 0px !important;
+
 }
 
 .platform-ios .popup{
 
-    border-radius: 13px;
-    overflow: hidden;
-    max-width: 270px;
-    background-color: #f8f8f8;
-    box-shadow: none;
+  border-radius: 13px;
+  overflow: hidden;
+  max-width: 270px;
+  background-color: #f8f8f8;
+  box-shadow: none;
 }
 
 .platform-ios .popup-head {
-	text-align: center;
-    padding: 12px 16px 7px;
-  	border-bottom: 0px;
+  text-align: center;
+  padding: 12px 16px 7px;
+  border-bottom: 0px;
 }
 
 .platform-ios .popup-head,.platform-android .popup-title{
-    color: black;
-    font-size: 22px;
+  color: black;
+  font-size: 22px;
 }
 
 
 .platform-ios .popup-body {
-	text-align: center;
-	max-height: 240px;
-    padding: 0 24px 24px 24px;
-    color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  max-height: 240px;
+  padding: 0 24px 24px 24px;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .platform-ios .popup-buttons{
-	margin-right: -.55px;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    padding: 0px;
-    min-height: 0px !important;
+  margin-right: -.55px;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0px;
+  min-height: 0px !important;
 }
 
 .platform-ios .popup-buttons button{
-	margin: 0;
-    border-radius: 0;
-    overflow: hidden;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    min-width: 50%;
-    height: 44px;
-    border-top: .55px solid #dbdbdf;
-    border-right: .55px solid #dbdbdf;
-    border-bottom: 0px;
-    border-left: 0px;
-    font-size: 17px;
-    color: #488aff;
-    background-color: transparent;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 50%;
+  height: 44px;
+  border-top: .55px solid #dbdbdf;
+  border-right: .55px solid #dbdbdf;
+  border-bottom: 0px;
+  border-left: 0px;
+  font-size: 17px;
+  color: #488aff;
+  background-color: transparent;
 }
 
 
 .platform-ios .popup-buttons button:hover{
- 	color: #488aff;
+  color: #488aff;
 }
 
 .platform-android .action-sheet-backdrop.active {
@@ -185,28 +185,28 @@
 .platform-android .action-sheet-cancel {
   display: block;
   margin-top: 3px;
- 
+
 }
 .platform-android .action-sheet-has-icons .button {
   padding-left: 56px; 
 
 }
 .platform-android .loading-container .loading{
-    border-radius: 2px;
-    max-width: 280px;
-    max-height: 90%;
-    color: rgba(0,0,0,.5);
-    background: #fafafa;
-    box-shadow: 0 16px 20px rgba(0,0,0,.4);
-    padding: 24px;
+  border-radius: 2px;
+  max-width: 280px;
+  max-height: 90%;
+  color: rgba(0,0,0,.5);
+  background: #fafafa;
+  box-shadow: 0 16px 20px rgba(0,0,0,.4);
+  padding: 24px;
 }
 .platform-ios .loading-container .loading{
   border-radius: 8px;
-    max-width: 280px;
-    max-height: 90%;
-    color: #000;
-    background: #f8f8f8;
-    padding: 24px 34px;
+  max-width: 280px;
+  max-height: 90%;
+  color: #000;
+  background: #f8f8f8;
+  padding: 24px 34px;
 }
 .loading-container .loading span{
   margin-left: 16px;
@@ -215,12 +215,13 @@
 }
 
 .spinner-android {
-    stroke: #16469e;
- }
- .loading-container .spinner svg {
-    width: 45px;
-    height: 45px;
-    float: left;
+  stroke: #16469e;
+}
+
+.loading-container .spinner svg {
+  width: 45px;
+  height: 45px;
+  float: left;
 }
 .platform-android .ion-badges{
   border-radius: 4px;
@@ -240,51 +241,51 @@
 }
 
 .platform-android .item-floating-label:after {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 2px;
-    border: none;
-    background: #16469e;
-    font-size: 1px;
-    will-change: transform, visibility;
-    transition: all 200ms ease-out;
-    transform: scaleX(0);
-    visibility: hidden;
-    z-index: 10;
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 2px;
+  border: none;
+  background: #16469e;
+  font-size: 1px;
+  will-change: transform, visibility;
+  transition: all 200ms ease-out;
+  transform: scaleX(0);
+  visibility: hidden;
+  z-index: 10;
 }
 .platform-android .item-floating-label:focus-within:after {
   transform: scaleX(1);
-    visibility: visible;
+  visibility: visible;
 }
 
 .platform-android .item-input:before {
   content: '';
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 2px;
-    border: none;
-    background: #16469e;
-    font-size: 1px;
-    will-change: transform, visibility;
-    transition: all 200ms ease-out;
-    transform: scaleX(0);
-    visibility: hidden;
-    z-index: 10;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 2px;
+  border: none;
+  background: #16469e;
+  font-size: 1px;
+  will-change: transform, visibility;
+  transition: all 200ms ease-out;
+  transform: scaleX(0);
+  visibility: hidden;
+  z-index: 10;
 }
 .platform-android .item-input:focus-within:before {
   transform: scaleX(1);
-    visibility: visible;
+  visibility: visible;
 }
 
 
@@ -293,7 +294,7 @@
 .platform-android .modal-select {
   position: absolute;
   width: 90%;
-  
+
   top: 5%;
   left: 5%;
   background: #fff;
@@ -307,7 +308,7 @@
 .platform-ios .modal-select {
   position: absolute;
   width: 90%;
-  
+
   top: 5%;
   left: 5%;
   background: #fff;
@@ -328,20 +329,20 @@
 }
 .platform-android .modal-select .popup-buttons{
   border-bottom-right-radius: 2px !important;
-    border-bottom-left-radius: 2px !important;
-    background: white;
+  border-bottom-left-radius: 2px !important;
+  background: white;
 }
 
 .platform-ios .modal-select .popup-buttons{
   border-bottom-right-radius: 13px !important;
-    border-bottom-left-radius: 13px !important;
-    background: white;
+  border-bottom-left-radius: 13px !important;
+  background: white;
 }
 
 
 .platform-ios .modal-select .popup-buttons .OK{
-    border-bottom-left-radius: 13px !important;
-   
+  border-bottom-left-radius: 13px !important;
+
 }
 
 .platform-ios .modal-select .popup-buttons .Cancel{
@@ -453,47 +454,47 @@ background: #F7F7F7;
 }
 
 .platform-android .ionic .toggle .track {
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.3s;
-    transition-property: background-color, border;
-    display: inline-block;
-    box-sizing: border-box;
-    width: 40px;
-    height: 12px;
-   /*border: solid 2px #e6e6e6;*/
-    border-radius: 20px;
-    background-color: #e6e6e6;
-    content: ' ';
-    cursor: pointer;
-    pointer-events: none;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.3s;
+  transition-property: background-color, border;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 40px;
+  height: 12px;
+  /*border: solid 2px #e6e6e6;*/
+  border-radius: 20px;
+  background-color: #e6e6e6;
+  content: ' ';
+  cursor: pointer;
+  pointer-events: none;
 }
 
 .platform-android .ionic .toggle .handle {
-    transition: 0.3s cubic-bezier(0, 1.1, 1, 1.1);
-    transition-property: background-color, -webkit-transform;
-    transition-property: background-color, transform;
-    transition-property: background-color, transform, -webkit-transform;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-radius: 27px;
-    background-color: #fff;
-    top: 3px;
-    left: 6px;
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.15);
+  transition: 0.3s cubic-bezier(0, 1.1, 1, 1.1);
+  transition-property: background-color, -webkit-transform;
+  transition-property: background-color, transform;
+  transition-property: background-color, transform, -webkit-transform;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 27px;
+  background-color: #fff;
+  top: 3px;
+  left: 6px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.15);
 }
 
 .platform-android .ionic .toggle input:checked + .track .handle {
-    background: #377cf2;
+  background: #377cf2;
 }
 
 .main-modal {
-    background-color: transparent;
- }
+  background-color: transparent;
+}
 
 
 .modal-backdrop-bg {
-    background: rgba(0, 0, 0, 0.26);
+  background: rgba(0, 0, 0, 0.26);
 }
 
 
@@ -505,16 +506,16 @@ background: #F7F7F7;
 }
 
 .platform-android .popup-menu-panel{
-    border-radius: 2px;
-    background-color: #fafafa;
-    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+  border-radius: 2px;
+  background-color: #fafafa;
+  box-shadow: 0 16px 20px rgba(0,0,0,.4);
 }
 
 
 .platform-ios .popup-menu-panel{
-    border-radius: 13px;
-    box-shadow: none;
-    background-color: #f8f8f8;
+  border-radius: 13px;
+  box-shadow: none;
+  background-color: #f8f8f8;
 }
 
 
@@ -541,9 +542,9 @@ background: #F7F7F7;
 }
 
 .platform-android .button-has-search{
-    position: absolute;
-    color: black;
-    right: 20px;
+  position: absolute;
+  color: black;
+  right: 20px;
 }
 
 .platform-ios .button-has-search{
@@ -560,80 +561,36 @@ background: #F7F7F7;
 
 .platform-android ion-content .button, .platform-android .botonF1{
   -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
-    -webkit-transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
-    transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
-    transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1);
-    transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
-   border-radius: 2px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  -webkit-transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+  transition: background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+  transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1);
+  transition: box-shadow .3s cubic-bezier(.4,0,.2,1),background-color .3s cubic-bezier(.4,0,.2,1),color .3s cubic-bezier(.4,0,.2,1),-webkit-box-shadow .3s cubic-bezier(.4,0,.2,1);
+  border-radius: 2px;
 }
 .platform-android .botonF1{
   border-radius: 50%;
 }
 
 /*.platform-android .bar{
- /* -webkit-box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 15px -2px rgba(0,0,0,0.75);
-  
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+
 }*/
-
-/*.platform-android ion-nav-view [nav-view-direction="forward"] {     
-  left: 0;     
-  z-index: 2;     
-  -webkit-animation: scaleUp .2s ease both;     
-  -moz-animation: scaleUp .2s ease both;     
-  animation: scaleUp .2s ease both;     
-  -webkit-transform: translate3d(0, 0, 0); 
-}
-
-.platform-android ion-nav-view [nav-view-direction="back"] {     
-  left: 0;     
-  z-index: 2;     
-  -webkit-animation: scaleDown .2s ease both;     
-  -moz-animation: scaleDown .2s ease both;     
-  animation: scaleDown .2s ease both; 
-}
-
-@-webkit-keyframes scaleDown {
-  to { opacity: 0; -webkit-transform: scale(.8); }
-}
-@-moz-keyframes scaleDown {
-  to { opacity: 0; -moz-transform: scale(.8); }
-}
-@keyframes scaleDown {
-  to { opacity: 0; transform: scale(.8); }
-}
-
-@-webkit-keyframes scaleUp {
-  from { opacity: 0; -webkit-transform: scale(.8); }
-}
-@-moz-keyframes scaleUp {
-  from { opacity: 0; -moz-transform: scale(.8); }
-}
-@keyframes scaleUp {
-  from { opacity: 0; transform: scale(.8); }
-}*/
-
 
 .platform-android .card{
-    margin: 10px 5px;
-    border-radius: 2px !important;
-    /*width: calc(100% - 20px);
-    */
-    background: #fff;
-    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  margin: 10px 5px;
+  border-radius: 2px !important;
+  background: #fff;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
 }
 
 .platform-ios .card{
-    margin: 12px;
-    border-radius: 2px;
-    width: calc(100% - 24px);
-    
-    background: #fff;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.3);
-    box-shadow: 0 1px 2px rgba(0,0,0,.3);
-
+  margin: 12px;
+  border-radius: 10px;
+  width: calc(100% - 24px);
+  background: #fff;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
 }
-

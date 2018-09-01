@@ -3,7 +3,7 @@ angular.module('turismo.interno.services', [])
 .service('turismoInterno', function ($http, $q, CONFIG) {
 
 	this.getTemporadas=function () {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -19,7 +19,7 @@ angular.module('turismo.interno.services', [])
   	}; 
 
   	this.cargardatos=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -35,7 +35,7 @@ angular.module('turismo.interno.services', [])
   	}; 
 
   	this.datoshogar=function () {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -51,7 +51,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.barrios=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -67,7 +67,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.guardarhogar=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -84,7 +84,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.datoseditar=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -100,7 +100,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.eliminarpersona=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -116,7 +116,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.guardareditarhogar=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -132,7 +132,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.viajes=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -148,7 +148,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.createviaje=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -164,7 +164,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.viaje=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -180,7 +180,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.eliminarviaje=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -196,7 +196,7 @@ angular.module('turismo.interno.services', [])
   	};
   	
   	this.siguienteviaje=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -212,7 +212,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.viajedataprincipal=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
@@ -228,7 +228,7 @@ angular.module('turismo.interno.services', [])
   	};	
 
   	this.createviajeprincipal=function (data) {
-	    var deferred = $q.defer();
+	    let deferred = $q.defer();
 	    
 	    $http({
 	      method: "POST",
@@ -244,7 +244,7 @@ angular.module('turismo.interno.services', [])
   	};
 
   	this.actividades=function (id) {
-    	var deferred = $q.defer();
+    	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',

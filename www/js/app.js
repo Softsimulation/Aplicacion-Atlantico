@@ -109,7 +109,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.editGeneral', {
-    url: '/editGeneral/:id',
+    url: '/editGeneral/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
