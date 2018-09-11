@@ -32,12 +32,12 @@
           name="encuestador"
           ng-required="true"
           >
-          Encuestador: {{encuesta.encuestador.asp_net_user.username}}
+          Encuestador: {{encuesta.encuestador.user.username}}
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.encuestador.$touched">
               <span ng-show="forms.DatosForm.encuestador.$error.required">*</span>
           </span>
           <div class="option ripple ripple-green">
-              {{option.asp_net_user.username}}
+              {{option.user.username}}
           </div>  
         </a>        	
       </div>
@@ -268,7 +268,7 @@
             cancel-button="Cancelar" 
             reset-button="Limpiar" 
             sub-header-class="bar-custom"
-            ng-change="changedepartamento(pais_residencia.id)"
+            ng-change="updatedPaisRes(pais_residencia);changedepartamento(pais_residencia.id)"
             name="pais_residencia"
             ng-required="true"
             >
@@ -295,7 +295,7 @@
             cancel-button="Cancelar" 
             reset-button="Limpiar" 
             sub-header-class="bar-custom"
-            ng-change="changemunicipio(departamento.id)"
+            ng-change="updatedDptoRes(departamento);changemunicipio(departamento.id)"
             name="departamento"
             ng-required="true"
             >
@@ -338,7 +338,7 @@
 
       <div class="card animated fadeInLeft"  ng-if="pais_residencia.id != 47">
         <div class="item item-divider situr-header required">
-          <h2>¿Cuál fue su destino principal en Atlántico?</h2>
+          <h2>¿Cuál fue su destino principal en Colombia?</h2>
         </div>
         <!--Dpto destino-->
         <a 
@@ -355,7 +355,7 @@
           reset-button="Limpiar" 
           sub-header-class="bar-custom"
           ng-required="pais_residencia.id != 47"
-          ng-change="changemunicipiocolombia(departamentod.id)"
+          ng-change="updatedDptoDes(departamentod);changemunicipiocolombia(departamentod.id)"
           name="departamento_p"
           >
           Departamento: {{departamentod.nombre}}
@@ -478,41 +478,7 @@
   </ion-content>
 
 
-
-  <!--<div class="popup-menu">
-    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
-    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
-    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
-      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
-        <i class="ion ion-information-circled"></i>
-        <span>General</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
-        <i class="ion ion-clock"></i>
-        <span>Estancia</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
-        <i class="ion ion-model-s"></i>
-        <span>Transporte</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
-        <i class="ion ion-ios-people"></i>
-        <span>Grupo</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
-        <i class="ion-cash"></i>
-        <span>Gastos</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
-        <i class="ion ion-person-add"></i>
-        <span>Percepción</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
-        <i class="ion ion-speakerphone"></i>
-        <span>Redes e internet</span>
-      </a>
-    </div>
-  </div>-->
+  <div ng-include="'templates/receptor/popup-menu.html'"></div>
 
   <div class="progress-container">
     <round-progress

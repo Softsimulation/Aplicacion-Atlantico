@@ -1,5 +1,5 @@
 <ion-view view-title="Duración de la estancia y lugares visitados">
-  <ion-content>
+  <ion-content >
     <div class="card animated fadeInLeft list" ng-if="errores">
       <div class="item item-divider situr-header-error">
           <h2>Corrige los errores</h2>
@@ -8,10 +8,10 @@
         {{error[0]}}
       </div>
     </div>
-    <form role="form" name="forms.EstanciaForm" novalidate>
+    <form role="form" name="forms.EstanciaForm"  novalidate>
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>Registre los municipios que visitó en el Atlántico</h2>
+          <h2> B2. Registre los municipios que visitó en el Atlántico</h2>
         </div>
         <div class="item">
           <a ng-click="agregar()" class="button button-small button-outline button-positive ripple ripple-green">
@@ -120,7 +120,7 @@
 
       <div class="card animated bounceInUp">
         <div class="item item-divider situr-header required">
-          <h2>¿Qué actividades realizó en el Atlántico?</h2>
+          <h2>B5. ¿Qué actividades realizó en el Atlántico?</h2>
         </div>
         <div ng-repeat="activ in Datos.Actividadesrelizadas">
           <ion-checkbox 
@@ -191,7 +191,7 @@
       
       <div class="row">
         <div class="col col-50">
-          <a href="#/app/editGeneral/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+          <a href="#/app/editGeneral/{{id}}/{{is_offline}}?lastSection={{last_section}}" class="button button-outline button-positive ripple ripple-green button-block" >
             Anterior
           </a>
         </div>
@@ -202,47 +202,11 @@
         </div>
       </div>
     </form>
-
-  <br><br><br>
+    <br><br><br>
 </ion-content>
 
+<div ng-include="'templates/receptor/popup-menu.html'"></div>
 
-
-<!--<div class="popup-menu">
-  <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
-  <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
-  <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
-    <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
-      <i class="ion ion-information-circled"></i>
-      <span>General</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
-      <i class="ion ion-clock"></i>
-      <span>Estancia</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
-      <i class="ion ion-model-s"></i>
-      <span>Transporte</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
-      <i class="ion ion-ios-people"></i>
-      <span>Grupo</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
-      <i class="ion-cash"></i>
-      <span>Gastos</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
-      <i class="ion ion-person-add"></i>
-      <span>Percepción</span>
-    </a>
-    <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
-      <i class="ion ion-speakerphone"></i>
-      <span>Redes e internet</span>
-    </a>
-  </div>
-</div>
--->
 <div class="progress-container">
   <round-progress
   max="100"

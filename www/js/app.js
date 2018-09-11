@@ -23,7 +23,7 @@ angular.module('starter', ['ionic',
                            ])
 
 .constant('CONFIG', {
-  APIURL: "https://situr-jeferbustamante.c9users.io/situr/public/",
+  APIURL: "https://situr-andoedo94.c9users.io/",
 })
 
 .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicPickerI18n) {

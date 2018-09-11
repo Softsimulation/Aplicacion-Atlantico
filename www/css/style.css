@@ -74,6 +74,7 @@ body{
     -webkit-transition: all 0.35s ease-in-out;
     transition: all 0.35s ease-in-out;
     border-radius: 50%;
+    border: 0.5px solid white;
 }
 .popup-menu-toggle:before {
     position: absolute;
@@ -551,3 +552,11 @@ hr{
     color: #aaa;
 }
 
+.btn-error{
+    margin-left: 10px;
+    text-decoration: none;
+    padding: 2px;
+    float: left;
+    width: 100%;
+
+}

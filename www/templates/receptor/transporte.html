@@ -13,7 +13,7 @@
 		<form role="form" name="forms.transForm" novalidate>
 			<div class="card animated fadeInLeft">
 				<div class="item item-divider situr-header required">
-					<h2> ¿Qué tipo de transporte utilizó para llegar al departamento del Atlántico?</h2>
+					<h2>C1. ¿Qué tipo de transporte utilizó para llegar al departamento del Atlántico?</h2>
 				</div>
 				<label ng-repeat="item in transportes" >             	 
 					<ion-radio 
@@ -45,7 +45,7 @@
 
 			<div class="card animated fadeInLeft">
 				<div class="item item-divider situr-header required">
-					<h2>¿Cuál fue el transporte utilizado la mayor parte del tiempo para desplazarse por el departamento?</h2>
+					<h2>C2. ¿Cuál fue el transporte utilizado la mayor parte del tiempo para desplazarse por el departamento?</h2>
 				</div>
 				<label ng-repeat="item in transportes" ng-if="item.Id != 9">             	 
 					<ion-radio name="mover" ng-value="item.id" ng-model="transporte.Mover" ng-required="true">
@@ -71,7 +71,7 @@
 
 			<div class="card animated fadeInLeft">
 				<div class="item item-divider situr-header ">
-					<h2>En una escala de 1 a 10, donde 1 es Ninguna dificultad y 10 Mucha dificultad. ¿Qué tanta dificultad tuvo para llegar a Atlántico ?</h2>
+					<h2>C3. En una escala de 1 a 10, donde 1 es Ninguna dificultad y 10 Mucha dificultad. ¿Qué tanta dificultad tuvo para llegar a Atlántico ?</h2>
 				</div>
 				<label ng-repeat="n in [] | range:10">
 					<ion-radio type="radio" name="experiencia" ng-model="transporte.Calificacion" value="{{$index+1}}">
@@ -83,7 +83,7 @@
 
 			<div class="row">
 	    	<div class="col col-50">
-	      	<a href="#/app/estancia/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+	      	<a href="#/app/estancia/{{id}}/{{is_offline}}?lastSection={{last_section}}" class="button button-outline button-positive ripple ripple-green button-block" >
 	        	Anterior
 	      	</a>
 	    	</div>
@@ -98,40 +98,8 @@
 		<br><br><br>
 	</ion-content>
 
-	<!--<div class="popup-menu">
-		<div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
-		<i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
-		<div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
-			<a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
-				<i class="ion ion-information-circled"></i>
-				<span>General</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
-				<i class="ion ion-clock"></i>
-				<span>Estancia</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
-				<i class="ion ion-model-s"></i>
-				<span>Transporte</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
-				<i class="ion ion-ios-people"></i>
-				<span>Grupo</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
-				<i class="ion-cash"></i>
-				<span>Gastos</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
-				<i class="ion ion-person-add"></i>
-				<span>Percepción</span>
-			</a>
-			<a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
-				<i class="ion ion-speakerphone"></i>
-				<span>Redes e internet</span>
-			</a>
-		</div>
-	</div>-->
+  	<div ng-include="'templates/receptor/popup-menu.html'"></div>
+
 
 	<div class="progress-container">
 		<round-progress

@@ -3,7 +3,46 @@ angular.module('starter.controllers', [
                                       'interno.controllers'
                                       ])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover, $rootScope) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover, $rootScope, $location, ionicToast) {
+  $rootScope.togglePopupMenu = function() {
+    return $scope.menu_is_open = !$scope.menu_is_open;
+  };
+
+  $rootScope.navigateReceptor=function (to_section, last_section, id, is_offline) {
+    if(to_section<=last_section){
+      switch(to_section){
+        case 1:
+          $location.path("/app/editGeneral/"+id+"/"+is_offline).search({'lastSection':last_section});                
+        break;
+
+        case 2:
+          $location.path("/app/estancia/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+
+        case 3:
+          $location.path("/app/transporte/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+          
+        case 4:
+          $location.path("/app/grupo/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+
+        case 5:
+          $location.path("/app/gastos/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+
+        case 6:
+          $location.path("/app/percepcion/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+
+        case 7:
+          $location.path("/app/enteran/"+id+"/"+is_offline).search({'lastSection':last_section});
+        break;
+      }
+    }else{
+      ionicToast.show("Aún no tienes permisos para acceder a esa sección",'middle', false, 5000); 
+    }
+  }
 })
 
 .controller('listarGrupoController', function($scope, $stateParams) {

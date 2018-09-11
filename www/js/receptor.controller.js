@@ -7,8 +7,9 @@ angular.module('receptor.controllers', [])
   $scope.pageSize = 5;           
   $scope.encuestas=[];
   $scope.toDelete=[];
-  if(localStorage.getItem("receptor_off")!=null){
+  if(localStorage.getItem("receptor_off")!=null ){
     $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+    if($rootScope.receptor_off.length>0)
     ionicToast.show("Hay encuestas cargadas para sincronizar",'middle', false, 5000);
   }
   
@@ -78,15 +79,15 @@ angular.module('receptor.controllers', [])
   $scope.sincronizar=function () {
     
     for (let i = 0; i < $rootScope.receptor_off.length; i++) { 
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
       if(!$rootScope.receptor_off[i].id){
         let section1 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardardatos', $rootScope.receptor_off[i].section_1,{'content-type':'application/json',});
+        $ionicLoading.show({
+          template: '<ion-spinner></ion-spinner> Espere por favor...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
+        });
         $q.all([section1]).then(data => {
           let success=data[0].data.success;
           if(success==true){
@@ -150,45 +151,72 @@ angular.module('receptor.controllers', [])
                                               }else{
                                                $rootScope.receptor_off[i].section_7.errores = data[0].data.errores;
                                               }
+                                              $ionicLoading.hide();
                                               localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                            }).catch(reason => {
+                                              $ionicLoading.hide(); 
+                                              ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                             });
                                           }
                                         }else{
                                          $rootScope.receptor_off[i].section_6.errores = data[0].data.errores;
+                                         $ionicLoading.hide();
                                         }
                                         localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                      }).catch(reason => {
+                                        $ionicLoading.hide(); 
+                                        ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                       });
                                     }
                                   }else{
                                    $rootScope.receptor_off[i].section_5.errores = data[0].data.errores;
+                                   $ionicLoading.hide();
                                   }
                                   localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                }).catch(reason => {
+                                  $ionicLoading.hide(); 
+                                  ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                 });
                               }
                             }else{
                              $rootScope.receptor_off[i].section_4.errores = data[0].data.errores;
+                             $ionicLoading.hide();
                             }
                             localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                          }).catch(reason => {
+                            $ionicLoading.hide(); 
+                            ionicToast.show("Error interno del servidor",'middle', false, 5000);
                           });
                         }
                       }else{
                        $rootScope.receptor_off[i].section_3.errores = data[0].data.errores;
                       }
+                      $ionicLoading.hide();
                       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                    }).catch(reason => {
+                      $ionicLoading.hide(); 
+                      ionicToast.show("Error interno del servidor",'middle', false, 5000);
                     });
                   } 
                 }else{
                  $rootScope.receptor_off[i].section_2.errores = data[0].data.errores;
+                 $ionicLoading.hide();
                 }
-
                 localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+              }).catch(reason => {
+                $ionicLoading.hide(); 
+                ionicToast.show("Error interno del servidor",'middle', false, 5000);
               });
             }
           }else{
            $rootScope.receptor_off[i].section_1.errores = data[0].data.errores;
+           $ionicLoading.hide();
           }
-          $ionicLoading.hide();
+          
           localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+        }).catch(reason => {
+          $ionicLoading.hide(); 
+          ionicToast.show("Error interno del servidor",'middle', false, 5000);
         });
       }else{
         $rootScope.receptor_off[i].section_1.Id=$rootScope.receptor_off[i].id;
@@ -196,13 +224,23 @@ angular.module('receptor.controllers', [])
         ionicToast.show("Las encuestas que ya tienen todas las secciones cargadas no serán tenidas en cuentas, te recomendamos que uses el botón para eliminarlas todas",'top', false, 5000);
 
         if($rootScope.receptor_off[i].lastLoad!=7){
-        let section1 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardareditardatos', $rootScope.receptor_off[i].section_1,{'content-type':'application/json',});
+          let section1 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardareditardatos', $rootScope.receptor_off[i].section_1,{'content-type':'application/json',});
+          $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner> Espere por favor...',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 200,
+            showDelay: 0
+          });
           $q.all([section1]).then(data => {
             let success=data[0].data.success;
             if(success==true){
               $rootScope.receptor_off[i].terminada=data[0].data.terminada;
               $rootScope.receptor_off[i].section_1.isUpload=true;
               $rootScope.receptor_off[i].lastLoad=1;
+              if($rootScope.receptor_off[i].section_1.errores){
+                delete $rootScope.receptor_off[i].section_1.errores;
+              }
               if($rootScope.receptor_off[i].section_2){          
                 $rootScope.receptor_off[i].section_2.Id=$rootScope.receptor_off[i].id;
                 let section2 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/crearestancia', $rootScope.receptor_off[i].section_2,{'content-type':'application/json',});
@@ -211,6 +249,9 @@ angular.module('receptor.controllers', [])
                   if(success==true){
                     $rootScope.receptor_off[i].lastLoad=2;
                     $rootScope.receptor_off[i].section_2.isUpload=true;
+                    if($rootScope.receptor_off[i].section_2.errores){
+                      delete $rootScope.receptor_off[i].section_2.errores;
+                    }
                     if($rootScope.receptor_off[i].section_3){  
                       $rootScope.receptor_off[i].section_3.Id=$rootScope.receptor_off[i].id;
                       let section3 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardarsecciontransporte', $rootScope.receptor_off[i].section_3,{'content-type':'application/json',});
@@ -220,6 +261,9 @@ angular.module('receptor.controllers', [])
                           $rootScope.receptor_off[i].lastLoad=3;
                           $rootScope.receptor_off[i].section_3.isUpload=true;
                           $rootScope.receptor_off[i].section_3.sw=0;
+                          if($rootScope.receptor_off[i].section_3.errores){
+                            delete $rootScope.receptor_off[i].section_3.errores;
+                          }
                           if($rootScope.receptor_off[i].section_4){  
                             $rootScope.receptor_off[i].section_4.Id=$rootScope.receptor_off[i].id;
                             let section4 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardarseccionviajegrupo', $rootScope.receptor_off[i].section_4,{'content-type':'application/json',});
@@ -229,6 +273,9 @@ angular.module('receptor.controllers', [])
                                 $rootScope.receptor_off[i].lastLoad=4;
                                 $rootScope.receptor_off[i].section_4.isUpload=true;
                                 $rootScope.receptor_off[i].section_4.sw=0;
+                                if($rootScope.receptor_off[i].section_4.errores){
+                                  delete $rootScope.receptor_off[i].section_4.errores;
+                                }
                                 if($rootScope.receptor_off[i].section_5){  
                                   $rootScope.receptor_off[i].section_5.id=$rootScope.receptor_off[i].id;
                                   let section5 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardargastos', $rootScope.receptor_off[i].section_5,{'content-type':'application/json',});
@@ -237,6 +284,9 @@ angular.module('receptor.controllers', [])
                                     if(success==true){
                                       $rootScope.receptor_off[i].lastLoad=5;
                                       $rootScope.receptor_off[i].section_5.isUpload=true;
+                                      if($rootScope.receptor_off[i].section_5.errores){
+                                        delete $rootScope.receptor_off[i].section_5.errores;
+                                      }
                                       if($rootScope.receptor_off[i].section_6){  
                                         $rootScope.receptor_off[i].section_6.Id=$rootScope.receptor_off[i].id;
                                         let section6 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardarseccionpercepcion', $rootScope.receptor_off[i].section_6,{'content-type':'application/json',});
@@ -246,6 +296,9 @@ angular.module('receptor.controllers', [])
                                             $rootScope.receptor_off[i].lastLoad=6;
                                             $rootScope.receptor_off[i].section_6.isUpload=true;
                                             $rootScope.receptor_off[i].section_6.sw=0;
+                                            if($rootScope.receptor_off[i].section_6.errores){
+                                              delete $rootScope.receptor_off[i].section_6.errores;
+                                            }
                                             if($rootScope.receptor_off[i].section_7){  
                                               $rootScope.receptor_off[i].section_7.Id=$rootScope.receptor_off[i].id;
                                               let section7 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/guardarseccioninformacion', $rootScope.receptor_off[i].section_7,{'content-type':'application/json',});
@@ -256,52 +309,83 @@ angular.module('receptor.controllers', [])
                                                   $rootScope.receptor_off[i].section_7.isUpload=true;
                                                   $rootScope.receptor_off[i].section_7.sw=0;
                                                   $rootScope.receptor_off[i].codigo=data[0].data.codigo;
+                                                  if($rootScope.receptor_off[i].section_7.errores){
+                                                    delete $rootScope.receptor_off[i].section_7.errores;
+                                                  }
+                                                  $scope.toDelete.push(i);
                                                 }else{
                                                  $rootScope.receptor_off[i].section_7.errores = data[0].data.errores;
                                                 }
+                                                $ionicLoading.hide();
                                                 localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                              }).catch(reason => {
+                                                $ionicLoading.hide(); 
+                                                ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                               });
                                             }
                                           }else{
                                            $rootScope.receptor_off[i].section_6.errores = data[0].data.errores;
+                                           $ionicLoading.hide();
                                           }
                                           localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                        }).catch(reason => {
+                                          $ionicLoading.hide(); 
+                                          ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                         });
                                       }
                                     }else{
                                      $rootScope.receptor_off[i].section_5.errores = data[0].data.errores;
+                                     $ionicLoading.hide();
                                     }
                                     localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                                  }).catch(reason => {
+                                    $ionicLoading.hide(); 
+                                    ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                   });
                                 }
                               }else{
                                $rootScope.receptor_off[i].section_4.errores = data[0].data.errores;
+                               $ionicLoading.hide();
                               }
                               localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                            }).catch(reason => {
+                              $ionicLoading.hide(); 
+                              ionicToast.show("Error interno del servidor",'middle', false, 5000);
                             });
                           }
                         }else{
                          $rootScope.receptor_off[i].section_3.errores = data[0].data.errores;
+                         $ionicLoading.hide();
                         }
                         localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                      }).catch(reason => {
+                        $ionicLoading.hide(); 
+                        ionicToast.show("Error interno del servidor",'middle', false, 5000);
                       });
                     } 
                   }else{
                    $rootScope.receptor_off[i].section_2.errores = data[0].data.errores;
+                   $ionicLoading.hide();
                   }
 
                   localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+                }).catch(reason => {
+                  $ionicLoading.hide(); 
+                  ionicToast.show("Error interno del servidor",'middle', false, 5000);
                 });
               }
             }else{
              $rootScope.receptor_off[i].section_1.errores = data[0].data.errores;
+             $ionicLoading.hide();
             }
-            $ionicLoading.hide();
+            
             localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
+          }).catch(reason => {
+            $ionicLoading.hide(); 
+            ionicToast.show("Error interno del servidor",'middle', false, 5000);
           });
         }
-        $ionicLoading.hide();
-      } 
+      }
     }
   }
 
@@ -339,6 +423,11 @@ angular.module('receptor.controllers', [])
   $scope.encuesta = {};
   $scope.forms={};
   $scope.is_offline=0;
+  $scope.pais_residencia2={};
+  $scope.departamento2={};
+  $scope.departamentod = {};
+  $scope.departamentod2 = {};
+  $scope.this_section=1;
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -359,7 +448,7 @@ angular.module('receptor.controllers', [])
     maxWidth: 200,
     showDelay: 0
   });
-  ////let data = $rootScope.loader_receptor.general;
+
   if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
     $scope.is_offline=1;
     $ionicLoading.hide();
@@ -368,17 +457,21 @@ angular.module('receptor.controllers', [])
       ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }else{
       ionicToast.show("No tiene conexion, pero hay elementos precargados, puede continuar",'middle', false, 5000);
-      let data= $rootScope.loader_receptor.general;
-      $scope.grupos = data.grupos;
-      $scope.encuestadores = data.encuestadores;
-      $scope.lugares = data.lugar_nacimiento;
-      $scope.paises = data.paises;
-      $scope.motivos = data.motivos;
-      $scope.medicos = data.medicos;
-      $scope.departamentos_colombia = data.departamentos;
-      $scope.lugares_aplicacion = data.lugares_aplicacion;
-      $scope.all_departamentos = data.all_departamentos;
-      $scope.all_municipios = data.all_municipios;
+      if($rootScope.loader_receptor.general){
+        let data= $rootScope.loader_receptor.general;
+        $scope.grupos = data.grupos;
+        $scope.encuestadores = data.encuestadores;
+        $scope.lugares = data.lugar_nacimiento;
+        $scope.paises = data.paises;
+        $scope.motivos = data.motivos;
+        $scope.medicos = data.medicos;
+        $scope.departamentos_colombia = data.departamentos;
+        $scope.lugares_aplicacion = data.lugares_aplicacion;
+        $scope.all_departamentos = data.all_departamentos;
+        $scope.all_municipios = data.all_municipios;
+      }else{
+        ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
+      }
     }  
   }else{
 
@@ -476,7 +569,7 @@ angular.module('receptor.controllers', [])
     $scope.encuesta.Destino = "";
     $scope.municipios_colombia = [];
     if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
-      $scope.municipios = factories.findSelectMultipleDpts(id, $scope.all_municipios);
+      $scope.municipios_colombia = factories.findSelectMultipleDpts(id, $scope.all_municipios);
     }else{
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -517,6 +610,18 @@ angular.module('receptor.controllers', [])
     }
   };
 
+  $scope.updatedDptoRes=function (dpto) {
+    $scope.departamento2=dpto;
+  };
+
+  $scope.updatedPaisRes=function (pais) {
+    $scope.pais_residencia2=pais;
+  };
+
+  $scope.updatedDptoDes=function (dpto) {
+    $scope.departamentod2=dpto;
+  }
+
   $scope.guardar=function () {
     
 
@@ -540,9 +645,13 @@ angular.module('receptor.controllers', [])
     $scope.encuesta.Llegada=$filter('date')($scope.encuesta.Llegada, 'yyyy-MM-dd');
     $scope.encuesta.Salida=$filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd');
 
-    //$scope.encuesta.is_offline=$scope.is_offline;
     if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
-      $rootScope.receptor_off.push({'section_1':$scope.encuesta})
+      $scope.encuesta.pais_residencia=$scope.pais_residencia2;
+      $scope.encuesta.departamento=$scope.departamento2;
+      $scope.encuesta.departamentod=$scope.departamentod2;
+      $scope.encuesta.last_section=1;
+      $rootScope.receptor_off.push({'section_1':$scope.encuesta});
+      $rootScope.receptor_off[$rootScope.receptor_off.length-1].last_section=1;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
       $location.path("/app/estancia/"+($rootScope.receptor_off.length-1)+"/1")
@@ -562,7 +671,7 @@ angular.module('receptor.controllers', [])
           if (data.terminada == 1) {
             $location.path("/app/encuestas");
           } else {
-            $location.path("/app/estancia/"+data.id+"/"+$scope.is_offline);
+            $location.path("/app/estancia/"+data.id+"/"+$scope.is_offline).search({'lastSection':1});
           }
         } else {
           $ionicScrollDelegate.scrollTop(true);
@@ -586,8 +695,14 @@ angular.module('receptor.controllers', [])
   $scope.encuesta = {};
   $scope.forms={};
   $scope.departamentod = {};
+  $scope.departamentod2 = {};
   $scope.id=$stateParams.id;
+  $scope.pais_residencia2={};
+  $scope.departamento2={};
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=1;
+  $scope.last_section=parseInt($location.search().lastSection);
+
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -614,21 +729,34 @@ angular.module('receptor.controllers', [])
     if(localStorage.getItem("loader_receptor")==null){
       ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }else{
-      ionicToast.show("No tiene conexion, pero hay elementos precargados, puede continuar",'middle', false, 5000);
-      let data= $rootScope.loader_receptor.general;
-      $scope.grupos = data.grupos;
-      $scope.encuestadores = data.encuestadores;
-      $scope.lugares = data.lugar_nacimiento;
-      $scope.paises = data.paises;
-      $scope.motivos = data.motivos;
-      $scope.medicos = data.medicos;
-      $scope.departamentos_colombia = data.departamentos;
-      $scope.lugares_aplicacion = data.lugares_aplicacion;
-      $scope.all_departamentos = data.all_departamentos;
-      $scope.all_municipios = data.all_municipios;
-      $scope.encuesta = $rootScope.receptor_off[$stateParams.id].section_1;
-      if($rootScope.receptor_off[$stateParams.id].section_1.errores){
-        $scope.errores = $rootScope.receptor_off[$stateParams.id].section_1.errores;
+
+      if($rootScope.loader_receptor.general){
+        ionicToast.show("No tiene conexion, pero hay elementos precargados, puede continuar",'middle', false, 5000);
+        let data= $rootScope.loader_receptor.general;
+        $scope.grupos = data.grupos;
+        $scope.encuestadores = data.encuestadores;
+        $scope.lugares = data.lugar_nacimiento;
+        $scope.paises = data.paises;
+        $scope.motivos = data.motivos;
+        $scope.medicos = data.medicos;
+        $scope.departamentos_colombia = data.departamentos;
+        $scope.lugares_aplicacion = data.lugares_aplicacion;
+        $scope.all_departamentos = data.all_departamentos;
+        $scope.all_municipios = data.all_municipios;
+        $scope.encuesta = $rootScope.receptor_off[$stateParams.id].section_1;
+        $scope.pais_residencia=$scope.encuesta.pais_residencia;
+        $scope.departamento=$scope.encuesta.departamento;
+        $scope.departamentod=$scope.encuesta.departamentod;
+        $scope.pais_residencia2=$scope.encuesta.pais_residencia;
+        $scope.departamento2=$scope.encuesta.departamento;
+        $scope.departamentod2=$scope.encuesta.departamentod;
+        $scope.encuesta.Sexo=Boolean($scope.encuesta.Sexo); 
+        $scope.encuesta.Municipio=$scope.encuesta.municipio.id;
+        if($rootScope.receptor_off[$stateParams.id].section_1 && $rootScope.receptor_off[$stateParams.id].section_1.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_1.errores;
+        }
+      }else{
+        ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
       }
     }  
   }else{
@@ -748,7 +876,7 @@ angular.module('receptor.controllers', [])
     $scope.encuesta.Destino = "";
     $scope.municipios_colombia = [];
     if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1) {
-      $scope.municipios = factories.findSelectMultipleDpts(id, $scope.all_municipios);
+      $scope.municipios_colombia = factories.findSelectMultipleDpts(id, $scope.all_municipios);
     }else{
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -789,6 +917,18 @@ angular.module('receptor.controllers', [])
     }
   };
 
+  $scope.updatedDptoRes=function (dpto) {
+    $scope.departamento2=dpto;
+  };
+
+  $scope.updatedPaisRes=function (pais) {
+    $scope.pais_residencia2=pais;
+  };
+
+  $scope.updatedDptoDes=function (dpto) {
+    $scope.departamentod2=dpto;
+  }
+  
   $scope.guardar=function () {
     
 
@@ -814,7 +954,9 @@ angular.module('receptor.controllers', [])
     $scope.encuesta.Salida=$filter('date')($scope.encuesta.Salida, 'yyyy-MM-dd');
 
     if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1) {
-      //$rootScope.receptor_off.push({'section_1':$scope.encuesta})
+      $scope.encuesta.pais_residencia=$scope.pais_residencia2;
+      $scope.encuesta.departamento=$scope.departamento2;
+      $scope.encuesta.departamentod=$scope.departamentod2;
       $rootScope.receptor_off[$stateParams.id].section_1=$scope.encuesta;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
@@ -836,7 +978,7 @@ angular.module('receptor.controllers', [])
           if (data.terminada == 1) {
             $location.path("/app/encuestas");
           } else {
-            $location.path("/app/estancia/"+$stateParams.id+"/"+$scope.is_offline);
+            $location.path("/app/estancia/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
             
           }
         } else {
@@ -865,69 +1007,9 @@ angular.module('receptor.controllers', [])
   $scope.forms={};
   $scope.id=$stateParams.id;
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=2;
+  $scope.last_section=parseInt($location.search().lastSection);
 
-
-  if(localStorage.getItem("loader_receptor")!=null){
-    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
-  }else{
-    $rootScope.loader_receptor={};
-  }
-  
-  if(localStorage.getItem("receptor_off")!=null){
-    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
-  }else{
-    $rootScope.receptor_off=[];
-  }
-
-  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data= $rootScope.loader_receptor.estancia;
-    $scope.Datos = data;
-    $scope.encuesta=$rootScope.receptor_off[$stateParams.id].section_2;
-    if($rootScope.receptor_off[$stateParams.id].section_2.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_2.errores;
-    }
-
-  }else{
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.estancia){
-          $rootScope.loader_receptor.estancia=data.Enlaces;
-          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
-      
-      $scope.Datos = data.Enlaces;
-      if(data.encuesta != undefined){
-        $scope.encuesta = data.encuesta; 
-        $scope.encuesta.Estancias.forEach(function(_this) {
-          
-          if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
-          if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
-
-
-        });
-        if (data.encuesta.Estancias == null) {
-          $scope.agregar();
-        }
-      }
-      $scope.encuesta.Id = $scope.id;
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-          title: '¡Error!',
-          template: 'Ha ocurrido un error.',
-          okType:'button-stable'
-      });
-    });
-  }
 
   $scope.agregar = function () {
     $scope.estancia = new Object();
@@ -958,16 +1040,16 @@ angular.module('receptor.controllers', [])
     let dataValue = angular.element($event.target).attr("disabled");;
     if(dataValue!=="disabled"){
 
-	    let idx = factories.index_of(item.id, $scope.encuesta.ActividadesRelizadas);
-	    
-	    if (idx > -1) {
-	      $scope.encuesta.ActividadesRelizadas.splice(idx, 1);
-	    }else {
-	      $scope.encuesta.ActividadesRelizadas.push(item);
-	    }	   
-	  }else{
-	   	return;
-	  } 
+      let idx = factories.index_of(item.id, $scope.encuesta.ActividadesRelizadas);
+      
+      if (idx > -1) {
+        $scope.encuesta.ActividadesRelizadas.splice(idx, 1);
+      }else {
+        $scope.encuesta.ActividadesRelizadas.push(item);
+      }    
+    }else{
+      return;
+    } 
   };
 
   $scope.toggleSelection2 = function (id, Respuestas) {
@@ -1009,7 +1091,8 @@ angular.module('receptor.controllers', [])
   };
 
   $scope.validarRequeridoOtroActividad = function(){
-    if($scope.encuesta.ActividadesRelizadas != undefined){
+    
+    if($scope.encuesta.ActividadesRelizadas){
       let resultado = $filter('filter')($scope.encuesta.ActividadesRelizadas, {'id':19}, true);
       if(resultado.length > 0){
         return true;   
@@ -1074,9 +1157,13 @@ angular.module('receptor.controllers', [])
     
     if($scope.is_offline==1){
       $rootScope.receptor_off[$stateParams.id].section_2=$scope.encuesta;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      }
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/transporte/"+$stateParams.id+"/"+$scope.is_offline);
+      $location.path("/app/transporte/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
     }else{
       $scope.errores = null
       $ionicLoading.show({
@@ -1091,7 +1178,10 @@ angular.module('receptor.controllers', [])
         $ionicLoading.hide();
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/transporte/"+$scope.encuesta.Id+"/"+$scope.is_offline);
+          if($scope.last_section<$scope.this_section){
+            $scope.last_section++;
+          }
+          $location.path("/app/transporte/"+$scope.encuesta.Id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
           
         } else {
           $ionicScrollDelegate.scrollTop(true);
@@ -1129,6 +1219,74 @@ angular.module('receptor.controllers', [])
     }
     return false;
   };
+ 
+  if(localStorage.getItem("loader_receptor")!=null){
+    $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
+  }else{
+    $rootScope.loader_receptor={};
+  }
+  
+  if(localStorage.getItem("receptor_off")!=null){
+    $rootScope.receptor_off=JSON.parse(localStorage.getItem("receptor_off"));
+  }else{
+    $rootScope.receptor_off=[];
+  }
+
+  if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
+    if($rootScope.loader_receptor.estancia){
+      let data= $rootScope.loader_receptor.estancia;
+      $scope.Datos = data;
+      if($rootScope.receptor_off[$stateParams.id].section_2){
+        $scope.encuesta=$rootScope.receptor_off[$stateParams.id].section_2;
+        if($rootScope.receptor_off[$stateParams.id].section_2 && $rootScope.receptor_off[$stateParams.id].section_2.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_2.errores;
+        }
+      }
+    }else{
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000)
+    }
+
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      if(!$rootScope.loader_receptor.estancia){
+          $rootScope.loader_receptor.estancia=data.Enlaces;
+          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      }
+      
+      $scope.Datos = data.Enlaces;
+      if(data.encuesta != undefined){
+        $scope.encuesta = data.encuesta; 
+        $scope.encuesta.Estancias.forEach(function(_this) {
+          
+          if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
+          if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
+
+
+        });
+        if (data.encuesta.Estancias == null) {
+          $scope.agregar();
+        }
+      }
+      $scope.encuesta.Id = $scope.id;
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 })
 
 .controller('transporteController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $stateParams, $rootScope, $cordovaNetwork) {
@@ -1136,6 +1294,9 @@ angular.module('receptor.controllers', [])
   $scope.forms={};
   $scope.id=$stateParams.id;
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=3;
+  $scope.last_section=parseInt($location.search().lastSection);
+
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -1150,14 +1311,19 @@ angular.module('receptor.controllers', [])
   }
 
   if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data= $rootScope.loader_receptor.transporte;
-    $scope.transportes = data.transporte_llegar;
-    $scope.lugares = data.lugares;
-    $scope.transporte=$rootScope.receptor_off[$stateParams.id].section_3;
-    if($rootScope.receptor_off[$stateParams.id].section_3.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_3.errores;
+    if($rootScope.loader_receptor.transporte){
+      let data= $rootScope.loader_receptor.transporte;
+      $scope.transportes = data.transporte_llegar;
+      $scope.lugares = data.lugares;
+      if($rootScope.receptor_off[$stateParams.id].section_3){
+        $scope.transporte=$rootScope.receptor_off[$stateParams.id].section_3;
+        if($rootScope.receptor_off[$stateParams.id].section_3 && $rootScope.receptor_off[$stateParams.id].section_3.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_3.errores;
+        }
+      }   
+    }else{
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }
-
   }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -1207,9 +1373,13 @@ angular.module('receptor.controllers', [])
 
     if($scope.is_offline==1){
       $rootScope.receptor_off[$stateParams.id].section_3=$scope.transporte;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      }
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline);
+      $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
     }else{
       $scope.errores = null
 
@@ -1226,7 +1396,10 @@ angular.module('receptor.controllers', [])
 
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline);
+          if($scope.last_section<$scope.this_section){
+            $scope.last_section++;
+          }
+          $location.path("/app/grupo/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
           
         } else {
           $ionicScrollDelegate.scrollTop(true);
@@ -1252,6 +1425,8 @@ angular.module('receptor.controllers', [])
 	$scope.forms={};
   $scope.id=$stateParams.id;
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=4;
+  $scope.last_section=parseInt($location.search().lastSection);
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -1266,11 +1441,17 @@ angular.module('receptor.controllers', [])
   }
 
   if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data = $rootScope.loader_receptor.grupo;
-    $scope.viaje_grupos = data.viaje_grupos;
-    $scope.grupo=$rootScope.receptor_off[$stateParams.id].section_4;
-    if($rootScope.receptor_off[$stateParams.id].section_4.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_4.errores;
+    if($rootScope.loader_receptor.grupo){
+      let data = $rootScope.loader_receptor.grupo;
+      $scope.viaje_grupos = data.viaje_grupos;
+      if($rootScope.receptor_off[$stateParams.id].section_4){
+        $scope.grupo=$rootScope.receptor_off[$stateParams.id].section_4;
+        if($rootScope.receptor_off[$stateParams.id].section_4 && $rootScope.receptor_off[$stateParams.id].section_4.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_4.errores;
+        }
+      }
+    }else{
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }
   }else{
     $ionicLoading.show({
@@ -1384,9 +1565,13 @@ angular.module('receptor.controllers', [])
 
     if($scope.is_offline==1){
       $rootScope.receptor_off[$stateParams.id].section_4=$scope.grupo;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      }
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline);
+      $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
     }else{
 
       $ionicLoading.show({
@@ -1400,7 +1585,10 @@ angular.module('receptor.controllers', [])
         $ionicLoading.hide();
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline);
+          if($scope.last_section<$scope.this_section){
+            $scope.last_section++;
+          }
+          $location.path("/app/gastos/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
           
         } else {
           $ionicScrollDelegate.scrollTop(true);
@@ -1431,7 +1619,10 @@ angular.module('receptor.controllers', [])
   $scope.encuestaReceptor.ServiciosIncluidos=[];
   $scope.forms={};
   $scope.is_offline=$stateParams.isOff;
-
+  $scope.rubros=[];
+  $scope.this_section=5;
+  $scope.last_section=$location.search().lastSection;
+  $scope.encuestaReceptor.Financiadores=[];
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -1568,11 +1759,11 @@ angular.module('receptor.controllers', [])
 
   $scope.checked=function(id, objeto) {
     let i=0;
-    for(i=0; i<objeto.length; i++){
-      if(id==objeto[i]){
-        return true;
+      for(i=0; i<objeto.length; i++){
+        if(id==objeto[i]){
+          return true;
+        }
       }
-    }
     return false;
   };
 
@@ -1589,49 +1780,57 @@ angular.module('receptor.controllers', [])
   };
 
   if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data = $rootScope.loader_receptor.gastos;
-    $scope.divisas = data.divisas;
-    $scope.financiadores = data.financiadores;
-    $scope.municipios = data.municipios;
-    $scope.opciones = data.opciones;
-    $scope.servicios = data.servicios;
-    $scope.tipos = data.tipos;
-    $scope.rubros = data.rubros;
-    $scope.encuestaReceptor = $rootScope.receptor_off[$stateParams.id].section_5;
-    if($rootScope.receptor_off[$stateParams.id].section_5.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_5.errores;
-    }
+    
+    if($rootScope.loader_receptor.gastos){
+      let data = $rootScope.loader_receptor.gastos;
+      $scope.divisas = data.divisas;
+      $scope.financiadores = data.financiadores;
+      $scope.municipios = data.municipios;
+      $scope.opciones = data.opciones;
+      $scope.servicios = data.servicios;
+      $scope.tipos = data.tipos;
+      $scope.rubros = data.rubros;
+      if($rootScope.receptor_off[$stateParams.id].section_5){
+        $scope.encuestaReceptor = $rootScope.receptor_off[$stateParams.id].section_5;
+        if($rootScope.receptor_off[$stateParams.id].section_5 && $rootScope.receptor_off[$stateParams.id].section_5.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_5.errores;
+        }
 
-    $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
-    if(!$scope.encuestaReceptor.ServiciosIncluidos){
-      $scope.encuestaReceptor.ServiciosIncluidos=[];
-    }
 
-    if(!$scope.encuestaReceptor.Municipios){
-      $scope.encuestaReceptor.Municipios=[];
+        $scope.encuestaReceptor.divisapaquete=factories.findSelect($scope.encuestaReceptor.DivisaPaquete,data.divisas);
+        if(!$scope.encuestaReceptor.ServiciosIncluidos){
+          $scope.encuestaReceptor.ServiciosIncluidos=[];
+        }
+
+        if(!$scope.encuestaReceptor.Municipios){
+          $scope.encuestaReceptor.Municipios=[];
+        }else{
+          $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
+        }
+
+        if(!$scope.encuestaReceptor.Financiadores){
+          $scope.encuestaReceptor.Financiadores=[];
+        }
+
+
+        let rubros = $rootScope.receptor_off[$stateParams.id].section_5.Rubros;
+        for(let i=0; i<rubros.length;i++){
+          for (let j = 0; j < $scope.rubros.length; j++) {
+            if(rubros[i].id==$scope.rubros[j].id){
+              $scope.rubros[j].gastos_visitantes=rubros[i].gastos_visitantes;
+            } 
+          }
+        }
+
+        for(let i = 0; i<$scope.rubros.length;i++){
+          $scope.cambiarAlquiler($scope.rubros[i]);
+          if($scope.rubros[i].gastos_visitantes[0]){
+            $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
+          }
+         } 
+      }
     }else{
-      $scope.encuestaReceptor.municipios=factories.findSelectMultiple($scope.encuestaReceptor.Municipios, data.municipios);
-    }
-
-    if(!$scope.encuestaReceptor.Financiadores){
-      $scope.encuestaReceptor.Financiadores=[];
-    }
-
-
-    let rubros = $rootScope.receptor_off[$stateParams.id].section_5.Rubros;
-    for(let i=0; i<rubros.length;i++){
-      for (let j = 0; j < $scope.rubros.length; j++) {
-        if(rubros[i].id==$scope.rubros[j].id){
-          $scope.rubros[j].gastos_visitantes=rubros[i].gastos_visitantes;
-        } 
-      }
-    }
-
-    for(let i = 0; i<$scope.rubros.length;i++){
-      $scope.cambiarAlquiler($scope.rubros[i]);
-      if($scope.rubros[i].gastos_visitantes[0]){
-        $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
-      }
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }
   }else{
 
@@ -1675,8 +1874,6 @@ angular.module('receptor.controllers', [])
      
       for(let i = 0; i<$scope.rubros.length;i++){
         $scope.cambiarAlquiler($scope.rubros[i]);
-        //console.log($scope.rubros[i].gastos_visitantes[0]);
-
         if($scope.rubros[i].gastos_visitantes[0]){
           $scope.rubros[i].gastos_visitantes[0].divisas_magdalena_obj=factories.findSelect($scope.rubros[i].gastos_visitantes[0].divisas_magdalena,data.divisas)
         }
@@ -1705,6 +1902,11 @@ angular.module('receptor.controllers', [])
         return;   
       }
     }
+
+    if($scope.encuestaReceptor.Financiadores.length==0){
+      ionicToast.show("Hay errores en el formulario, corrigelo",'middle', false, 2000);
+      return;
+    }
     
     $scope.encuestaReceptor.Rubros = [];
     for(let i = 0 ;i<$scope.rubros.length;i++){
@@ -1721,9 +1923,13 @@ angular.module('receptor.controllers', [])
   
       delete $scope.encuestaReceptor.id;
       $rootScope.receptor_off[$stateParams.id].section_5=$scope.encuestaReceptor;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      } 
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/percepcion/"+$stateParams.id+"/"+$scope.is_offline);
+      $location.path("/app/percepcion/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
     }else{
 
       $ionicLoading.show({
@@ -1738,7 +1944,10 @@ angular.module('receptor.controllers', [])
         $ionicLoading.hide();
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/percepcion/"+$stateParams.id+"/"+$scope.is_offline);       
+          if($scope.last_section<$scope.this_section){
+            $scope.last_section++;
+          }     
+          $location.path("/app/percepcion/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});       
         } else {
           $ionicScrollDelegate.scrollTop(true);
           ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
@@ -1767,6 +1976,9 @@ angular.module('receptor.controllers', [])
   $scope.forms={}
   $scope.aspectos = {'Items': [],'radios': {}};
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=6;
+  $scope.last_section=parseInt($location.search().lastSection);
+
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -1886,14 +2098,21 @@ angular.module('receptor.controllers', [])
   };
 
   if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data = $rootScope.loader_receptor.percepcion;
-    $scope.aspectos = $scope.convertirObjeto(data.percepcion);
-    $scope.elementos = data.elementos;
-    $scope.veces = data.veces;
-    $scope.actividades = data.actividades;
-    $scope.calificacion=$rootScope.receptor_off[$stateParams.id].section_6;
-    if($rootScope.receptor_off[$stateParams.id].section_6.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_6.errores;
+    
+    if($rootScope.loader_receptor.percepcion){
+      let data = $rootScope.loader_receptor.percepcion;
+      $scope.aspectos = $scope.convertirObjeto(data.percepcion);
+      $scope.elementos = data.elementos;
+      $scope.veces = data.veces;
+      $scope.actividades = data.actividades;
+      if($rootScope.receptor_off[$stateParams.id].section_6){
+        $scope.calificacion=$rootScope.receptor_off[$stateParams.id].section_6;
+        if($rootScope.receptor_off[$stateParams.id].section_6 && $rootScope.receptor_off[$stateParams.id].section_6.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_6.errores;
+        }
+      }
+    }else{
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }
   }else{
 
@@ -1977,9 +2196,13 @@ angular.module('receptor.controllers', [])
     }
     if($scope.is_offline==1){
       $rootScope.receptor_off[$stateParams.id].section_6=$scope.calificacion;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      }   
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline);
+      $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});
     }else{
       
       $scope.calificacion.Id = $scope.id;
@@ -1997,7 +2220,10 @@ angular.module('receptor.controllers', [])
         $ionicLoading.hide();
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline);      
+          if($scope.last_section<$scope.this_section){
+            $scope.last_section++;
+          }           
+          $location.path("/app/enteran/"+$stateParams.id+"/"+$scope.is_offline).search({'lastSection':$scope.last_section});      
         } else {
           $ionicScrollDelegate.scrollTop(true);
           ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
@@ -2024,6 +2250,9 @@ angular.module('receptor.controllers', [])
   $scope.forms={};
   $scope.id=$stateParams.id;
   $scope.is_offline=$stateParams.isOff;
+  $scope.this_section=7;
+  $scope.last_section=parseInt($location.search().lastSection);
+
 
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -2038,14 +2267,21 @@ angular.module('receptor.controllers', [])
   }
 
   if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1){
-    let data = $rootScope.loader_receptor.enteran
-    $scope.fuentesAntes = data.fuentesAntes;
-    $scope.fuentesDurante = data.fuentesDurante;
-    $scope.redes = data.redes;
-    $scope.enteran.Id = $scope.id;
-    $scope.enteran=$rootScope.receptor_off[$stateParams.id].section_7;
-    if($rootScope.receptor_off[$stateParams.id].section_7.errores){
-      $scope.errores = $rootScope.receptor_off[$stateParams.id].section_7.errores;
+    
+    if($rootScope.loader_receptor.enteran){
+      let data = $rootScope.loader_receptor.enteran
+      $scope.fuentesAntes = data.fuentesAntes;
+      $scope.fuentesDurante = data.fuentesDurante;
+      $scope.redes = data.redes;
+      $scope.enteran.Id = $scope.id;
+      if($rootScope.receptor_off[$stateParams.id].section_7){
+        $scope.enteran=$rootScope.receptor_off[$stateParams.id].section_7;
+        if($rootScope.receptor_off[$stateParams.id].section_7 && $rootScope.receptor_off[$stateParams.id].section_7.errores){
+          $scope.errores = $rootScope.receptor_off[$stateParams.id].section_7.errores;
+        }
+      }
+    }else{
+      ionicToast.show("No hay elementos precargados, no se podrá realizar la encuesta",'middle', false, 5000);
     }
 
   }else{
@@ -2227,9 +2463,13 @@ angular.module('receptor.controllers', [])
 
     if($scope.is_offline==1){
       $rootScope.receptor_off[$stateParams.id].section_7=$scope.enteran;
+      if($scope.last_section<$scope.this_section){
+        $scope.last_section++;
+      }  
+      $rootScope.receptor_off[$scope.id].last_section=$scope.last_section;
       localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
       ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
-      $location.path("/app/encuestas"); 
+      $location.path("/app/encuestas").search({}); 
     }else{
 
       $ionicLoading.show({

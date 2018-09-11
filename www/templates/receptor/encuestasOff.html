@@ -32,13 +32,15 @@
 		     	<div class="item">
 		        <h2>{{item.section_1.Nombre}}</h2>
 		        <p>{{item.section_1.Llegada | date:'dd/MM/yyyy'}} - {{item.section_1.Salida | date:'dd/MM/yyyy'}}</p>
-		        <p>Encuestador: {{item.section_1.encuestador.asp_net_user.username}}</p>
+		        <p>Encuestador: {{item.section_1.encuestador.user.username}}</p>
 		        <p>Estado: 
 		        	<span ng-if="!item.lastLoad">No cargado</span> 
 		        	<span ng-if="item.lastLoad<7">En proceso</span>
 		        	<span ng-if="item.lastLoad==7">Cargada</span>
 		        </p>
-		        <p>Última sección (cargada) : {{item.lastLoad}}</p>     
+		        <p ng-if="item.lastLoad">Última sección (cargada) : {{item.lastLoad}}</p>     
+		        <p ng-if="!item.lastLoad">Última sección (cargada) : 0</p>     
+		        <p >Última sección : {{item.last_section}}</p>     
 		        <span class="validated" 
 		        	  ng-show="item.section_1.errores || 
 		        	  item.section_2.errores ||
@@ -50,14 +52,73 @@
 		        	  ">
                       <span>*</span>
                 </span>
+                <p>Secciones con errores: 
+                	<span ng-show="!item.section_1.errores && 
+		        	  !item.section_2.errores &&
+		        	  !item.section_3.errores &&
+		        	  !item.section_4.errores &&
+		        	  !item.section_5.errores &&
+		        	  !item.section_6.errores &&
+		        	  !item.section_7.errores 
+		        	  ">Ninguna</span>
+		        	  <br>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/editGeneral/{{$index}}/1"
+		        	  	ng-if="item.section_1.errores">
+		        	  	Información general
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/estancia/{{$index}}/1"
+		        	  	ng-if="item.section_2.errores">
+		        	  	Estancia y visitados
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/transporte/{{$index}}/1"
+		        	  	ng-if="item.section_3.errores">
+		        	  	Transporte
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/grupo/{{$index}}/1"
+		        	  	ng-if="item.section_4.errores">
+		        	  	Grupo de viaje
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/gastos/{{$index}}/1"
+		        	  	ng-if="item.section_5.errores">
+		        	  	Gastos de viaje
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/percepcion/{{$index}}/1"
+		        	  	ng-if="item.section_6.errores">
+		        	  	Percepción del viaje
+		        	  </a>
+		        	  <a 
+		        	  	class="assertive btn-error" 
+		        	  	ng-click="modal.hide();" 
+		        	  	href="#/app/enteran/{{$index}}/1"
+		        	  	ng-if="item.section_7.errores">
+		        	  	Como se enteran los visitantes
+		        	  </a>
+		        	  
+                </p>
                 
 		        <div class="pull-right">
-		        	<a href="#/app/editGeneral/{{$index}}/0" class="ripple ripple-green button button-outline button-positive button-small" ng-if="item.lastLoad!=7">
+		        	<a ng-click="modal.hide();" href="#/app/editGeneral/{{$index}}/1?lastSection={{item.last_section}}" class="ripple ripple-green button button-outline button-positive button-small" ng-if="item.lastLoad!=7">
 		          		<i class="ion-edit"></i>
 		          	</a>
-		          	<!--<button class="ripple ripple-green button button-outline button-royal button-small">
-		          		<i class="ion-upload"></i>
-		          	</button>-->
+		          	
 		          	<button class="ripple ripple-green button button-outline button-assertive button-small" ng-click="deleted(currentPage*pageSize+$index)">
 		          		<i class="ion-trash-b"></i>
 		          	</button>

@@ -13,7 +13,7 @@
 
       <div class="card animated fadeInLeft" >
         <div class="item item-divider situr-header required">
-          <h2>El viaje al departamento hizo parte de un paquete/plan turístico o excursión</h2>
+          <h2>E1. El viaje al departamento hizo parte de un paquete/plan turístico o excursión</h2>
         </div>              
         <ion-radio 
           value="1" 
@@ -103,7 +103,7 @@
 
       <div class="card animated fadeInLeft" ng-if="encuestaReceptor.ViajoDepartamento==1">
         <div class="item item-divider situr-header required">
-          <h2>¿El paquete/plan turístico incluyó municipios fuera del Atlántico?</h2>
+          <h2>E1.1 ¿El paquete/plan turístico incluyó municipios fuera del Atlántico?</h2>
         </div>
                  
         <ion-radio 
@@ -134,7 +134,7 @@
 
       <div class="card animated fadeInLeft"  ng-if="encuestaReceptor.IncluyoOtros==1">
         <div class="item item-divider situr-header required">
-          <h2> ¿Qué otras ciudades/municipios fuera del Atlántico incluyó el paquete/plan turístico?</h2>
+          <h2>E1.1 ¿Qué otras ciudades/municipios fuera del Atlántico incluyó el paquete/plan turístico?</h2>
         </div>
 
         <a 
@@ -170,7 +170,7 @@
      
       <div class="card animated fadeInLeft" ng-if="encuestaReceptor.ViajoDepartamento==1">
         <div class="item item-divider situr-header required">
-          <h2> El paquete/plan turístico o excursión fue comprado a:</h2>
+          <h2>E3. El paquete/plan turístico o excursión fue comprado a:</h2>
         </div>
                     
         <ion-radio 
@@ -187,7 +187,7 @@
 
       <div class="card animated fadeInLeft" ng-if="encuestaReceptor.Proveedor==1">
         <div class="item item-divider situr-header required">
-          <h2>¿En donde está ubicada la agencia de viajes/operador turístico?</h2>
+          <h2>E4. ¿En donde está ubicada la agencia de viajes/operador turístico?</h2>
         </div>
                     
         <ion-radio 
@@ -207,7 +207,7 @@
 
       <div class="card animated fadeInLeft" ng-if="encuestaReceptor.ViajoDepartamento==1">
         <div class="item item-divider situr-header required">
-          <h2> ¿Qué productos y servicios incluía el paquete turístico o excursión?</h2>
+          <h2>E4. ¿Qué productos y servicios incluía el paquete turístico o excursión?</h2>
         </div>
       
         <ion-checkbox 
@@ -225,10 +225,10 @@
       
       <div class="card animated fadeInLeft" >
         <div class="item item-divider situr-header required">
-          <h2>Indique los gastos totales hechos por usted, para usted o su grupo de viaje. No coloque gastos induviduales</h2>
+          <h2>E5. Indique los gastos totales hechos por usted, para usted o su grupo de viaje. No coloque gastos induviduales</h2>
         </div>
         <ion-checkbox class="ripple ripple-green" ng-model="encuestaReceptor.poderLLenar" ng-change="limpiarMatriz()" value="true">
-          No realicé ningún tipo de gasto/ Esa situación no se presentó en el viaje
+          E5.1.99. No realicé ningún tipo de gasto/ Esa situación no se presentó en el viaje
         </ion-checkbox>
 
         <div class="card card animated fadeInLeft" ng-repeat="rub in rubros">
@@ -236,7 +236,7 @@
             ng-click="toggleGroup(rub)" 
             ng-class="{active: isGroupShown(rub)}" 
             class="item item-divider ripple ripple-green">
-            {{rub.rubros_con_idiomas[0].nombre}}
+            E5.1.{{$index+1}}. {{rub.rubros_con_idiomas[0].nombre}}
           </ion-item>
           
           <ion-item class="item-accordion" ng-show="isGroupShown(rub)">
@@ -258,10 +258,10 @@
             </label>
 
             <label class="item item-input item-floating-label" >
-              <span class="input-label" >¿Cuánto gastó?</span>
+              <span class="input-label" >E5.1. ¿Cuánto gastó?</span>
               <input 
                 type="number" 
-                placeholder="¿Cuánto gastó?" 
+                placeholder="E5.1 ¿Cuánto gastó?" 
                 name="cantDentro{{$index}}" 
                 min="1" 
                 ng-blur="cambiarAlquiler(rub)" 
@@ -303,10 +303,10 @@
             </button>
 
             <label class="item item-input item-floating-label" >
-              <span class="input-label" >¿Cuantas personas cubrió?</span>
+              <span class="input-label" >E.5.2. ¿Cuantas personas cubrió?</span>
               <input 
                 type="number" 
-                placeholder="¿Cuantas personas cubrió?" 
+                placeholder="E.5.2. ¿Cuantas personas cubrió?" 
                 name="personas{{$index}}" 
                 ng-model="rub.gastos_visitantes[0].personas_cubiertas" 
                 ng-blur="cambiarAlquiler(rub)" 
@@ -323,7 +323,7 @@
               ng-model="rub.gastos_visitantes[0].gastos_asumidos_otros" 
               value="true"
               class="ripple ripple-green">
-              Gastos pagados por otra persona u organización
+              E6. Gastos pagados por otra persona u organización
             </ion-checkbox>
           </ion-item>
         </div>
@@ -331,7 +331,7 @@
 
       <div class="card animated fadeInLeft"  ng-if="abrirTerrestre">
         <div class="item item-divider situr-header required">
-          <h2>¿Cuál es el nombre de la empresa de transporte terrestre de pasajeros utilizado desde una ciudad de  Colombia a Atlántico?</h2>
+          <h2>E7.¿Cuál es el nombre de la empresa de transporte terrestre de pasajeros utilizado desde una ciudad de  Colombia a Atlántico?</h2>
         </div>
         <label class="item item-input item-floating-label">
           <span class="input-label" >Nombre de empresa</span>
@@ -350,7 +350,7 @@
 
       <div class="card animated fadeInLeft"  ng-if="abrirAlquiler">
         <div class="item item-divider situr-header required">
-          <h2>El alquiler de vehículo fue realizado en:</h2>
+          <h2>E8. El alquiler de vehículo fue realizado en:</h2>
         </div>
         <ion-radio 
           ng-repeat="item in opciones"
@@ -369,7 +369,7 @@
 
       <div class="card animated fadeInLeft"  ng-if="abrirRopa">
         <div class="item item-divider situr-header required">
-          <h2>En dónde fue realizado el mayor gasto de productos como ropa, calzado,  artesanías etc. (bienes duraderos) antes y durante el viaje a Atlántico :</h2>
+          <h2>E9. En dónde fue realizado el mayor gasto de productos como ropa, calzado,  artesanías etc. (bienes duraderos) antes y durante el viaje a Atlántico :</h2>
         </div>
         <ion-radio 
           ng-repeat="item in opciones"
@@ -388,7 +388,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2> Los gastos de las personas que conformaron el grupo de viaje fueron pagados por:</h2>
+          <h2>E10. Los gastos de las personas que conformaron el grupo de viaje fueron pagados por:</h2>
         </div>
         <div ng-repeat="fin in financiadores"  ng-if="!(encuestaReceptor.RealizoGasto==0 && fin.id==1)">
           <ion-checkbox 
@@ -415,7 +415,7 @@
       </div>
       <div class="row">
         <div class="col col-50">
-          <a href="#/app/grupo/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+          <a href="#/app/grupo/{{id}}/{{is_offline}}?lastSection={{last_section}}" class="button button-outline button-positive ripple ripple-green button-block" >
             Anterior
           </a>
         </div>
@@ -428,41 +428,9 @@
     </form>
     <br><br><br>
   </ion-content>
+  
+  <div ng-include="'templates/receptor/popup-menu.html'"></div>
 
-  <!--<div class="popup-menu">
-    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
-    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
-    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
-      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
-        <i class="ion ion-information-circled"></i>
-        <span>General</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
-        <i class="ion ion-clock"></i>
-        <span>Estancia</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
-        <i class="ion ion-model-s"></i>
-        <span>Transporte</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
-        <i class="ion ion-ios-people"></i>
-        <span>Grupo</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
-        <i class="ion-cash"></i>
-        <span>Gastos</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
-        <i class="ion ion-person-add"></i>
-        <span>Percepción</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
-        <i class="ion ion-speakerphone"></i>
-        <span>Redes e internet</span>
-      </a>
-    </div>
-  </div>-->
 
   <div class="progress-container">
     <round-progress

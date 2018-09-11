@@ -1,0 +1,40 @@
+<div class="popup-menu">
+  <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
+  <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
+  <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
+    
+    <a class="popup-menu-item ripple ripple-green" href="#/app/encuestas" ng-click="togglePopupMenu()">
+      <i class="ion ion-home"></i>
+      <span>Encuestas</span>
+    </a>    
+
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(1,last_section, id, is_offline)">
+      <i class="ion ion-information-circled"></i>
+      <span>General</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(2,last_section, id, is_offline)">
+      <i class="ion ion-clock"></i>
+      <span>Estancia</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(3,last_section, id, is_offline)">
+      <i class="ion ion-model-s"></i>
+      <span>Transporte</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(4,last_section, id, is_offline)">
+      <i class="ion ion-ios-people"></i>
+      <span>Grupo</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(5,last_section, id, is_offline)">
+      <i class="ion-cash"></i>
+      <span>Gastos</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(6,last_section, id, is_offline)">
+      <i class="ion ion-person-add"></i>
+      <span>Percepción</span>
+    </a>
+    <a class="popup-menu-item ripple ripple-green" ng-click="togglePopupMenu();navigateReceptor(7,last_section, id, is_offline);">
+      <i class="ion ion-speakerphone"></i>
+      <span>Redes</span>
+    </a>
+  </div>
+</div>

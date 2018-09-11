@@ -11,7 +11,7 @@
       </div>
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Antes de venir al departamento del Atlántico, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
+          <h2>G1. ¿Antes de venir al departamento del Atlántico, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
         </div>
         <div  ng-repeat="it in fuentesAntes | orderBy:'id'">
           <ion-checkbox 
@@ -43,7 +43,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Durante la permanencia en el Atlántico, de qué forma usted buscó más forms.información sobre destinos turísticos?</h2>
+          <h2>G2. ¿Durante la permanencia en el Atlántico, de qué forma usted buscó más información sobre destinos turísticos?</h2>
         </div>
         <div  ng-repeat="it in fuentesDurante | orderBy:'id'">
 
@@ -80,7 +80,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>Sostenibilidad ¿Fue fácil encontrar los servicios, productos y atractivos de Atlántico?</h2>
+          <h2>G3. Sostenibilidad ¿Fue fácil encontrar los servicios, productos y atractivos de Atlántico?</h2>
         </div>               
         <ion-radio 
           name="facilidad" 
@@ -109,7 +109,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2> ¿Después del viaje al Atlántico en qué redes sociales compartió su experiencia de viaje (Comentarios, fotos, etc)?</h2>
+          <h2>G4. ¿Después del viaje al Atlántico en qué redes sociales compartió su experiencia de viaje (Comentarios, fotos, etc)?</h2>
         </div>
         <div ng-repeat="it in redes">
           <ion-checkbox 
@@ -147,7 +147,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2> ¿Le gustaría que le enviáramos información sobre el Atlántico a su correo electrónico?</h2>
+          <h2>G5. ¿Le gustaría que le enviáramos información sobre el Atlántico a su correo electrónico?</h2>
         </div>               
         <ion-radio 
           value="1" 
@@ -176,7 +176,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Le gustaría que le enviáramos una invitación por redes sociales para seguir al Atlántico?</h2>
+          <h2>G6. ¿Le gustaría que le enviáramos una invitación por redes sociales para seguir al Atlántico?</h2>
         </div>               
           <ion-radio 
             value="1" 
@@ -243,7 +243,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Conoce la marca que acaba de ver?</h2>
+          <h2>H1. ¿Conoce la marca que acaba de ver?</h2>
         </div>               
           <ion-radio 
             class="ripple ripple-green" 
@@ -337,7 +337,7 @@
 
       <div class="row">
         <div class="col col-50">
-          <a href="#/app/percepcion/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+          <a href="#/app/percepcion/{{id}}/{{is_offline}}?lastSection={{last_section}}" class="button button-outline button-positive ripple ripple-green button-block" >
             Anterior
           </a>
         </div>
@@ -351,40 +351,8 @@
     <br><br><br>
   </ion-content>
 
-  <!--<div class="popup-menu">
-    <div class="popup-menu-overlay" ng-class="{'in': menu_is_open}" ng-click="togglePopupMenu()"></div>
-    <i class="ion ion-grid popup-menu-toggle" ng-click="togglePopupMenu()" ng-class="{'out': menu_is_open}"></i>
-    <div class="popup-menu-panel" ng-class="{'in': menu_is_open}">
-      <a class="popup-menu-item ripple ripple-green" href="#/app/general" ng-click="togglePopupMenu()">
-        <i class="ion ion-forms.information-circled"></i>
-        <span>General</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/estancia" ng-click="togglePopupMenu()">
-        <i class="ion ion-clock"></i>
-        <span>Estancia</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/transporte" ng-click="togglePopupMenu()">
-        <i class="ion ion-model-s"></i>
-        <span>Transporte</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/grupo" ng-click="togglePopupMenu()">
-        <i class="ion ion-ios-people"></i>
-        <span>Grupo</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/gastos" ng-click="togglePopupMenu()">
-        <i class="ion-cash"></i>
-        <span>Gastos</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/percepcion" ng-click="togglePopupMenu()">
-        <i class="ion ion-person-add"></i>
-        <span>Percepción</span>
-      </a>
-      <a class="popup-menu-item ripple ripple-green" href="#/app/enteran" ng-click="togglePopupMenu();">
-        <i class="ion ion-speakerphone"></i>
-        <span>Redes e internet</span>
-      </a>
-    </div>
-  </div>-->
+  <div ng-include="'templates/receptor/popup-menu.html'"></div>
+  
 
   <div class="progress-container">
     <round-progress
