@@ -157,6 +157,8 @@ angular.module('receptor.controllers', [])
                                               $ionicLoading.hide(); 
                                               ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                             });
+                                          }else{
+                                            $ionicLoading.hide();   
                                           }
                                         }else{
                                          $rootScope.receptor_off[i].section_6.errores = data[0].data.errores;
@@ -167,6 +169,8 @@ angular.module('receptor.controllers', [])
                                         $ionicLoading.hide(); 
                                         ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                       });
+                                    }else{
+                                      $ionicLoading.hide();
                                     }
                                   }else{
                                    $rootScope.receptor_off[i].section_5.errores = data[0].data.errores;
@@ -177,6 +181,8 @@ angular.module('receptor.controllers', [])
                                   $ionicLoading.hide(); 
                                   ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                 });
+                              }else{
+                                $ionicLoading.hide();
                               }
                             }else{
                              $rootScope.receptor_off[i].section_4.errores = data[0].data.errores;
@@ -187,6 +193,8 @@ angular.module('receptor.controllers', [])
                             $ionicLoading.hide(); 
                             ionicToast.show("Error interno del servidor",'middle', false, 5000);
                           });
+                        }else{
+                          $ionicLoading.hide();
                         }
                       }else{
                        $rootScope.receptor_off[i].section_3.errores = data[0].data.errores;
@@ -197,6 +205,8 @@ angular.module('receptor.controllers', [])
                       $ionicLoading.hide(); 
                       ionicToast.show("Error interno del servidor",'middle', false, 5000);
                     });
+                  }else{
+                    $ionicLoading.hide();
                   } 
                 }else{
                  $rootScope.receptor_off[i].section_2.errores = data[0].data.errores;
@@ -207,6 +217,8 @@ angular.module('receptor.controllers', [])
                 $ionicLoading.hide(); 
                 ionicToast.show("Error interno del servidor",'middle', false, 5000);
               });
+            }else{
+              $ionicLoading.hide();
             }
           }else{
            $rootScope.receptor_off[i].section_1.errores = data[0].data.errores;
@@ -241,7 +253,7 @@ angular.module('receptor.controllers', [])
               if($rootScope.receptor_off[i].section_1.errores){
                 delete $rootScope.receptor_off[i].section_1.errores;
               }
-              if($rootScope.receptor_off[i].section_2){          
+              if($rootScope.receptor_off[i].section_2){
                 $rootScope.receptor_off[i].section_2.Id=$rootScope.receptor_off[i].id;
                 let section2 = $http.post(CONFIG.APIURL+'turismoreceptoroapi/crearestancia', $rootScope.receptor_off[i].section_2,{'content-type':'application/json',});
                 $q.all([section2]).then(data => { 
@@ -322,6 +334,8 @@ angular.module('receptor.controllers', [])
                                                 $ionicLoading.hide(); 
                                                 ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                               });
+                                            }else{
+                                              $ionicLoading.hide();
                                             }
                                           }else{
                                            $rootScope.receptor_off[i].section_6.errores = data[0].data.errores;
@@ -332,6 +346,8 @@ angular.module('receptor.controllers', [])
                                           $ionicLoading.hide(); 
                                           ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                         });
+                                      }else{
+                                        $ionicLoading.hide();
                                       }
                                     }else{
                                      $rootScope.receptor_off[i].section_5.errores = data[0].data.errores;
@@ -342,6 +358,8 @@ angular.module('receptor.controllers', [])
                                     $ionicLoading.hide(); 
                                     ionicToast.show("Error interno del servidor",'middle', false, 5000);
                                   });
+                                }else{
+                                  $ionicLoading.hide();
                                 }
                               }else{
                                $rootScope.receptor_off[i].section_4.errores = data[0].data.errores;
@@ -352,6 +370,8 @@ angular.module('receptor.controllers', [])
                               $ionicLoading.hide(); 
                               ionicToast.show("Error interno del servidor",'middle', false, 5000);
                             });
+                          }else{
+                            $ionicLoading.hide();
                           }
                         }else{
                          $rootScope.receptor_off[i].section_3.errores = data[0].data.errores;
@@ -362,7 +382,9 @@ angular.module('receptor.controllers', [])
                         $ionicLoading.hide(); 
                         ionicToast.show("Error interno del servidor",'middle', false, 5000);
                       });
-                    } 
+                    }else{
+                      $ionicLoading.hide();
+                    }
                   }else{
                    $rootScope.receptor_off[i].section_2.errores = data[0].data.errores;
                    $ionicLoading.hide();
@@ -373,6 +395,8 @@ angular.module('receptor.controllers', [])
                   $ionicLoading.hide(); 
                   ionicToast.show("Error interno del servidor",'middle', false, 5000);
                 });
+              }else{
+                $ionicLoading.hide();
               }
             }else{
              $rootScope.receptor_off[i].section_1.errores = data[0].data.errores;
