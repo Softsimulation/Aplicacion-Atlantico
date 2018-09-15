@@ -1,35 +1,37 @@
 angular.module('turismo.receptor.services', [])
 
 .service('turismoReceptor', function ($http, $q, CONFIG) {
+	let token="Bearer "+JSON.parse(localStorage.getItem("token"));
+	$http.defaults.headers.common['Authorization']=token;
 
 	this.encuestas=function () {
-    	let deferred = $q.defer();
-    	
+    	let deferred = $q.defer();    	
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/encuestas',
-	      	async:true,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
 	    }).error(function(status, error, data) {
 	        deferred.reject(error);
 	    }); 
 	    
-    	return deferred.promise;  
-
-    	
+    	return deferred.promise;     	
   	}; 
 
   	this.informaciondatoscrear=function () {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/informaciondatoscrear',
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -41,11 +43,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.departamento=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/departamento/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -57,11 +61,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.municipio=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/municipio/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -73,10 +79,12 @@ angular.module('turismo.receptor.services', [])
 
   	this.guardardatos=function (data) {
 	    let deferred = $q.defer();
-	    
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardardatos',
 	      data: data
 	    }).success(function(result, status) {
@@ -90,11 +98,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.cargareditardatos=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargareditardatos/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -107,9 +117,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardareditardatos=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardareditardatos',
 	      data: data
 	    }).success(function(result, status) {
@@ -123,11 +137,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.cargardatosseccionestancia=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccionestancia/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -140,9 +156,13 @@ angular.module('turismo.receptor.services', [])
   	this.crearestancia=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/crearestancia',
 	      data: data
 	    }).success(function(result, status) {
@@ -156,11 +176,13 @@ angular.module('turismo.receptor.services', [])
 
    	this.cargardatostransporte=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatostransporte/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -173,9 +195,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardarsecciontransporte=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarsecciontransporte',
 	      data: data
 	    }).success(function(result, status) {
@@ -189,11 +215,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.cargardatosseccionviaje=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccionviaje/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -206,9 +234,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardarseccionviajegrupo=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionviajegrupo',
 	      data: data
 	    }).success(function(result, status) {
@@ -222,11 +254,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.infogasto=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/infogasto/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -239,9 +273,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardargastos=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardargastos',
 	      data: data
 	    }).success(function(result, status) {
@@ -255,11 +293,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.cargardatospercepcion=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatospercepcion/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -272,9 +312,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardarseccionpercepcion=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionpercepcion',
 	      data: data
 	    }).success(function(result, status) {
@@ -288,11 +332,13 @@ angular.module('turismo.receptor.services', [])
 
   	this.cargardatosseccioninformacion=function (id) {
     	let deferred = $q.defer();
+
     	$http({
       		method: "get",
-      		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
-      	},
+      		headers:{
+      			'content-type':'application/json',
+            	'Authorization':token
+      		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccioninformacion/'+id,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
@@ -305,9 +351,13 @@ angular.module('turismo.receptor.services', [])
   	this.guardarseccioninformacion=function (data) {
 	    let deferred = $q.defer();
 	    
+
 	    $http({
-	      method: "POST",
-	      header: {'content-type':'application/json'},
+	      	method: "post",
+	      	header: {
+	      		'content-type':'application/json',
+	  			'Authorization':token
+	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccioninformacion',
 	      data: data
 	    }).success(function(result, status) {

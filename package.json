@@ -28,7 +28,6 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-statusbar": {},
-      "WebViewer": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-headercolor": {},
       "cordova-plugin-network-information": {}

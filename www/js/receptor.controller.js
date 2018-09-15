@@ -17,6 +17,9 @@ angular.module('receptor.controllers', [])
     return Object.keys(a).length - 1;
   }
 
+  ionicToast.show("Si deseas refrescar la lista de encuestas, desliza tu dedo hacía abajo",'bottom', false, 5000);
+
+
   $ionicModal.fromTemplateUrl('templates/receptor/encuestasOff.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -439,7 +442,29 @@ angular.module('receptor.controllers', [])
       }
     }
     localStorage.setItem("receptor_off",JSON.stringify($rootScope.receptor_off));
-  }
+  };
+
+  $scope.doRefresh=function () {
+    turismoReceptor.encuestas().then(function (data) {
+      $scope.encuestas=data;
+      $scope.$broadcast('scroll.refreshComplete');
+      for (let i = 0; i < $scope.encuestas.length; i++) {
+        if ($scope.encuestas[i].estadoid > 0 && $scope.encuestas[i].estadoid < 7) {
+            $scope.encuestas[i].Filtro = 'sincalcular';
+        } else {
+            $scope.encuestas[i].Filtro = 'calculadas';
+        }
+      }      
+    }, 
+    function (error, data) {
+      $scope.$broadcast('scroll.refreshComplete');
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  };
 })
 
 .controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $rootScope, $cordovaNetwork, factories) {

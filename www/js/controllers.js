@@ -3,7 +3,11 @@ angular.module('starter.controllers', [
                                       'interno.controllers'
                                       ])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover, $rootScope, $location, ionicToast) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopover, $rootScope, $location, ionicToast, $ionicHistory, $state, $ionicNavBarDelegate) {
+  
+  $ionicHistory.clearHistory();
+  $ionicHistory.clearCache();
+
   $rootScope.togglePopupMenu = function() {
     return $scope.menu_is_open = !$scope.menu_is_open;
   };
@@ -43,6 +47,66 @@ angular.module('starter.controllers', [
       ionicToast.show("Aún no tienes permisos para acceder a esa sección",'middle', false, 5000); 
     }
   }
+  
+  $scope.$on('$ionicView.enter', function(e) {
+      $ionicNavBarDelegate.showBar(true);
+  });
+
+  if(localStorage.getItem("token") == null){
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
+    localStorage.removeItem("token");
+    localStorage.removeItem("loader_receptor");
+    localStorage.removeItem("receptor_off");
+    $state.go('login');
+  }
+})
+
+.controller('loginController', function($scope, $ionicLoading, $ionicPopup, $state, CONFIG, $location,ionicToast, $ionicHistory, generalServices) {
+  $scope.type=false;
+  $ionicHistory.clearHistory();
+  $ionicHistory.clearCache();
+  if(localStorage.getItem("token") != null){$state.go('app.home');}
+    
+  $scope.login=function (user) {
+    
+    if(!user.username || user.username=='' || !user.password || user.password==''){
+      ionicToast.show("Complete todos los campos",'middle', false, 5000);
+      return;
+    }
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    generalServices.apiLogin(user).then(function (data) {
+      $ionicLoading.hide();
+      localStorage.setItem("token",JSON.stringify(data.token));
+      $state.go('app.home');
+    }, 
+    function (error) {
+      user.password="";
+      $ionicLoading.hide();
+      if(error.status==401){
+        ionicToast.show(error.error.mensaje,'middle', false, 5000);
+      }else{
+        ionicToast.show("Error interno del servidor",'middle', false, 5000);
+      }
+    });
+  }
+})
+
+
+.controller('logoutController', function($scope, $state, $ionicHistory) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("loader_receptor");
+    localStorage.removeItem("receptor_off");
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
+    $state.go('login');
 })
 
 .controller('listarGrupoController', function($scope, $stateParams) {
@@ -251,10 +315,21 @@ angular.module('starter.controllers', [
           items: null
         
         }]
+    },
+    {
+      id:4,
+      level:0,
+      name:'Logout',
+      icon:'ion-log-out',
+      state:'logout',
+      items:null
     }];
 })
 
-.controller('homeController', function($scope, $stateParams, $ionicPopup) {
+.controller('homeController', function($scope, $stateParams, $ionicPopup, $ionicHistory) {
+  $ionicHistory.clearHistory();
+  $ionicHistory.clearCache();
+
   $scope.show=function () {
     $ionicPopup.alert({
           title: '¡Información!',

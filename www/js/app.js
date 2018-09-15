@@ -15,6 +15,7 @@ angular.module('starter', ['ionic',
                            'ionic-modal-select',
                            'turismo.interno.services',
                            'turismo.receptor.services',
+                           'general.services',
                            'checklist-model',
                            'starter.directives',
                            'factories',
@@ -23,13 +24,15 @@ angular.module('starter', ['ionic',
                            ])
 
 .constant('CONFIG', {
-  APIURL: "https://situr-andoedo94.c9users.io/",
+  APIURL: "http://situr-andoedo94.c9users.io/",
 })
 
 .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicPickerI18n) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+
+
     $ionicPickerI18n.weekdays = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
     $ionicPickerI18n.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     $ionicPickerI18n.ok = "Ok";
@@ -62,9 +65,25 @@ angular.module('starter', ['ionic',
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
   //$ionicConfigProvider.views.transition('none');
-  $httpProvider.useApplyAsync(true);
+  //$httpProvider.useApplyAsync(true);
+  //$httpProvider.defaults.useXDomain = true;
 
   $stateProvider
+
+  
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'loginController',
+    cache: false
+  })
+
+  .state('logout', {
+    url: '/logout',
+    templateUrl: 'templates/login.html',
+    controller: 'logoutController',
+    cache: false
+  })
 
   .state('app', {
     url: '/app',
@@ -435,5 +454,5 @@ angular.module('starter', ['ionic',
 
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/login');
 });
