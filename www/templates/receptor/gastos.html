@@ -225,7 +225,7 @@
       
       <div class="card animated fadeInLeft" >
         <div class="item item-divider situr-header required">
-          <h2>E5. Indique los gastos totales hechos por usted, para usted o su grupo de viaje. No coloque gastos induviduales</h2>
+          <h2>E5. Indique los gastos totales hechos por usted, para usted o su grupo de viaje. No coloque gastos individuales</h2>
         </div>
         <ion-checkbox class="ripple ripple-green" ng-model="encuestaReceptor.poderLLenar" ng-change="limpiarMatriz()" value="true">
           E5.1.99. No realicé ningún tipo de gasto/ Esa situación no se presentó en el viaje
@@ -303,10 +303,10 @@
             </button>
 
             <label class="item item-input item-floating-label" >
-              <span class="input-label" >E.5.2. ¿Cuantas personas cubrió?</span>
+              <span class="input-label" >E.5.2. ¿Cuántas personas cubrió?</span>
               <input 
                 type="number" 
-                placeholder="E.5.2. ¿Cuantas personas cubrió?" 
+                placeholder="E.5.2. ¿Cuántas personas cubrió?" 
                 name="personas{{$index}}" 
                 ng-model="rub.gastos_visitantes[0].personas_cubiertas" 
                 ng-blur="cambiarAlquiler(rub)" 

@@ -85,7 +85,10 @@
         <p>Última sección : {{item.ultima}}</p>      
 
         <div class="pull-right">
+          <button class="ripple ripple-green button button-outline button-royal button-small" ng-click="actionSheet(item.id, item.ultima, 0)"><i class="ion-android-share"></i></button>
+
           <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/editGeneral/{{item.id}}/0?lastSection={{item.ultima}}"><i class="ion-edit"></i></a>
+
         </div>
       </div>
     </div>

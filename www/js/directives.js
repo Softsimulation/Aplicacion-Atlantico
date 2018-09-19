@@ -9,6 +9,7 @@ angular.module('starter.directives', [])
 
 .filter('firstPage', function() {
   return function(input, start) {
+  	if (!input || !input.length) { return; }
     start = +start;
     return input.slice(start);
   }

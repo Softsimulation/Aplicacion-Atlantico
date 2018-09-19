@@ -54,6 +54,7 @@
             ng-model="encuesta.fechaAplicacion"
             name="fechaAplicacion"
             ng-required="true"
+            only-valid="{'before': 'today', 'inclusive': true}"
             >
             {{encuesta.fechaAplicacion | date: "yyyy-MM-dd  HH:mm" }}
           </div>
@@ -101,6 +102,7 @@
             ng-model="encuesta.Llegada" 
             name="llegada" 
             ng-required="true"
+            only-valid="{'before': 'today', 'inclusive': true}"
             >
             {{encuesta.Llegada| date: "yyyy-MM-dd" }}
             
@@ -268,7 +270,7 @@
             cancel-button="Cancelar" 
             reset-button="Limpiar" 
             sub-header-class="bar-custom"
-            ng-change="updatedPaisRes(pais_residencia);changedepartamento(pais_residencia.id)"
+            ng-change="updatedPaisRes(pais_residencia);changedepartamento(pais_residencia.id); departamento={};"
             name="pais_residencia"
             ng-required="true"
             >
@@ -397,7 +399,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Cuál fué el motivo principal para venir al departamento del Atlántico?</h2>
+          <h2>¿Cuál fue el motivo principal para venir al departamento del Atlántico?</h2>
         </div>
         <label>             	 
           <ion-radio  

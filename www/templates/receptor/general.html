@@ -124,7 +124,7 @@
             ng-model="encuesta.Salida"
             name="salida"
             ng-required="true"
-            only-valid="{'before': 'today', 'inclusive': true}"
+            
             >
             {{encuesta.Salida| date: "yyyy-MM-dd" }}
             
@@ -275,7 +275,7 @@
             cancel-button="Cancelar" 
             reset-button="Limpiar" 
             sub-header-class="bar-custom"
-            ng-change="updatedPaisRes(pais_residencia);changedepartamento(pais_residencia.id)"
+            ng-change="updatedPaisRes(pais_residencia);changedepartamento(pais_residencia.id); departamento={};"
             name="pais_residencia"
             ng-required="true"
             >
@@ -404,7 +404,7 @@
 
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
-          <h2>¿Cuál fué el motivo principal para venir al departamento del Atlántico?</h2>
+          <h2>¿Cuál fue el motivo principal para venir al departamento del Atlántico?</h2>
         </div>
         <label>             	 
           <ion-radio  

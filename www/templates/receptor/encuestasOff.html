@@ -115,6 +115,8 @@
                 </p>
                 
 		        <div class="pull-right">
+		        	<button class="ripple ripple-green button button-outline button-royal button-small" ng-click="modal.hide();actionSheet($index, item.last_section, 1)"><i class="ion-android-share"></i></button>
+
 		        	<a ng-click="modal.hide();" href="#/app/editGeneral/{{$index}}/1?lastSection={{item.last_section}}" class="ripple ripple-green button button-outline button-positive button-small" ng-if="item.lastLoad!=7">
 		          		<i class="ion-edit"></i>
 		          	</a>

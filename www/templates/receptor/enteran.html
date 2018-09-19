@@ -204,7 +204,7 @@
       </div>
 
       <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
-        <div class="item item-divider situr-header required">
+        <div class="item item-divider situr-header">
           <h2> ¿Cómo podemos buscarlo en facebook?</h2>
         </div>
 
@@ -213,7 +213,6 @@
           <input 
             type="text" 
             placeholder="Escriba su cuenta de Facebook" 
-            ng-required="enteran.Invitacion==1"  
             ng-model="enteran.NombreFacebook"
             name="facebook">
             <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.facebook.$touched">
@@ -223,7 +222,7 @@
       </div>
 
       <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
-        <div class="item item-divider situr-header required">
+        <div class="item item-divider situr-header">
           <h2> ¿Cómo podemos buscarlo en Twitter?</h2>
         </div>
 
@@ -232,7 +231,6 @@
           <input 
             type="text" 
             placeholder="Escriba su cuenta de Twitter" 
-            ng-required="enteran.Invitacion==1"  
             ng-model="enteran.NombreTwitter"
             name="twitter">
             <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.twitter.$touched">

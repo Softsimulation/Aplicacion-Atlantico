@@ -11,7 +11,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/encuestas',
 	    }).success(function(result, status) {
@@ -30,7 +30,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/informaciondatoscrear',
 	    }).success(function(result, status) {
@@ -48,7 +48,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/departamento/'+id,
 	    }).success(function(result, status) {
@@ -66,7 +66,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/municipio/'+id,
 	    }).success(function(result, status) {
@@ -83,7 +83,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardardatos',
 	      data: data
@@ -103,7 +103,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargareditardatos/'+id,
 	    }).success(function(result, status) {
@@ -122,7 +122,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardareditardatos',
 	      data: data
@@ -142,7 +142,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccionestancia/'+id,
 	    }).success(function(result, status) {
@@ -161,7 +161,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/crearestancia',
 	      data: data
@@ -181,7 +181,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatostransporte/'+id,
 	    }).success(function(result, status) {
@@ -200,7 +200,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarsecciontransporte',
 	      data: data
@@ -220,7 +220,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccionviaje/'+id,
 	    }).success(function(result, status) {
@@ -239,7 +239,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionviajegrupo',
 	      data: data
@@ -259,7 +259,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/infogasto/'+id,
 	    }).success(function(result, status) {
@@ -278,7 +278,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardargastos',
 	      data: data
@@ -298,7 +298,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatospercepcion/'+id,
 	    }).success(function(result, status) {
@@ -317,7 +317,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccionpercepcion',
 	      data: data
@@ -337,7 +337,7 @@ angular.module('turismo.receptor.services', [])
       		method: "get",
       		headers:{
       			'content-type':'application/json',
-            	'Authorization':token
+            	
       		},
 	      	url: CONFIG.APIURL+'turismoreceptoroapi/cargardatosseccioninformacion/'+id,
 	    }).success(function(result, status) {
@@ -356,7 +356,7 @@ angular.module('turismo.receptor.services', [])
 	      	method: "post",
 	      	header: {
 	      		'content-type':'application/json',
-	  			'Authorization':token
+	  			
 	  			},
 	      url: CONFIG.APIURL+'turismoreceptoroapi/guardarseccioninformacion',
 	      data: data

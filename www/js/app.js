@@ -31,7 +31,7 @@ angular.module('starter', ['ionic',
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-
+    
 
     $ionicPickerI18n.weekdays = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
     $ionicPickerI18n.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -64,12 +64,7 @@ angular.module('starter', ['ionic',
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
-  //$ionicConfigProvider.views.transition('none');
-  //$httpProvider.useApplyAsync(true);
-  //$httpProvider.defaults.useXDomain = true;
-
   $stateProvider
-
   
   .state('login', {
     url: '/login',
