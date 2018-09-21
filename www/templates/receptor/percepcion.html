@@ -57,10 +57,10 @@
               <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
               <div class="col col-20" ng-repeat="n in [] | range:11">
                 <ion-radio 
-                  id="alojamiento_{{it.id}}_{{$index}}"
+                  id="alojamiento_{{it.id}}_{{$index+1}}"
                   name="alojamiento_{{it.id}}"  
                   ng-model="it.radios" 
-                  ng-checked="checkedRadio('alojamiento_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-checked="checkedRadio('alojamiento_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" ng-value="{Id:it.id,Valor:{{$index+1}}}"
                   ng-if="!$last"
                   class="ripple ripple-green">
                 </ion-radio>
@@ -132,11 +132,11 @@
               <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
               <div class="col col-20" ng-repeat="n in [] | range:11">
                 <ion-radio 
-                  id="restaurante_{{it.id}}_{{$index}}" 
+                  id="restaurante_{{it.id}}_{{$index+1}}" 
                   name="restaurante_{{it.id}}" 
                   ng-checked="checkedRadio('restaurante_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
                   ng-model="it.radios" 
-                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
                   ng-if="!$last"
                   class="ripple ripple-green">
                 </ion-radio>
@@ -179,10 +179,10 @@
               <div class="col col-20" ng-repeat="n in [] | range:11">
                 <ion-radio
                 name="factores_{{it.id}}" 
-                id="factores_{{it.id}}_{{$index}}" 
+                id="factores_{{it.id}}_{{$index+1}}" 
                 ng-checked="checkedRadio('factores_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
                 ng-model="it.radios" 
-                ng-value="{Id:it.id,Valor:{{$index}}}"
+                ng-value="{Id:it.id,Valor:{{$index+1}}}"
                 ng-if="!$last" 
                 class="ripple ripple-green"
                 >
@@ -225,9 +225,9 @@
                 <ion-radio 
                   name="ocio_{{it.id}}" 
                   ng-model="it.radios" 
-                  id="ocio_{{it.id}}_{{$index}}" 
+                  id="ocio_{{it.id}}_{{$index+1}}" 
                   ng-checked="checkedRadio('ocio_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
-                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
                   ng-if="!$last"
                   class="ripple ripple-green">
                 </ion-radio>
@@ -269,10 +269,10 @@
               <div class="col col-20" ng-repeat="n in [] | range:11">
                 <ion-radio 
                   name="infraestructura_{{it.id}}" 
-                  id="infraestructura_{{it.id}}_{{$index}}" 
+                  id="infraestructura_{{it.id}}_{{$index+1}}" 
                   ng-checked="checkedRadio('infraestructura_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" 
                   ng-model="it.radios" 
-                  ng-value="{Id:it.id,Valor:{{$index}}}"
+                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
                   ng-if="!$last"
                   class="ripple ripple-green">
                 </ion-radio>

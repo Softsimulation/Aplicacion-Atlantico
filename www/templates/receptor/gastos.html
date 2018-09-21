@@ -28,7 +28,6 @@
         </ion-radio>
 
         <ion-radio 
-          ng-value="2" 
           type="radio" 
           value="0" 
           name="opt2" 
@@ -192,7 +191,7 @@
                     
         <ion-radio 
           ng-repeat="opc in opciones"
-          value="{{opc.id.id}}" 
+          value="{{opc.id}}" 
           ng-change="limpiarLocalizacion()" 
           name="lugar" 
           ng-model="encuestaReceptor.LugarAgencia" 

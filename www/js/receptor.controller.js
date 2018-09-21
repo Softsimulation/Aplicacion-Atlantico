@@ -1782,7 +1782,7 @@ angular.module('receptor.controllers', [])
     if(rub.gastos_visitantes.length==0){
         return;
     }
-        
+    
     if( rub.gastos_visitantes[0].personas_cubiertas != null && rub.gastos_visitantes[0].divisas_magdalena!= null && rub.gastos_visitantes[0].cantidad_pagada_magdalena != null){
       switch (rub.id) {
         case 3:
