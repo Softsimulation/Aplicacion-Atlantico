@@ -321,7 +321,8 @@
               name="asumido{{$index}}"  
               ng-model="rub.gastos_visitantes[0].gastos_asumidos_otros" 
               value="true"
-              class="ripple ripple-green">
+              class="ripple ripple-green"
+              ng-blur="cambiarAlquiler(rub)">
               E6. Gastos pagados por otra persona u organización
             </ion-checkbox>
           </ion-item>

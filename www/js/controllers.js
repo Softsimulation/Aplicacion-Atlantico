@@ -252,17 +252,9 @@ angular.module('starter.controllers', [
           icon: "ion-document-text",
           state: 'app.encuestas',
           items: null
-        }, {
-          id: 11,
-          level: 1,
-          name: 'Grupos de Viaje',
-          icon: "ion-ios-people",
-          state: 'app.listarGrupo',
-          items: null
-        
         }]
     },
-    {
+    /*{
       id: 2,
       level: 0,
       name: 'Encuesta oferta y empleo',
@@ -292,7 +284,7 @@ angular.module('starter.controllers', [
           items: null
         
         }]
-    },
+    },*/
     {
       id: 3,
       level: 0,
@@ -306,7 +298,7 @@ angular.module('starter.controllers', [
           icon: "ion-document-text",
           state: 'app.temporadas',
           items: null
-        }, {
+        }, /*{
           id: 31,
           level: 2,
           name: 'Población DANE',
@@ -314,7 +306,7 @@ angular.module('starter.controllers', [
           state: 'app.dane',
           items: null
         
-        }]
+        }*/]
     },
     {
       id:4,

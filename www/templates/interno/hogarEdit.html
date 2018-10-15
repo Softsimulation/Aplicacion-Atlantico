@@ -146,9 +146,9 @@
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.encuestador.$touched">
               <span ng-show="forms.DatosForm.encuestador.$error.required">*</span>
           </span>
-          Encuestador: {{encuestador.asp_net_user.username}}
+          Encuestador: {{encuestador.user.username}}
           <div class="option ripple ripple-green">
-              {{option.asp_net_user.username}}
+              {{option.user.username}}
           </div>  
         </a>
       </div>
@@ -184,6 +184,8 @@
               <div class="col col-50">
                 <a ng-click="integranteAdd($index)" class="button button-outline button-stable button-small"><i class="ion-edit"></i></a>
                 <a ng-click="deleteIntegrante($index)" class="button button-outline button-assertive button-small"><i class="ion-ios-trash"></i></a>
+                <a ng-if="data.id != null && data.es_viajero && data.es_residente" href="#/app/viajeRealizado/{{data.id}}/{{id}}"class="button button-outline button-royal button-small"><i class="ion-clipboard"></i></a>
+
               </div>
             </div>
 
@@ -223,17 +225,17 @@
         </label>
         <br>
       </div>
-      <div class="row">
-        <div class="col col-50">
+      <div class="padding">
+        <!--<div class="col col-50">-->
           <button type="submit" ng-click="save()" class=" button button-positive ripple ripple-light button-block">
             Guardar
           </button>
-        </div>
-        <div class="col col-50">
+        <!--</div>-->
+        <!--<div class="col col-50">
           <a href="#/app/viajeRealizado/{{id}}" class="button button-outline button-positive ripple ripple-green button-block">
             Siguiente
           </a>
-        </div>
+        </div>-->
       </div>
     </form>
     <br><br><br>

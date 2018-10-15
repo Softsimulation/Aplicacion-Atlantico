@@ -1,0 +1,46 @@
+<ion-view view-title="Como se enteran los visitantes sobre el departamento del Atlántico">
+  <ion-content>
+		<div class="card animated fadeInLeft list" ng-if="errores">
+		  <div class="item item-divider situr-header-error">
+		      <h2>Corrige los errores</h2>
+		  </div>
+		  <div class="assertive item errors" ng-repeat="error in errores">
+		    {{error[0]}}
+		  </div>
+		</div>
+		<form role="form" name="forms.inForm" novalidate>
+			<div class="card animated fadeInLeft">
+	        <div class="item item-divider situr-header required">
+	          <h2>¿Antes del viaje, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
+	        </div>
+	        <div  ng-repeat="it in fuentesAntes | orderBy:'id'">
+	          <ion-checkbox 
+	            class="ripple ripple-green" 
+	            name="fuentesAntes" 
+	            ng-click="toggleSelection(it.id);validar(2, it.id)"
+	            ng-checked="checked(it.id, enteran.FuentesAntes)">
+	            {{it.fuente_informacion_antes_viaje_con_idiomas[0].nombre}}
+	            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+	              <span ng-show="enteran.FuentesAntes.length == 0">*</span>
+	            </span>
+	          </ion-checkbox>
+	          <label class="item item-input item-floating-label" ng-if="it.id==14">
+	            <span class="input-label" >Otro</span>
+	            <input 
+	              type="text" 
+	              placeholder="Otro" 
+	              name="otroFantes"  
+	              id="inputOtro_atrativo"  
+	              ng-model="enteran.OtroFuenteAntes" 
+	              ng-change="validarOtro(0)" 
+	              ng-required="enteran.FuentesAntes.indexOf(14) !== -1">
+	              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+	                <span ng-show="forms.inForm.otroFantes.$error.required">*</span>
+	              </span>
+	          </label>
+	        </div>                      
+	    </div>
+
+		</form>
+	</ion-content>
+</ion-view>

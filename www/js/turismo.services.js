@@ -1,13 +1,14 @@
 angular.module('turismo.interno.services', [])
 
 .service('turismoInterno', function ($http, $q, CONFIG) {
+	let token="Bearer "+JSON.parse(localStorage.getItem("token"));
+	$http.defaults.headers.common['Authorization']=token;
 
 	this.getTemporadas=function () {
     	let deferred = $q.defer();
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismointernoapi/gettemporadas',
 	    }).success(function(result, status) {
@@ -23,7 +24,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
       	url: CONFIG.APIURL+'turismointernoapi/cargardatos/'+id,
 	    }).success(function(result, status) {
@@ -39,7 +39,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	    url: CONFIG.APIURL+'turismointernoapi/datoshogar',
 	    }).success(function(result, status) {
@@ -136,7 +135,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismointernoapi/viajes/'+id,
 	    }).success(function(result, status) {
@@ -168,7 +166,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismointernoapi/viaje/'+id,
 	    }).success(function(result, status) {
@@ -216,7 +213,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismointernoapi/viajedataprincipal/'+id,
 	    }).success(function(result, status) {
@@ -248,7 +244,6 @@ angular.module('turismo.interno.services', [])
     	$http({
       		method: "get",
       		headers:{'content-type':'application/json',
-            //Authorization:'Bearer{'+user.token+'}'
       	},
 	      	url: CONFIG.APIURL+'turismointernoapi/actividades/'+id,
 	    }).success(function(result, status) {
@@ -258,4 +253,100 @@ angular.module('turismo.interno.services', [])
 	    }); 
     	return deferred.promise;  
   	};
+  	
+  	this.crearestancia=function (data) {
+	    let deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismointernoapi/crearestancia',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+		return deferred.promise;
+  	};
+ 
+  	this.cargartransporte=function (id) {
+    	let deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+      	},
+	      	url: CONFIG.APIURL+'turismointernoapi/cargartransporte/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
+
+  	this.guardartransporte=function (data) {
+	    let deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismointernoapi/guardartransporte',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+		return deferred.promise;
+  	};
+
+  	this.datagastos=function (id) {
+	    let deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismointernoapi/datagastos',
+	      data: {id:id}
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+		return deferred.promise;
+  	};
+
+  	this.guardargastos=function (data) {
+	    let deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismointernoapi/guardargastos',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+		return deferred.promise;
+  	};
+
+  	this.cargardatosfuentes=function (id) {
+    	let deferred = $q.defer();
+    	$http({
+      		method: "get",
+      		headers:{'content-type':'application/json',
+      	},
+	      	url: CONFIG.APIURL+'turismointernoapi/cargardatosfuentes/'+id,
+	    }).success(function(result, status) {
+	        deferred.resolve(result);  
+	    }).error(function(status, error, data) {
+	        deferred.reject(error);
+	    }); 
+    	return deferred.promise;  
+  	};
+
+  	
 });

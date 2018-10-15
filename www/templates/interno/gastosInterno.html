@@ -1,0 +1,402 @@
+<ion-view view-title="Gastos">
+	<ion-content>
+		<div class="card animated fadeInLeft list" ng-if="errores">
+			<div class="item item-divider situr-header-error">
+				<h2>Corrige los errores</h2>
+			</div>
+			<div class="assertive item errors" ng-repeat="error in errores">
+				{{error[0]}}
+			</div>
+		</div>
+		<form role="form" name="forms.GastoForm" novalidate>
+			<div class="card animated fadeInLeft" >
+        <div class="item item-divider situr-header required">
+          <h2>E1. El viaje al departamento hizo parte de un paquete/plan turístico o excursión</h2>
+        </div>              
+        <ion-radio 
+          value="1" 
+          name="opt2" 
+          ng-model="encuesta.viajePaquete" 
+          ng-required="true" 
+          class="ripple ripple-green">
+          Si
+          <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.opt2.$touched">
+            <span ng-show="forms.GastoForm.opt2.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          type="radio" 
+          value="0" 
+          name="opt2" 
+          ng-change="clearDataViaje()" 
+          ng-model="encuesta.viajePaquete" 
+          ng-required="true"
+          class="ripple ripple-green">
+          No
+          <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.opt2.$touched">
+            <span ng-show="forms.GastoForm.opt2.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.viajePaquete==1">
+        <div class="item item-divider situr-header required" >
+          <h2>Información del paquete turístico</h2>
+        </div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >¿Cuánto pagó usted por el paquete turístico o excursión?</span>
+          <input 
+            type="number" 
+            placeholder="¿Cuánto pagó usted por el paquete turístico o excursión?"  
+            ng-required="encuesta.viajePaquete==1"
+            min="1" 
+            name="pago" 
+            ng-model="encuesta.viajeExcursion.valor_paquete"
+            >
+            <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.pago.$touched">
+              <span ng-show="forms.GastoForm.pago.$error.required">*</span>
+            </span>
+        </label>
+
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuesta.viajeExcursion.Divisas" 
+          options="divisas" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          sub-header-class="bar-custom"
+          reset-button="Limpiar" 
+          ng-change="encuesta.viajeExcursion.divisas_id=encuesta.viajeExcursion.Divisas.id"
+          name="Divisa">
+          Moneda de compra : {{encuesta.viajeExcursion.Divisas.divisas_con_idiomas[0].nombre}}
+          <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.Divisa.$touched">
+            <span ng-show="forms.GastoForm.Divisa.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.divisas_con_idiomas[0].nombre}}
+          </div>  
+        </a>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >¿A cuántas personas cubrió?</span>
+          <input 
+            type="number" 
+            placeholder="¿A cuántas personas cubrió?" 
+            min="1" 
+            name="personas_cubiertas" 
+            ng-model="encuesta.viajeExcursion.personas_cubrio" 
+            ng-required="encuesta.viajePaquete==1">
+            <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.personas_cubiertas.$touched">
+              <span ng-show="forms.GastoForm.personas_cubiertas.$error.required">*</span>
+            </span>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.viajePaquete==1">
+        <div class="item item-divider situr-header required">
+          <h2>El paquete/plan turístico o excursión fue comprado a una agencia de viajes u operador turístico</h2>
+        </div>
+                    
+        <ion-radio 
+          ng-repeat="prov in TipoProveedorPaquete"
+          value="{{prov.id}}" 
+          name="proveedor" 
+          ng-model="encuesta.viajeExcursion.tipo_proveedor_paquete_id" 
+          ng-required="encuesta.viajePaquete==1"
+          class="ripple ripple-green">
+          {{prov.tipo_proveedor_paquete_con_idiomas[0].nombre}}
+        </ion-radio>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.viajePaquete==1">
+        <div class="item item-divider situr-header required">
+          <h2>E4. ¿En donde está ubicada la agencia de viajes/operador turístico?</h2>
+        </div>
+                    
+        <ion-radio 
+          ng-repeat="opc in opcionesLugares"
+          value="{{opc.id}}" 
+          name="lugar" 
+          ng-model="encuesta.lugarAgencia" 
+          ng-required="encuesta.comproEnAgencia==1"
+          class="ripple ripple-green">
+          {{opc.opciones_lugares_con_idiomas[0].nombre}}
+          <span class="validated" ng-show="forms.GastoForm.$submitted">
+            <span ng-show="forms.GastoForm.proveedor.$error.required">*</span>
+          </span>
+        </ion-radio>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.viajePaquete==1">
+        <div class="item item-divider situr-header required">
+          <h2>¿Qué productos y servicios incluía el paquete turístico o excursión?</h2>
+        </div>
+      	<div ng-repeat="servicio in serviciosPaquetes">
+	        <ion-checkbox 
+	          class="ripple ripple-green" 
+	          
+	          ng-click="toggleSelection(servicio.id); changeServiciosPaquetes(servicio)"
+	          ng-checked="checked(servicio.id, encuesta.serviciosPaquetes)"
+
+	          >
+	          {{servicio.nombre}}
+	          <span class="validated" ng-show="forms.GastoForm.$submitted">
+	            <span  ng-show="(encuesta.ServiciosIncluidos.length == 0 ||  encuesta.ServiciosIncluidos == null) && encuesta.ViajoDepartamento==1">*</span>
+	          </span>
+	        </ion-checkbox>   
+        </div>      
+      </div>
+      
+      <div class="card animated fadeInLeft" ng-if="encuesta.gastosServicosPaquetes.length>0">
+        <div class="item item-divider situr-header required">
+          <h2>Qué porcentaje del gasto realizó:</h2>
+        </div>
+        <div class="card" ng-repeat="servicio in encuesta.gastosServicosPaquetes" >
+        	<div class="item item-divider required">
+          	<h2>{{servicio.nombre}}</h2>
+        	</div>
+        	<label class="item item-input item-floating-label">
+            <span class="input-label" >En el Atlántico</span>
+            <input 
+              type="number" 
+              placeholder="En el Atlántico" 
+              name="costoA{{$index}}"  
+              min="0" 
+              max="100" 
+              ng-model="servicio.dentro" 
+              ng-required="true">
+            
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Fuera del Atlántico</span>
+            <input 
+              type="number" 
+              placeholder="Fuera del Atlántico" 
+              name="costoB{{$index}}" 
+              ng-model="servicio.fuera" 
+              ng-required="true">
+            
+          </label>
+        </div>  	      
+      </div>
+
+      <div class="card animated fadeInLeft" >
+        <div class="item item-divider situr-header required">
+          <h2>Indique los gastos totales hechos por usted, para usted o su grupo de viaje. No coloque gastos individuales</h2>
+        </div>
+        <ion-checkbox class="ripple ripple-green" ng-model="encuesta.noRealiceGastos" ng-change="changeNorealiceGastos()" ng-true-value="1" ng-false-value="0">
+          No realicé ningún tipo de gasto/ Esa situación no se presentó en el viaje
+        	
+        </ion-checkbox>
+
+        <div class="card card animated fadeInLeft" ng-repeat="rub in encuesta.rubros">
+          <ion-item 
+            ng-click="toggleGroup(rub)" 
+            ng-class="{active: isGroupShown(rub)}" 
+            class="item item-divider ripple ripple-green">
+            {{rub.nombre}}
+          </ion-item>
+          
+          <ion-item class="item-accordion" ng-show="isGroupShown(rub)">
+
+            <label class="item item-input item-floating-label" ng-if="rub.id==20">
+              <span class="input-label" >Otro, ¿Cuál?</span>
+              <input 
+                type="text" 
+                placeholder="Otro, ¿Cuál?" 
+                name="cantDentro{{$index}}" 
+                min="1" 
+                name="otroRubros" 
+                ng-model="rub.viajes_gastos_internos[0].otro"  
+                ng-disabled="encuesta.noRealiceGastos" 
+                ng-required="rub.viajes_gastos_internos[0].valor && rub.viajes_gastos_internos[0].divisa_id && rub.viajes_gastos_internos[0].personas_cubrio"  >
+              <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.otroRubros.$touched">
+                <span ng-show="forms.GastoForm.otroRubros.$error.required">*</span>
+              </span>
+            </label>
+
+            <label class="item item-input item-floating-label" >
+              <span class="input-label" >¿Cuánto gastó?</span>
+              <input 
+                type="number" 
+                placeholder="¿Cuánto gastó?" 
+                name="cantDentro{{$index}}" 
+                min="1" 
+                ng-change="changeRubros(rub)"
+                ng-model="rub.viajes_gastos_internos[0].valor"
+                ng-disabled="encuesta.noRealiceGastos" 
+                ng-required="rub.viajes_gastos_internos[0].divisa_id" >
+              <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.cantDentro{{$index}}.$touched">
+                <span  ng-show="forms.GastoForm.cantDentr{{$index}}.$error.required">*</span>
+              </span>
+            </label>
+
+            <button 
+              type="button"
+              class="item item-input item-select ripple ripple-green item-select-block" 
+              modal-select 
+              options="divisas" 
+              modal-title="Elegir grupo" 
+              has-search="true" 
+              header-footer-class="bar-custom" 
+              cancel-search-button='X' 
+              search-placeholder="Buscar..." 
+              cancel-button="Cancelar" 
+              sub-header-class="bar-custom"
+              reset-button="Limpiar" 
+              ng-change="rub.viajes_gastos_internos[0].divisa_id=rub.viajes_gastos_internos[0].divisa_obj.id"
+              name="divisaDentro{{$index}}" 
+              ng-change="changeRubros(rub)" 
+              ng-model="rub.viajes_gastos_internos[0].divisa_obj"
+              ng-disabled="encuesta.noRealiceGastos" 
+              ng-required="rub.viajes_gastos_internos[0].valor"
+              >
+              Divisa : {{rub.viajes_gastos_internos[0].divisa_obj.divisas_con_idiomas[0].nombre}}
+              <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.divisaDentro{{$index}}.$touched">
+                <span ng-show="forms.GastoForm.divisaDentro{{$index}}.$error.required">*</span>
+              </span>
+              <div class="option ripple ripple-green">
+                  {{option.divisas_con_idiomas[0].nombre}}
+              </div>  
+            </button>
+
+            <label class="item item-input item-floating-label" >
+              <span class="input-label" >¿Cuántas personas cubrió?</span>
+              <input 
+                type="number" 
+                placeholder="¿Cuántas personas cubrió?" 
+                name="personas{{$index}}" 
+                ng-model="rub.viajes_gastos_internos[0].personas_cubrio"
+                ng-change="changeRubros(rub)"
+                ng-disabled="encuesta.noRealiceGastos" 
+                placeholder="0" 
+                ng-required="rub.viajes_gastos_internos[0].valor || rub.viajes_gastos_internos[0].divisa_id">
+                <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.personas{{$index}}.$touched">
+                  <span ng-show="forms.GastoForm.personas{{$index}}.$error.required">*</span>
+                </span>
+            </label>
+
+            <ion-checkbox 
+              name="asumido{{$index}}"  
+              ng-model="rub.viajes_gastos_internos[0].gastos_realizados_otros" 
+              value="true"
+              class="ripple ripple-green">
+              Fue pagado por otra persona u organización/ empresa diferente a usted o a su grupo de viaje
+            </ion-checkbox>
+          </ion-item>
+        </div>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="verNombreEmpresa">
+        <div class="item item-divider situr-header required">
+          <h2> Nombre de la empresa de transporte</h2>
+        </div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Nombre de empresa</span>
+          <input 
+            type="text" 
+            name="empresa" 
+            placeholder="Nombre de empresa"  
+            ng-model="encuesta.empresaTransporte"
+            ng-required="true"
+            max="150">
+            <span  class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.empresa.$touched">     
+              <span ng-show="forms.GastoForm.empresa.$error.required">* </span>
+            </span>
+        </label>                       
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="verAlquilerVehiculo">
+        <div class="item item-divider situr-header required">
+          <h2>El alquiler de vehículo fue realizado en:</h2>
+        </div>
+        <ion-radio 
+          ng-repeat="item in opcionesLugares"
+          name="alquiler" 
+          ng-value="item.id" 
+          ng-model="rubroAlquilerVehiculo.viajes_gastos_internos[0].alquila_vehiculo_id"
+          ng-required="true"
+          class="ripple ripple-green"
+          ng-if="item.id!=3">
+          {{item.opciones_lugares_con_idiomas[0].nombre}}
+          <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.alquiler.$touched">
+            <span ng-show="forms.GastoForm.alquiler.$error.required">* </span>
+          </span>
+        </ion-radio>                          
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuesta.porcentajeGastoRubros.length>0">
+        <div class="item item-divider situr-header required">
+          <h2>Qué porcentaje del gasto realizó:</h2>
+        </div>
+        <div class="card" ng-repeat="rb in encuesta.porcentajeGastoRubros" >
+        	<div class="item item-divider required">
+          	<h2>{{rb.nombre}}</h2>
+        	</div>
+        	<label class="item item-input item-floating-label">
+            <span class="input-label" >En el Atlántico</span>
+            <input 
+              type="number" 
+              placeholder="En el Atlántico" 
+              name="costoC{{$index}}"  
+              min="0" 
+              max="100" 
+              ng-model="rb.dentro" 
+              ng-required="true">
+            
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label" >Fuera del Atlántico</span>
+            <input 
+              type="number" 
+              placeholder="Fuera del Atlántico" 
+              name="costoD{{$index}}" 
+              ng-model="rb.fuera"
+              ng-required="true">
+            
+          </label>
+        </div>  	      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Los gastos de las personas que conformaron el grupo de viaje fueron pagados por:</h2>
+        </div>
+        <div ng-repeat="fin in financiadores"  ng-show="!(encuestaInterno.RealizoGasto==0 && fin.Id==1)">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name ="Financiadores"
+            ng-click="toggleSelection2(fin.id)"
+            ng-checked="checked(fin.id, encuesta.financiadores)">
+            {{fin.financiadores_viajes_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.Financiadores.$touched">
+              <span  ng-show="encuesta.financiadores.length == 0 ||  encuesta.financiadores == null">*</span>
+            </span>
+          </ion-checkbox>
+          
+        </div>                      
+      </div>
+
+      <div class="row">
+        <div class="col col-50">
+          <a href="" class="button button-outline button-positive ripple ripple-green button-block" >
+            Anterior
+          </a>
+        </div>
+        <div class="col col-50">
+          <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+            Guardar
+          </button>
+        </div>
+      </div>
+
+		</form>
+
+	</ion-content>
+</ion-view>

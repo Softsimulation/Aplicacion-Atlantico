@@ -25,6 +25,8 @@ angular.module('starter', ['ionic',
 
 .constant('CONFIG', {
   APIURL: "http://situr-andoedo94.c9users.io/",
+  //APIURL: "http://demo.situratlantico.info/",
+  
 })
 
 .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicPickerI18n) {
@@ -247,7 +249,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.viajeRealizado', {
-    url: '/viajeRealizado/:id',
+    url: '/viajeRealizado/:id/:hogar',
     cache:false,
     views: {
       'menuContent': {
@@ -275,6 +277,39 @@ angular.module('starter', ['ionic',
       'menuContent': {
         templateUrl: 'templates/interno/actividadesRealizadas.html',
         controller: 'actividadesController'
+      }
+    }
+  })
+
+  .state('app.transporteInterno', {
+    url: '/transporteInterno/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/transporteInterno.html',
+        controller: 'transporteInternoController'
+      }
+    }
+  })
+
+  .state('app.gastosInterno', {
+    url: '/gastosInterno/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/gastosInterno.html',
+        controller: 'gastosInternoController'
+      }
+    }
+  })
+
+  .state('app.fuentesInformacion', {
+    url: '/fuentesInformacion/:id',
+    cache:false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/interno/fuentesInformacion.html',
+        controller: 'fuentesInformacionController'
       }
     }
   })

@@ -25,6 +25,7 @@ angular.module('interno.controllers', [])
 
 .controller('verTemporadaController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup) {
   $scope.active_content = 'hogar';
+
   $scope.setActiveContent = function(active_content){
     $scope.active_content = active_content;
   };
@@ -465,6 +466,7 @@ angular.module('interno.controllers', [])
   $scope.ver = false;
   $scope.env = {};
   $scope.env.id = $scope.id; 
+  $scope.hogar = $stateParams.hogar;
   $scope.env.principal = $scope.PrincipalViaje.id;
 
   $ionicLoading.show({
@@ -481,6 +483,7 @@ angular.module('interno.controllers', [])
       $scope.Datos = data.Enlaces;
       $scope.Viajes = data.Viajes;
       $scope.PrincipalViaje.id = data.Principal; 
+
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -1003,7 +1006,7 @@ angular.module('interno.controllers', [])
         if (data.Sw == 1) {
           $location.path("/app/actividades/"+$scope.encuesta.Id);
         } else {
-           //window.location.href = "/turismointerno/transporte/" + $scope.encuesta.Id;
+           $location.path("/app/transporteInterno/"+$scope.encuesta.Id);
         }
       } else {
         $ionicScrollDelegate.scrollTop(true);
@@ -1022,10 +1025,14 @@ angular.module('interno.controllers', [])
   };
 })
 
-.controller('actividadesController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location) {
+.controller('actividadesController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
   $scope.forms= {};
   $scope.encuesta = {}
   $scope.MensajeAlojamiento = false
+  $scope.activ=[];
+  $scope.encuesta.ActividadesRelizadas=[];
+  $scope.encuesta.OpcionesActividades=[];
+  $scope.id=$stateParams.id;
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -1037,7 +1044,8 @@ angular.module('interno.controllers', [])
       $ionicLoading.hide();
       $scope.Datos = data.Enlaces;
       $scope.encuesta = data.encuesta;
-      $scope.encuesta.Id = $stateParams.id;; 
+      $scope.encuesta.Id = $stateParams.id;
+      console.log(data);
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -1047,4 +1055,625 @@ angular.module('interno.controllers', [])
         okType:'button-stable'
     });
   });
+
+  $scope.existeActividad= function(obj){   
+
+    for (let i = 0; i < $scope.encuesta.ActividadesRelizadas.length; i++) {
+      if($scope.encuesta.ActividadesRelizadas[i].id == obj){            
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.toggleSelection = function (item , $event) {
+    
+    let dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+
+      let idx = factories.index_of(item.id, $scope.encuesta.ActividadesRelizadas);
+      
+      if (idx > -1) {
+        $scope.encuesta.ActividadesRelizadas.splice(idx, 1);
+      }else {
+        $scope.encuesta.ActividadesRelizadas.push(item);
+      }    
+    }else{
+      return;
+    } 
+  };
+
+  $scope.cambioActividadesRealizadas = function (obj) {
+    
+    for (let i = 0; i < $scope.encuesta.ActividadesRelizadas.length; i++) {
+      if($scope.encuesta.ActividadesRelizadas[i].id == 18){
+        obj = $scope.encuesta.ActividadesRelizadas[i];
+        $scope.encuesta.ActividadesRelizadas = [];
+        $scope.encuesta.ActividadesRelizadas.push(obj);
+        $scope.encuesta.OpcionesActividades = [];
+        $scope.encuesta.SubOpcionesActividades = [];
+      }        
+    };
+      
+    for (let i = 0; i < obj.opciones_actividades_realizadas_internos.length; i++) {
+      $scope.LimpiarOpcion(obj.opciones_actividades_realizadas_internos[i].id)
+    }
+  }
+
+  $scope.LimpiarOpcion = function(obj){
+   for (let i = 0; i < $scope.encuesta.OpcionesActividades.length; i++) {
+      if($scope.encuesta.OpcionesActividades[i].id == obj){
+        $scope.encuesta.OpcionesActividades.splice(i,1)
+      }
+    }
+  };
+
+  $scope.checked_object_id=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i].id){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.Actividad = function(obj){     
+   for (let i = 0; i < $scope.encuesta.ActividadesRelizadas.length; i++) {
+      if($scope.encuesta.ActividadesRelizadas[i].id == obj){  
+        return $scope.encuesta.ActividadesRelizadas[i];
+      }
+    }
+    return;
+  };
+
+  $scope.toggleSelection2 = function (item) {
+
+    let idx = factories.index_of(item.id, $scope.encuesta.OpcionesActividades);
+    if (idx > -1) {
+      $scope.encuesta.OpcionesActividades.splice(idx, 1);
+    }else {
+      $scope.encuesta.OpcionesActividades.push(item);
+    }    
+    console.log($scope.encuesta.OpcionesActividades);
+  };
+
+  $scope.existeOpcion = function(obj){
+    for (let i = 0; i < $scope.encuesta.OpcionesActividades.length; i++) {
+      if($scope.encuesta.OpcionesActividades[i].id == obj){
+          return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.Opcion = function(obj){
+    for (let i = 0; i < $scope.encuesta.OpcionesActividades.length; i++) {
+      if($scope.encuesta.OpcionesActividades[i].id == obj){
+        return $scope.encuesta.OpcionesActividades[i];
+      }
+    }
+    return;
+  };
+
+  $scope.requeridoOpciones = function(obj){
+    for (let i = 0; i < obj.length; i++) {
+      if($scope.existeOpcion(obj[i].id)){
+              
+        return false;
+      }
+    }
+    return true;
+  };
+
+  $scope.Validar = function(){
+    if($scope.encuesta.ActividadesRelizadas.length == 0){
+      return true
+    }
+    for (let i = 0; i < $scope.encuesta.ActividadesRelizadas.length; i++) {
+      let obj = $scope.encuesta.ActividadesRelizadas[i];
+      if(obj.opciones_actividades_realizadas_internos.length > 0){
+        if($scope.requeridoOpciones(obj.opciones_actividades_realizadas_internos )){
+          return true
+        }
+        for (let k = 0; k < obj.opciones_actividades_realizadas_internos.length; k++) {
+          let obj2 = obj.opciones_actividades_realizadas_internos[k];
+            if(obj2.sub_opciones_actividades_realizadas_internos.length > 0){        
+              if($scope.requeridoSubOpciones(obj2.sub_opciones_actividades_realizadas_internos)){
+                return true
+              }
+            }
+        }
+                
+      }
+    }
+    return false;
+  };
+
+  $scope.guardar = function () {
+
+
+    $scope.sw2 = $scope.Validar();
+    if (!$scope.forms.EstanciaForm.$valid || $scope.sw2) {
+        ionicToast.show("Corrija los errores",'top', false, 5000);
+        return
+    }
+
+    $scope.errores = null
+        
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoInterno.crearestancia($scope.encuesta).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/transporteInterno/"+$scope.id);
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });
+  }
+})
+
+.controller('transporteInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+  $scope.forms = {}
+  $scope.id=$stateParams.id;
+  $scope.forms= {};
+  $scope.transporte={};
+
+
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+
+  turismoInterno.cargartransporte($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      $scope.transportes = data.transportes;
+      $scope.medios=data.medios;
+      $scope.transporte.id = $stateParams.id;
+      $scope.transporte.Mover = data.tipo_transporte;
+      $scope.transporte.Medio = data.medio_transporte;
+      $scope.transporte.Tipo_otro=data.otrotipo;
+      $scope.transporte.Medio_otro=data.otromedio;
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.cambio=function(){ 
+    if($scope.transporte.Mover!=10){          
+      $scope.transporte.Tipo_otro="";   
+    }      
+  };
+    
+  $scope.cambio2=function(){
+   if($scope.transporte.Medio!=8){
+      $scope.transporte.Medio_otro="";
+    }
+  };
+
+  $scope.guardar = function () {
+    if (!$scope.forms.transForm.$valid) {
+      ionicToast.show("Corrija los errores",'middle', false, 5000);
+      return
+    }
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoInterno.guardartransporte($scope.transporte).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/gastosInterno/"+$scope.id);
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });    
+  };
+})
+
+.controller('gastosInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+  $scope.porcentajeGastoRubros = [];
+  $scope.id=$stateParams.id;
+  $scope.forms={};
+  $scope.encuesta={};
+  $scope.encuesta.serviciosPaquetes=[];
+
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+
+  turismoInterno.datagastos($stateParams.id).then(function (data) {
+    $ionicLoading.hide();
+    $scope.encuesta = data.encuesta;
+    $scope.divisas = data.divisas;
+    $scope.financiadores = data.financiadores;
+    $scope.opcionesLugares = data.opcionesLugares;
+    $scope.serviciosPaquetes = data.serviciosPaquetes;
+    $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
+    $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
+
+    $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
+            
+    for(let i=0; i< $scope.encuesta.rubros.length ;i++){
+      if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
+        $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
+      }
+      if($scope.encuesta.rubros[i].id==8){
+        $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
+        $scope.changeRubros($scope.encuesta.rubros[i]); break;
+      }
+    }
+            
+    for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
+      for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
+        if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
+          $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
+          break;
+        }
+      }              
+    }
+            
+    for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
+      for (let j = 0; j < $scope.encuesta.rubros.length; j++){
+        if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
+          $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
+          break;
+        }
+      }
+
+    }
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+
+  $scope.changeServiciosPaquetes = function(s){
+    if(s.id==9 || s.id==10 || s.id==11 ){
+      if( $scope.encuesta.serviciosPaquetes.indexOf(s.id)!=-1 ){
+       $scope.encuesta.gastosServicosPaquetes.push( { servicio_paquete_id:s.id, nombre: s.nombre} );
+      }
+      else{ 
+        for(let i=0; i<$scope.encuesta.gastosServicosPaquetes.length;i++){
+          if( $scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id==s.id ){ 
+            $scope.encuesta.gastosServicosPaquetes.splice(i,1); break; 
+          }
+        }
+      }
+    }
+  };
+
+  $scope.changeRubros = function(rb){           
+    if( rb.id==8 && rb.viajes_gastos_internos.length>0 ){
+      $scope.verAlquilerVehiculo = ((rb.viajes_gastos_internos[0].valor || rb.viajes_gastos_internos[0].divisa_id) && rb.viajes_gastos_internos[0].personas_cubrio);
+    }
+      
+    else if( rb.id==6 && rb.viajes_gastos_internos.length>0 ){
+      $scope.verNombreEmpresa = ((rb.viajes_gastos_internos[0].valor || rb.viajes_gastos_internos[0].divisa_id) && rb.viajes_gastos_internos[0].personas_cubrio);
+    }
+    
+    else if( (rb.id==12 || rb.id==13 || rb.id==14 || rb.id==15 || rb.id==16 || rb.id==17 || rb.id==18) && rb.viajes_gastos_internos.length>0 ){
+      let sw = null;
+      for(let i=0; i<$scope.encuesta.porcentajeGastoRubros.length;i++){
+        if($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id==rb.id){ sw = i; break; }
+      }
+          
+      if( ((rb.viajes_gastos_internos[0].valor || rb.viajes_gastos_internos[0].divisa_id) && rb.viajes_gastos_internos[0].personas_cubrio) ){
+        if(sw==null){  
+          $scope.encuesta.porcentajeGastoRubros.push( { rubro_interno_id : rb.id, nombre : rb.nombre } ); 
+        }
+      }
+      else{
+        if(sw!=null){  $scope.encuesta.porcentajeGastoRubros.splice(sw,1); }
+      }
+    } 
+    return;
+  };
+
+  $scope.getNombreServicio =  function(id ){
+    for (let i = 0; i < $scope.serviciosPaquetes.length; i++){
+      if ($scope.serviciosPaquetes[i].servicio_paquete_id == id) { return $scope.serviciosPaquetes[i].nombre; }
+    }
+    return ;
+  };
+
+  $scope.changeNorealiceGastos = function(){
+    if($scope.encuesta.noRealiceGastos==1){
+      for(let i=0; i<$scope.encuesta.rubros.length; i++){
+        $scope.encuesta.rubros[i].viajes_gastos_internos[0] = {};
+      }
+      $scope.encuesta.gastosServicosPaquetes = [];
+      $scope.encuesta.porcentajeGastoRubros = [];
+      $scope.verNombreEmpresa = false;
+      $scope.empresaTransporte = null;
+    }
+  };
+
+  $scope.clearDataViaje = function(){
+    $scope.encuesta.gastosServicosPaquetes = [];
+  }
+
+  $scope.toggleSelection = function (id) {
+    let idx = $scope.encuesta.serviciosPaquetes.indexOf(id);
+    if (idx > -1) {
+      $scope.encuesta.serviciosPaquetes.splice(idx, 1);
+    }
+
+    else {
+      $scope.encuesta.serviciosPaquetes.push(id);
+    }
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
+  };
+
+  $scope.toggleGroup = function(group) {
+    if ($scope.isGroupShown(group)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = group;
+    }
+  };
+
+  $scope.isGroupShown = function(group) {
+    return $scope.shownGroup === group;
+  };
+
+  $scope.guardar = function () {
+        
+    if (!$scope.forms.GastoForm.$valid || $scope.encuesta.financiadores.length==0) {
+      ionicToast.show("Formulario incompleto corrige los errores",'top', false, 5000);
+      return;
+    }
+        
+    let data = angular.copy($scope.encuesta);
+    data.id = $scope.id;
+    data.rubros = [];
+   
+    for (let i = 0; i < $scope.encuesta.rubros.length; i++) {
+      if($scope.encuesta.rubros[i].viajes_gastos_internos.length>0){  
+        let rubro = $scope.encuesta.rubros[i];
+          
+        if($scope.encuesta.noRealiceGastos==1){
+          if( rubro.viajes_gastos_internos[0].gastos_realizados_otros ){
+            data.rubros.push({
+              rubros_id : rubro.id,
+              gastos_realizados_otros : rubro.viajes_gastos_internos[0].gastos_realizados_otros
+            });  
+          }
+        }else{
+          if( (rubro.viajes_gastos_internos[0].valor || rubro.viajes_gastos_internos[0].divisa_id) && rubro.viajes_gastos_internos[0].personas_cubrio ){
+            data.rubros.push({
+              rubros_id : rubro.id,
+              valor : rubro.viajes_gastos_internos[0].valor,
+              divisa_id : rubro.viajes_gastos_internos[0].divisa_id,
+              personas_cubrio : rubro.viajes_gastos_internos[0].personas_cubrio,
+              gastos_realizados_otros : rubro.viajes_gastos_internos[0].gastos_realizados_otros,
+              otro : rubro.viajes_gastos_internos[0].otro,
+              alquila_vehiculo_id : rubro.id==8 ? rubro.viajes_gastos_internos[0].alquila_vehiculo_id : null,
+            });  
+          }else if(rubro.viajes_gastos_internos[0].gastos_realizados_otros){
+            data.rubros.push({
+              rubros_id : rubro.id,
+              gastos_realizados_otros : rubro.viajes_gastos_internos[0].gastos_realizados_otros
+            });  
+          }
+        }  
+      }
+    } 
+        
+    if(data.rubros.length==0 && data.noRealiceGastos==1){
+      ionicToast.show("Debe llenar por lo menos un gasto, de lo contrario marque no realice ningun gasto.",'top', false, 5000);
+      return;
+    }
+        
+    for (let i = 0; i < $scope.encuesta.porcentajeGastoRubros.length; i++){
+      if( ($scope.encuesta.porcentajeGastoRubros[i].dentro+$scope.encuesta.porcentajeGastoRubros[i].fuera) != 100 ){
+        ionicToast.show("La suma de los porcentajes gastados debe ser igual a 100%.",'top', false, 5000);   
+        return;
+      }
+    }
+
+    for (let i = 0; i < $scope.encuesta.gastosServicosPaquetes.length; i++){
+      if( ($scope.encuesta.gastosServicosPaquetes[i].dentro+$scope.encuesta.gastosServicosPaquetes[i].fuera) != 100 ){
+        ionicToast.show("La suma de los porcentajes gastados debe ser igual a 100%.",'top', false, 5000);   
+        return;
+      }
+    }
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoInterno.guardargastos(data).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/fuentesInformacion/"+$scope.id);
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });
+  };
+})
+
+.controller('fuentesInformacionController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+  $scope.id=$stateParams.id;
+  $scope.enteran = {
+    FuentesAntes: [],
+    FuentesDurante: [],
+    Redes: []
+  } 
+  $scope.forms={};
+
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+
+  turismoInterno.cargardatosfuentes($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      $scope.fuentesAntes = data.fuentesAntes
+      $scope.fuentesDurante = data.fuentesDurante
+      $scope.redes = data.redes
+      $scope.enteran.id = $scope.id
+      $scope.experiencias = data.experiencias
+      $scope.calificaciones = data.calificaciones
+
+      if (data.invitacion_correo != null) {
+        $scope.enteran.FuentesAntes = data.fuentes_antes
+        $scope.enteran.FuentesDurante = data.fuentes_durante
+        $scope.enteran.Redes = data.compar_redes
+        $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes
+        $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante
+        $scope.enteran.Correo = data.invitacion_correo
+        $scope.enteran.Invitacion = data.invitacion
+        $scope.enteran.NombreFacebook = data.facebook
+        $scope.enteran.NombreTwitter = data.twitter
+        $scope.enteran.Autorizo=data.autorizo
+        $scope.enteran.Acepta_tratamiento=data.acepta
+        $scope.enteran.otra_red=data.Otrared
+      }
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
+    });
+  });
+  $scope.validar = function (sw, id) {
+    if (sw == 0) {
+      if (id == 13) {
+        let i = $scope.enteran.FuentesDurante.indexOf(13)
+          if (i == -1) {
+            $scope.enteran.FuentesDurante = [13]
+            $scope.enteran.OtroFuenteDurante = null
+          }
+      } else {
+        if (id == 14) {
+          let i = $scope.enteran.FuentesDurante.indexOf(14)
+          if (i != -1) {
+            $scope.enteran.OtroFuenteDurante = null
+          }
+        }
+      }
+    } else if (sw == 1) {
+      if (id == 1) {
+        let i = $scope.enteran.Redes.indexOf(1)
+        if (i == -1) {
+          $scope.enteran.Redes = [1]
+        }
+      }
+    } else {
+      if (id == 14) {
+        let i = $scope.enteran.FuentesAntes.indexOf(14)
+        if (i != -1) {
+          $scope.enteran.OtroFuenteAntes = null
+        }
+      }
+    }
+  };
+
+  $scope.validarOtro = function (sw) {
+    if (sw == 0) {
+      let i = $scope.enteran.FuentesAntes.indexOf(14)
+      if ($scope.enteran.OtroFuenteAntes != null && $scope.enteran.OtroFuenteAntes != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesAntes.push(14)
+        }
+      }
+    } else {
+      let i = $scope.enteran.FuentesDurante.indexOf(14)
+      if ($scope.enteran.OtroFuenteDurante != null && $scope.enteran.OtroFuenteDurante != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesDurante.push(14)
+        }
+      }
+    }
+  };
+
+  $scope.toggleSelection = function (item) {
+    let idx = $scope.enteran.FuentesAntes.indexOf(item);
+    if (idx > -1) {
+      $scope.enteran.FuentesAntes.splice(idx, 1);
+    }else {
+      $scope.enteran.FuentesAntes.push(item);
+    } 
+  };
 })

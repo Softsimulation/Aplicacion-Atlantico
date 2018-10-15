@@ -1,0 +1,119 @@
+<ion-view view-title="Transporte utilizado">
+	<ion-content>
+
+		<div class="card animated fadeInLeft list" ng-if="errores">
+		  <div class="item item-divider situr-header-error">
+		      <h2>Corrige los errores</h2>
+		  </div>
+		  <div class="assertive item errors" ng-repeat="error in errores">
+		    {{error[0]}}
+		  </div>
+		</div>
+
+		<form role="form" name="forms.transForm" novalidate>
+
+			<div class="card animated fadeInLeft">
+				<div class="item item-divider situr-header required">
+					<h2>¿Cuál fue el medio de transporte utilizado para recorrer la mayor distancia durante el viaje?</h2>
+				</div>
+				<label ng-repeat="item in transportes" ng-if="item.Id != 9">             	 
+					<ion-radio 
+						name="mover" 
+						ng-value="item.id" 
+						ng-model="transporte.Mover" 
+						ng-required="true"  
+						ng-change="cambio()">
+						{{item.nombre}}
+						<span  class="validated" ng-show="forms.transForm.$submitted || forms.transForm.mover.$touched">
+              <span ng-show="forms.transForm.mover.$error.required">*</span>
+            </span>
+					</ion-radio>
+					<label class="item item-input item-floating-label"  ng-if="item.id==10">
+	          <span class="input-label" >Otro</span>
+	          <input
+	          	ng-model="transporte.Tipo_otro"  
+	            type="text" 
+	            placeholder="Otro" 		              
+	            ng-disabled="transporte.Mover!=10">		             
+	        </label>
+				</label>
+			</div>
+
+			<div class="card animated fadeInLeft">
+				<div class="item item-divider situr-header required">
+					<h2>Tipo de transporte más utilizado para desplazarse durante su estancia en el departamento del Atlantico</h2>
+				</div>
+				<label ng-repeat="item in medios" >             	 
+					<ion-radio 
+						name="medio" 
+						ng-value="item.id" 
+						ng-model="transporte.Medio" 
+						ng-required="true" 
+						class="ripple ripple-green"
+						ng-change="cambio2()"
+					>
+						{{item.nombre}}
+						<span class="validated" ng-show="forms.transForm.$submitted || forms.transForm.medio.$touched">
+              <span ng-show="forms.transForm.medio.$error.required">*</span>
+            </span>
+					</ion-radio>
+					<label class="item item-input item-floating-label" ng-if="item.id == 8">
+	          <span class="input-label" >Otro</span>
+	          <input 
+	            type="text" 
+	            placeholder="Otro" 		              
+	            name="otromedio"
+	            ng-model="transporte.Medio_otro"
+	            ng-disabled="transporte.Medio!=8"  
+	            >	
+	            <span class="validated" ng-show="forms.transForm.$submitted || forms.transForm.medio.$touched">
+                <span ng-show="forms.transForm.otromedio.$error.required">* </span>
+              </span>	              
+	      	</label>
+				</label>
+			</div>
+
+			
+		
+
+			<div class="row">
+	    	<div class="col col-50">
+	    	<!--href="#/app/actividades/{{id}}"-->
+	      	<a  class="button button-outline button-positive ripple ripple-green button-block" >
+	        	Anterior
+	      	</a>
+	    	</div>
+	  		<div class="col col-50">
+	      	<button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+	        	Guardar
+	      	</button>
+	    	</div>
+	  	</div>
+  	</form>
+
+		<br><br><br>
+	</ion-content>
+
+
+
+	<div class="progress-container">
+		<round-progress
+		max="100"
+		current="60"
+		color="#16469e"
+		bgcolor="#c9cdff"
+		radius="10"
+		stroke="1"
+		semi="false"
+		rounded="false"
+		clockwise="true"
+		responsive="true"
+		duration="800"
+		animation="easeInOutQuart"
+		animation-delay="2">
+		</round-progress>
+		<div class="progress-text">
+			<span class="progress-percent">60%</span>
+		</div>
+	</div>
+</ion-view>
