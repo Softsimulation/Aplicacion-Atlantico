@@ -123,7 +123,6 @@ angular.module('interno.controllers', [])
     } else {
         $scope.aux = indice;
         $scope.integrante =  $scope.encuesta.integrantes[indice];
-        console.log($scope.integrante); 
     }
   };
 
@@ -926,7 +925,6 @@ angular.module('interno.controllers', [])
       for (i = 0; i < $scope.encuesta.Personas.length; i++){
         if ($scope.encuesta.Personas[i] == k ) {
           return true;
-          console.log(true);
         }
       }
       if (k == 2) {
@@ -1045,7 +1043,6 @@ angular.module('interno.controllers', [])
       $scope.Datos = data.Enlaces;
       $scope.encuesta = data.encuesta;
       $scope.encuesta.Id = $stateParams.id;
-      console.log(data);
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -1135,7 +1132,6 @@ angular.module('interno.controllers', [])
     }else {
       $scope.encuesta.OpcionesActividades.push(item);
     }    
-    console.log($scope.encuesta.OpcionesActividades);
   };
 
   $scope.existeOpcion = function(obj){
@@ -1319,6 +1315,7 @@ angular.module('interno.controllers', [])
   $scope.forms={};
   $scope.encuesta={};
   $scope.encuesta.serviciosPaquetes=[];
+  $scope.encuesta.financiadores=[];
 
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -1337,9 +1334,9 @@ angular.module('interno.controllers', [])
     $scope.serviciosPaquetes = data.serviciosPaquetes;
     $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
     $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
-
-    $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
-            
+    if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
+      $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
+    }            
     for(let i=0; i< $scope.encuesta.rubros.length ;i++){
       if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
         $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
@@ -1519,7 +1516,7 @@ angular.module('interno.controllers', [])
       }
     } 
         
-    if(data.rubros.length==0 && data.noRealiceGastos==1){
+    if(data.rubros.length==0 && !data.noRealiceGastos){
       ionicToast.show("Debe llenar por lo menos un gasto, de lo contrario marque no realice ningun gasto.",'top', false, 5000);
       return;
     }
@@ -1566,15 +1563,22 @@ angular.module('interno.controllers', [])
       });
     });
   };
+
+  $scope.toggleSelection2 = function (id) {
+    let idx = $scope.encuesta.financiadores.indexOf(id);
+    if (idx > -1) {
+      $scope.encuesta.financiadores.splice(idx, 1);
+    }
+
+    else {
+      $scope.encuesta.financiadores.push(id);
+    }
+  };
 })
 
 .controller('fuentesInformacionController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+  $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
   $scope.id=$stateParams.id;
-  $scope.enteran = {
-    FuentesAntes: [],
-    FuentesDurante: [],
-    Redes: []
-  } 
   $scope.forms={};
 
   $ionicLoading.show({
@@ -1617,56 +1621,6 @@ angular.module('interno.controllers', [])
         okType:'button-stable'
     });
   });
-  $scope.validar = function (sw, id) {
-    if (sw == 0) {
-      if (id == 13) {
-        let i = $scope.enteran.FuentesDurante.indexOf(13)
-          if (i == -1) {
-            $scope.enteran.FuentesDurante = [13]
-            $scope.enteran.OtroFuenteDurante = null
-          }
-      } else {
-        if (id == 14) {
-          let i = $scope.enteran.FuentesDurante.indexOf(14)
-          if (i != -1) {
-            $scope.enteran.OtroFuenteDurante = null
-          }
-        }
-      }
-    } else if (sw == 1) {
-      if (id == 1) {
-        let i = $scope.enteran.Redes.indexOf(1)
-        if (i == -1) {
-          $scope.enteran.Redes = [1]
-        }
-      }
-    } else {
-      if (id == 14) {
-        let i = $scope.enteran.FuentesAntes.indexOf(14)
-        if (i != -1) {
-          $scope.enteran.OtroFuenteAntes = null
-        }
-      }
-    }
-  };
-
-  $scope.validarOtro = function (sw) {
-    if (sw == 0) {
-      let i = $scope.enteran.FuentesAntes.indexOf(14)
-      if ($scope.enteran.OtroFuenteAntes != null && $scope.enteran.OtroFuenteAntes != '') {
-        if (i == -1) {
-          $scope.enteran.FuentesAntes.push(14)
-        }
-      }
-    } else {
-      let i = $scope.enteran.FuentesDurante.indexOf(14)
-      if ($scope.enteran.OtroFuenteDurante != null && $scope.enteran.OtroFuenteDurante != '') {
-        if (i == -1) {
-          $scope.enteran.FuentesDurante.push(14)
-        }
-      }
-    }
-  };
 
   $scope.toggleSelection = function (item) {
     let idx = $scope.enteran.FuentesAntes.indexOf(item);
@@ -1675,5 +1629,118 @@ angular.module('interno.controllers', [])
     }else {
       $scope.enteran.FuentesAntes.push(item);
     } 
+  };
+
+  $scope.validar = function (sw, id) {
+    if (sw == 0) {
+      if (id == 13) {
+        let i = $scope.enteran.FuentesDurante.indexOf(13);
+        if (i == -1) {
+          $scope.enteran.OtroFuenteDurante = null;
+        }
+      } else {
+        if (id == 14) {
+          let i = $scope.enteran.FuentesDurante.indexOf(14);
+          if (i != -1) {
+            $scope.enteran.OtroFuenteDurante = null;
+          }
+        }
+      }
+    } else if (sw == 1) {
+      if (id == 1) {
+        let i = $scope.enteran.Redes.indexOf(1);
+        if (i == -1) {
+          $scope.enteran.otroRed = null;
+        }
+      }
+    } else {
+      if (id == 14) {
+        let i = $scope.enteran.FuentesAntes.indexOf(14);
+        if (i != -1) {
+          $scope.enteran.OtroFuenteAntes = null;
+        }
+      }
+    }
+  };
+
+  $scope.validarOtro = function (sw) {
+    if (sw == 0) {
+      let i = $scope.enteran.FuentesAntes.indexOf(14);
+      if ($scope.enteran.OtroFuenteAntes != null && $scope.enteran.OtroFuenteAntes != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesAntes.push(14);
+        }
+      } 
+    } else if(sw == 1) {
+      let i = $scope.enteran.FuentesDurante.indexOf(14);
+      if ($scope.enteran.OtroFuenteDurante != null && $scope.enteran.OtroFuenteDurante != '') {
+        if (i == -1) {
+          $scope.enteran.FuentesDurante.push(14);
+        }
+      } 
+    } else if(sw == 2) {
+      let i = $scope.enteran.Redes.indexOf(12);
+      if ($scope.enteran.otroRed != null && $scope.enteran.otroRed != '') {
+        if (i == -1) {
+          $scope.enteran.Redes.push(12);
+        }
+      } 
+    }
+  };
+
+  
+
+  $scope.toggleSelection2 = function (item,$event) {
+    
+    let dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+      let idx = $scope.enteran.FuentesDurante.indexOf(item);
+
+      if (idx > -1) {
+        console.log($scope.enteran.FuentesDurante, idx)
+        $scope.enteran.FuentesDurante.splice(idx, 1)
+
+      }else {
+        
+        if(item==13){
+          $scope.enteran.FuentesDurante=[];
+        }
+        $scope.enteran.FuentesDurante.push(item);
+      }
+     
+
+    }else{
+      return;
+    }
+  };
+
+  $scope.toggleSelection3 = function (item,$event) {
+
+    let dataValue = angular.element($event.target).attr("disabled");;
+    if(dataValue!=="disabled"){
+      let idx = $scope.enteran.Redes.indexOf(item);
+
+      if (idx > -1) {
+        $scope.enteran.Redes.splice(idx, 1);
+      }else {
+        if(item==1){
+          $scope.enteran.Redes=[];
+        }
+        $scope.enteran.Redes.push(item);
+      }
+
+    }else{
+      return;
+    }
+  };
+
+  $scope.checked=function(id, objeto) {
+    let i=0;
+    for(i=0; i<objeto.length; i++){
+      if(id==objeto[i]){
+        return true;
+      }
+    }
+    return false;
   };
 })

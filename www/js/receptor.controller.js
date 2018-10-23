@@ -2513,6 +2513,7 @@ angular.module('receptor.controllers', [])
 
   $scope.checked=function(id, objeto) {
     let i=0;
+    console.log(id, objeto)
     for(i=0; i<objeto.length; i++){
       if(id==objeto[i]){
         return true;

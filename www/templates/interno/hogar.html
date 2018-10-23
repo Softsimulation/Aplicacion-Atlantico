@@ -146,9 +146,9 @@
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.encuestador.$touched">
               <span ng-show="forms.DatosForm.encuestador.$error.required">*</span>
           </span>
-          Encuestador: {{encuestador.asp_net_user.username}}
+          Encuestador: {{encuestador.user.username}}
           <div class="option ripple ripple-green">
-              {{option.asp_net_user.username}}
+              {{option.user.username}}
           </div>  
         </a>
       </div>
@@ -221,7 +221,7 @@
               <span ng-show="forms.DatosForm.email_entrevistado.$error.email">*</span>
           </span>
         </label>
-        <br>
+        
       </div>
       <div class="padding">
         <button type="submit" ng-click="save()" class="button button-outline button-positive button-block ripple ripple-green">

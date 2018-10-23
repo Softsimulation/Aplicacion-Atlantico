@@ -24,8 +24,8 @@ angular.module('starter', ['ionic',
                            ])
 
 .constant('CONFIG', {
-  APIURL: "http://situr-andoedo94.c9users.io/",
-  //APIURL: "http://demo.situratlantico.info/",
+  //APIURL: "http://situr-andoedo94.c9users.io/",
+  APIURL: "http://demo.situratlantico.info/",
   
 })
 

@@ -10,36 +10,113 @@
 		</div>
 		<form role="form" name="forms.inForm" novalidate>
 			<div class="card animated fadeInLeft">
-	        <div class="item item-divider situr-header required">
-	          <h2>¿Antes del viaje, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
-	        </div>
-	        <div  ng-repeat="it in fuentesAntes | orderBy:'id'">
-	          <ion-checkbox 
-	            class="ripple ripple-green" 
-	            name="fuentesAntes" 
-	            ng-click="toggleSelection(it.id);validar(2, it.id)"
-	            ng-checked="checked(it.id, enteran.FuentesAntes)">
-	            {{it.fuente_informacion_antes_viaje_con_idiomas[0].nombre}}
-	            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
-	              <span ng-show="enteran.FuentesAntes.length == 0">*</span>
-	            </span>
-	          </ion-checkbox>
-	          <label class="item item-input item-floating-label" ng-if="it.id==14">
-	            <span class="input-label" >Otro</span>
-	            <input 
-	              type="text" 
-	              placeholder="Otro" 
-	              name="otroFantes"  
-	              id="inputOtro_atrativo"  
-	              ng-model="enteran.OtroFuenteAntes" 
-	              ng-change="validarOtro(0)" 
-	              ng-required="enteran.FuentesAntes.indexOf(14) !== -1">
-	              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
-	                <span ng-show="forms.inForm.otroFantes.$error.required">*</span>
-	              </span>
-	          </label>
-	        </div>                      
+        <div class="item item-divider situr-header required">
+          <h2>¿Antes del viaje, de qué forma usted se enteró de los destinos turísticos visitados?</h2>
+        </div>
+        <div  ng-repeat="it in fuentesAntes | orderBy:'id'">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="fuentesAntes" 
+            ng-click="toggleSelection(it.id);validar(2, it.id)"
+            ng-checked="checked(it.id, enteran.FuentesAntes)">
+            {{it.fuente_informacion_antes_viaje_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+              <span ng-show="enteran.FuentesAntes.length == 0">*</span>
+            </span>
+          </ion-checkbox>
+          <label class="item item-input item-floating-label" ng-if="it.id==14">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro" 
+              name="otroFantes"  
+              id="inputOtro_atrativo"  
+              ng-model="enteran.OtroFuenteAntes" 
+              ng-change="validarOtro(0)" 
+              ng-required="enteran.FuentesAntes.indexOf(14) !== -1">
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesAntes.$touched">
+                <span ng-show="forms.inForm.otroFantes.$error.required">*</span>
+              </span>
+          </label>
+        </div>                      
 	    </div>
+
+	    <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Durante la permanencia en el Atlántico, de qué forma usted buscó más información sobre destinos turísticos?</h2>
+        </div>
+        <div  ng-repeat="it in fuentesDurante ">
+
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="fuentesDurante" 
+            ng-disabled="(enteran.FuentesDurante.indexOf(13) > -1 && it.id!=13)" 
+            ng-click="toggleSelection2(it.id,$event);validar(0, it.id)"
+            ng-checked="checked(it.id, enteran.FuentesDurante)">
+            {{it.fuentes_informacion_durante_viaje_con_idiomas[0].nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesDurante.$touched">
+              <span ng-show="enteran.FuentesDurante.length == 0">*</span>
+            </span>
+          </ion-checkbox>
+          
+          <label class="item item-input item-floating-label"  ng-if="it.id==14">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro" 
+              name="otroDurante" 
+              class="form-control" 
+              id="inputOtro_atrativo"
+              ng-disabled="enteran.FuentesDurante.indexOf(13) > -1 " 
+              ng-model="enteran.OtroFuenteDurante" 
+              ng-change="validarOtro(1)" 
+              ng-required="enteran.FuentesDurante.indexOf(14) != -1">
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.fuentesDurante.$touched">
+                <span ng-show="forms.inForm.otroDurante.$error.required">*</span>
+              </span>
+          </label>
+        </div>                      
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Después del viaje al Atlántico en qué redes y medios sociales compartió su experiencia de viaje (Comentarios, fotos, etc)?</h2>
+        </div>
+        <div ng-repeat="it in redes">
+          <ion-checkbox 
+            class="ripple ripple-green" 
+            name="redes" 
+            ng-disabled="enteran.Redes.indexOf(1) > -1 && it.id != 1" 
+            ng-checked="checked(it.id, enteran.Redes)"
+            ng-click="toggleSelection3(it.id,$event);validar(1, it.id)">
+            {{it.nombre}}
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.redes.$touched">
+              <span ng-show="enteran.Redes.length == 0">*</span>
+            </span>
+          </ion-checkbox> 
+
+          
+          <label class="item item-input item-floating-label"  ng-if="it.id==12">
+            <span class="input-label" >Otro</span>
+            <input 
+              type="text" 
+              placeholder="Otro"  
+              name="otroRed" 
+              class="form-control" 
+              id="otroRed" 
+              ng-disabled="enteran.Redes.indexOf(12) < 0"
+              ng-model="enteran.otra_red" 
+              ng-change="validarOtro(2)" 
+              ng-required="enteran.Redes.indexOf(12) != -1" >
+              <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.redes.$touched">
+                <span ng-show="forms.inForm.otroRed.$error.required">*</span>
+              </span>
+          </label>
+   
+        </div>                      
+      </div>
+
+      
 
 		</form>
 	</ion-content>
