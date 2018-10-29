@@ -24,8 +24,8 @@ angular.module('starter', ['ionic',
                            ])
 
 .constant('CONFIG', {
-  //APIURL: "http://situr-andoedo94.c9users.io/",
-  APIURL: "http://demo.situratlantico.info/",
+  APIURL: "http://situr-andoedo94.c9users.io/",
+  //APIURL: "http://demo.situratlantico.info/",
   
 })
 
@@ -249,7 +249,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.viajeRealizado', {
-    url: '/viajeRealizado/:id/:hogar',
+    url: '/viajeRealizado/:id',
     cache:false,
     views: {
       'menuContent': {
@@ -260,7 +260,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.viajePrincipal', {
-    url: '/viajePrincipal/:id/:principal',
+    url: '/viajePrincipal/:id',
     cache:false,
     views: {
       'menuContent': {

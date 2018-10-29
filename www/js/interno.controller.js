@@ -1,6 +1,13 @@
 angular.module('interno.controllers', [])
 
-.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading) {
+.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory) {
+  
+  $ionicHistory.clearHistory();
+  $ionicHistory.clearCache();
+  $scope.currentPage = 0;
+  $scope.pageSize = 5;  
+  $scope.encuestas = []; 
+    
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -11,7 +18,7 @@ angular.module('interno.controllers', [])
 
   turismoInterno.getTemporadas().then(function (data) {
       $ionicLoading.hide();
-      $scope.temporadas=data.temporadas;
+      $scope.temporadas = data.temporadas;
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -21,13 +28,35 @@ angular.module('interno.controllers', [])
         okType:'button-stable'
     });
   });
+
+  $scope.len=function (a) {
+    return Object.keys(a).length - 1;
+  };
+
+  $scope.numberOfPages=function(encuestas){
+    return Math.ceil(encuestas.length/$scope.pageSize);                
+  };
 })
 
 .controller('verTemporadaController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup) {
   $scope.active_content = 'hogar';
+  $scope.currentPage = 0;
+  $scope.pageSize = 5; 
+  $scope.datos = [];
+  $scope.datos.Hogares = [];
+  $scope.encuestas = []; 
+
 
   $scope.setActiveContent = function(active_content){
     $scope.active_content = active_content;
+  };
+
+  $scope.len=function (a) {
+    return Object.keys(a).length - 1;
+  };
+
+  $scope.numberOfPages=function(encuestas){
+    return Math.ceil(encuestas.length/$scope.pageSize);                
   };
 
   $ionicLoading.show({
@@ -41,6 +70,8 @@ angular.module('interno.controllers', [])
   turismoInterno.cargardatos($stateParams.id).then(function (data) {
       $ionicLoading.hide();
       $scope.datos=data.temporada;
+      $scope.encuestas = data.encuestas;
+
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -476,12 +507,12 @@ angular.module('interno.controllers', [])
     showDelay: 0
   });
 
-
   turismoInterno.viajes($stateParams.id).then(function (data) {
       $ionicLoading.hide();
       $scope.Datos = data.Enlaces;
       $scope.Viajes = data.Viajes;
       $scope.PrincipalViaje.id = data.Principal; 
+      $scope.hogar = data.hogar.id;
 
   }, 
   function (error, data) {
@@ -779,7 +810,7 @@ angular.module('interno.controllers', [])
       $ionicLoading.hide();
       if (data.success == true) {
         ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/viajePrincipal/"+$scope.env.id+"/"+$scope.env.principal);
+        $location.path("/app/viajePrincipal/"+$scope.env.principal);
       } else {
         $ionicScrollDelegate.scrollTop(true);
         ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
@@ -807,12 +838,14 @@ angular.module('interno.controllers', [])
     showDelay: 0
   });
 
-  turismoInterno.viajedataprincipal($stateParams.principal).then(function (data) {
+  turismoInterno.viajedataprincipal($stateParams.id).then(function (data) {
       $ionicLoading.hide();
       $scope.Datos = data.Enlaces;
       $scope.encuesta = data.encuesta;
-      $scope.encuesta.Id = $stateParams.principal;
-      $scope.id = $stateParams.id;
+      $scope.encuesta.Id = $stateParams.id;
+      
+
+      //$scope.id = $stateParams.id;
       if(!$scope.encuesta.motivo){$scope.encuesta.motivo=factories.findSelect(parseInt($scope.encuesta.Motivo), $scope.Datos.Motivos);}
       $scope.encuesta.Estancias.forEach(function(_this) {
         if(!_this.pais){_this.pais=factories.findSelect(_this.Pais,$scope.Datos.Paises)}
@@ -1688,8 +1721,6 @@ angular.module('interno.controllers', [])
     }
   };
 
-  
-
   $scope.toggleSelection2 = function (item,$event) {
     
     let dataValue = angular.element($event.target).attr("disabled");;
@@ -1743,4 +1774,45 @@ angular.module('interno.controllers', [])
     }
     return false;
   };
+
+  $scope.guardar=function () {
+
+    if (!$scope.forms.inForm.$valid || $scope.enteran.FuentesAntes.length == 0 || $scope.enteran.FuentesDurante.length == 0 || $scope.enteran.Redes.length == 0) {
+      ionicToast.show("Formulario incompleto corrige los errores",'middle', false, 5000);
+      return
+    }
+
+    if ($scope.enteran.FuentesAntes.indexOf(14) == -1) {$scope.enteran.OtroFuenteAntes = null}
+
+    if ($scope.enteran.FuentesDurante.indexOf(14) == -1) {$scope.enteran.OtroFuenteDurante = null}
+
+    $scope.enteran.Experiencias = $scope.experiencias
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoInterno.guardarfuentesinformacion($scope.enteran).then(function (data) {
+      $ionicLoading.hide();
+      if (data.success == true) {
+        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+        $location.path("/app/temporadas");
+      } else {
+        $ionicScrollDelegate.scrollTop(true);
+        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+        $scope.errores = data.errores;
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error. Intenta nuevamente',
+        okType:'button-stable'
+      });
+    });
+  }
 })

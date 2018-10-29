@@ -116,8 +116,245 @@
         </div>                      
       </div>
 
-      
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Le gustaría que le enviáramos información sobre el Atlántico a su correo electrónico?</h2>
+        </div>               
+        <ion-radio 
+          value="1" 
+          ng-model="enteran.Correo" 
+          class="ripple ripple-green" 
+          name="info"
+          ng-required="true">
+          Si
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.info.$touched">
+            <span ng-show="forms.inForm.info.$error.required">*</span>
+          </span>
+        </ion-radio>
 
-		</form>
+        <ion-radio 
+          value="0" 
+          ng-model="enteran.Correo" 
+          class="ripple ripple-green" 
+          name="info"
+          ng-required="true">
+          No
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.info.$touched">
+            <span ng-show="forms.inForm.info.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>¿Le gustaría que le enviáramos una invitación por redes sociales para seguir al Atlántico?</h2>
+        </div>               
+          <ion-radio 
+            value="1" 
+            ng-model="enteran.Invitacion"
+            class="ripple ripple-green" 
+            name="networks"
+            ng-required="true">
+            Si
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.networks.$touched">
+              <span ng-show="forms.inForm.networks.$error.required">*</span>
+            </span>
+          </ion-radio>
+
+          <ion-radio 
+            value="0" 
+            ng-model="enteran.Invitacion" 
+            class="ripple ripple-green" 
+            name="networks"
+            ng-required="true">
+            No
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.networks.$touched">
+              <span ng-show="forms.inForm.networks.$error.required">*</span>
+            </span>
+          </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
+        <div class="item item-divider situr-header">
+          <h2> ¿Cómo podemos buscarlo en facebook?</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Escriba su cuenta de Facebook</span>
+          <input 
+            type="text" 
+            placeholder="Escriba su cuenta de Facebook" 
+            ng-model="enteran.NombreFacebook"
+            name="facebook">
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.facebook.$touched">
+              <span ng-show="forms.inForm.facebook.$error.required">*</span>
+            </span>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft"  ng-if="enteran.Invitacion==1">
+        <div class="item item-divider situr-header">
+          <h2> ¿Cómo podemos buscarlo en Twitter?</h2>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label" >Escriba su cuenta de Twitter</span>
+          <input 
+            type="text" 
+            placeholder="Escriba su cuenta de Twitter" 
+            ng-model="enteran.NombreTwitter"
+            name="twitter">
+            <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.twitter.$touched">
+              <span ng-show="forms.inForm.twitter.$error.required">*</span>
+            </span>
+        </label>
+      </div>
+
+      <div class="card animated fadeInLeft"  >
+        <div class="item item-divider situr-header">
+          <h2>De acuerdo a su experiencia durante el viaje realizado, calique B (Bueno) R (Regular) M (Malo), el siguiente grupo de preguntas referente a los servicios utilizados y al entorno turístico visitado: </h2>
+        </div>
+        <div class="item" >
+          <ion-scroll direction="x" >
+            <div class="row row-table">
+              <div class="col col-60">SERVICIOS</div>
+              <div class="col col-20">B</div>
+              <div class="col col-20">M</div>
+              <div class="col col-20">R</div>  
+              <div class="col col-20">NA</div>  
+            </div> 
+            <div class="row row-table-col" ng-repeat="e in experiencias|filter:{tipo:false}">
+              <div class="col col-60">{{e.nombre}}</div>
+              <div class="col col-20" ng-repeat="c in calificaciones" style="text-align:center">
+                <ion-radio 
+                  ng-required="true"
+                  name="calificacion_{{e.id}}" 
+                  ng-model="e.valor" 
+                  value="{{c.id}}">
+                  
+                </ion-radio>
+              </div>
+              
+              <div class="col col-20">
+                <ion-radio 
+                  ng-required="true"
+                  name="calificacion_{{e.id}}" 
+                  ng-model="e.valor" 
+                  value="-1">
+                </ion-radio>
+              </div>  
+            </div>
+
+            <div class="row row-table">
+              <div class="col col-60">ENTORNO TURÍSTICO</div>
+              <div class="col col-20"></div>
+              <div class="col col-20"></div>
+              <div class="col col-20"></div>  
+              <div class="col col-20"></div>  
+            </div>
+            <div class="row row-table-col" ng-repeat="e in experiencias|filter:{tipo:true}">
+              <div class="col col-60">{{e.nombre}}</div>
+              <div class="col col-20" ng-repeat="c in calificaciones" style="text-align:center">
+                <ion-radio 
+                  ng-required="true"
+                  name="calificacion_{{e.id}}" 
+                  ng-model="e.valor" 
+                  value="{{c.id}}">
+                  
+                </ion-radio>
+              </div>
+              
+              <div class="col col-20">
+                <ion-radio 
+                  ng-required="true"
+                  name="calificacion_{{e.id}}" 
+                  ng-model="e.valor" 
+                  value="-1">
+                </ion-radio>
+              </div>  
+            </div> 
+          </ion-scroll>
+        </div>
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Dando cumplimiento a la ley de Protección de datos personales, solicito su autorización para que pueda contactarlo nuevamente. ¿Está usted de acuerdo?</h2>
+        </div>               
+        <ion-radio 
+          class="ripple ripple-green" 
+          name="acepta_autorizacion" 
+          id="acepta_autorizacion" 
+          ng-required="true" 
+          value="0" 
+          ng-model="enteran.Autorizo">
+          Si
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_autorizacion.$touched">
+            <span ng-show="forms.inForm.acepta_autorizacion.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          class="ripple ripple-green" 
+          name="acepta_autorizacion" 
+          id="acepta_autorizacion" 
+          ng-required="true" 
+          value="1" 
+          ng-model="enteran.Autorizo">
+          No
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_autorizacion.$touched">
+            <span ng-show="forms.inForm.acepta_autorizacion.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="card animated fadeInLeft">
+        <div class="item item-divider situr-header required">
+          <h2>Ya para terminar, le solicito su autorización para que SITUR ATLÁNTICO comparta sus respuestas con las entidades que contrataron el proyecto, ¿Está usted de acuerdo?</h2>
+        </div>               
+        <ion-radio 
+          class="ripple ripple-green" 
+          name="acepta_tratamiento" 
+          id="acepta_tratamiento" 
+          ng-required="true" 
+          value="0" 
+          ng-model="enteran.Acepta_tratamiento">
+          Si
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_tratamiento.$touched">
+            <span ng-show="forms.inForm.acepta_tratamiento.$error.required">*</span>
+          </span>
+        </ion-radio>
+
+        <ion-radio 
+          value="-1" 
+          class="ripple ripple-green" 
+          name="acepta_tratamiento" 
+          id="acepta_tratamiento" 
+          ng-required="true" 
+          value="1" 
+          ng-model="enteran.Acepta_tratamiento">
+          No
+          <span class="validated" ng-show="forms.inForm.$submitted || forms.inForm.acepta_tratamiento.$touched">
+            <span ng-show="forms.inForm.acepta_tratamiento.$error.required">*</span>
+          </span>
+        </ion-radio>  
+      </div>
+
+      <div class="row">
+        <div class="col col-50">
+
+          <a href="#/app/gastosInterno/{{id}}" class="button button-outline button-positive ripple ripple-green button-block" >
+            Anterior
+          </a>
+        </div>
+        <div class="col col-50">
+          <button type="submit" ng-click="guardar()" class=" button button-positive ripple ripple-light button-block" >
+            Guardar
+          </button>
+        </div>
+      </div>
+      
+    </form>
+    <br><br><br>  
 	</ion-content>
 </ion-view>

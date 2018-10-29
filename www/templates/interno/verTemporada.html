@@ -25,7 +25,28 @@
         <h2>Hogares</h2>
       </div>
      
-      <div class="card animated fadeInLeft" ng-if="datos" ng-repeat="item in datos.Hogares | filter:search">
+      <div class="card padding animated fadeInLeft">
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green" 
+          ng-disabled="currentPage == 0" 
+          ng-click="currentPage=currentPage-1">
+          <i class="icon ion-ios-arrow-back"></i>
+        
+        </button>
+        <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green"
+          ng-disabled="currentPage >= (datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+          ng-click="currentPage=currentPage+1">
+
+          <i class="icon ion-ios-arrow-forward"></i>
+        </button>
+        <span class="ion-badges" style="float: right;">
+          {{(datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+        </span>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="datos" ng-repeat="item in datos.Hogares | filter:search | firstPage:currentPage*pageSize | limitTo:pageSize"">
         <div class="item item-divider situr-header"></div>
         <div class="item" >
           <h2>{{item.edificacione.barrio.nombre}}</h2>
@@ -50,42 +71,110 @@
           </div>
         </div> 
       </div>
+
+      <div class="card padding animated fadeInLeft">
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green" 
+          ng-disabled="currentPage == 0" 
+          ng-click="currentPage=currentPage-1">
+          <i class="icon ion-ios-arrow-back"></i>
+        
+        </button>
+        <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green"
+          ng-disabled="currentPage >= (datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+          ng-click="currentPage=currentPage+1">
+
+          <i class="icon ion-ios-arrow-forward"></i>
+        </button>
+        <span class="ion-badges" style="float: right;">
+          {{(datos.Hogares| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+        </span>
+      </div>
+
     </div>
 
 
     <div class="card" ng-show="active_content=='personas'">
       <div class="item item-divider situr-header">
-        <h2>Personas</h2>
+        <h2>Encuestas</h2>
       </div>
-      <div class="item" >
-        <ion-scroll direction="x" id="scroll-x">
-          <div class="row row-table">
-            <div class="col col-33">IdPersona</div>
-            <div class="col col-33">IdHogar</div>
-            <div class="col col-75">Correo</div>
-            <div class="col col-75">Dirección</div>
-            <div class="col col-33">Estrato </div>
-            <div class="col col-50">Encuestador</div>
-            <div class="col col-50">Fecha de Salida </div>
-            <div class="col col-33">Última sección  </div>
-            <div class="col col-33"></div>
-          </div>
-          <div class="row row-table-col" ng-repeat="n in [] | range:3">
-            <div class="col col-33">2</div>
-            <div class="col col-33">1</div>
-            <div class="col col-75">humcals@gmail.com </div>
-            <div class="col col-75">CALLE 31 # 16-50  </div>
-            <div class="col col-33">IV</div>
-            <div class="col col-50">situr</div>
-            <div class="col col-50">12/04/2016</div>
-            <div class="col col-33">4</div>
-            <div class="col col-33">
-              <a class="button button-outline button-stable ripple ripple-green" href="#/app/hogar"><i class="ion-edit"></i></a>
-            </div>
-          </div>
 
-        </ion-scroll>
-      </div> 
+      <div class="card padding animated fadeInLeft">
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green" 
+          ng-disabled="currentPage == 0" 
+          ng-click="currentPage=currentPage-1">
+          <i class="icon ion-ios-arrow-back"></i>
+        
+        </button>
+        <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green"
+          ng-disabled="currentPage >= (encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+          ng-click="currentPage=currentPage+1">
+
+          <i class="icon ion-ios-arrow-forward"></i>
+        </button>
+        <span class="ion-badges" style="float: right;">
+          {{(encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+        </span>
+      </div>
+
+      <div class="card animated fadeInLeft" ng-if="encuestas" ng-repeat="item in encuestas | filter:search | firstPage:currentPage*pageSize | limitTo:pageSize">
+        <div class="item item-divider situr-header"></div>
+        <div class="item" >
+          <h2>{{item.codigo_encuesta}}</h2>
+          <p>Código encuesta</p>
+          <hr>
+          <h2>{{item.persona.hogare.fecha_realizacion}}</h2>
+          <p>Fecha Realización</p>
+          <hr>
+          <h2>{{item.fecha_inicio}}</h2>
+          <p>Fecha Inicio</p>
+          <hr>
+          <h2>{{item.fecha_final}}</h2>
+          <p>Fecha Final</p>
+          <hr>
+          <h2>{{item.persona.hogare.digitadore.user.username}}</h2>
+          <p>Encuestador</p>
+          <hr>
+          <h2>{{item.persona.hogare.edificacione.barrio.municipio.nombre}}</h2>
+          <p>Municipio</p>
+          <hr>
+          <h2>{{item.persona.hogare.edificacione.barrio.nombre}}</h2>
+          <p>Barrio</p>
+          <hr>
+          <h2>{{item.ultima_sesion}}</h2>
+          <p>Ultima sección </p>
+          <div class="pull-right">
+            <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/viajeRealizado/{{item.id}}"><i class="ion-edit"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card padding animated fadeInLeft">
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green" 
+          ng-disabled="currentPage == 0" 
+          ng-click="currentPage=currentPage-1">
+          <i class="icon ion-ios-arrow-back"></i>
+        
+        </button>
+        <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+        <button 
+          class="button button-positive button-small button-outline ripple ripple-green"
+          ng-disabled="currentPage >= (encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+          ng-click="currentPage=currentPage+1">
+
+          <i class="icon ion-ios-arrow-forward"></i>
+        </button>
+        <span class="ion-badges" style="float: right;">
+          {{(encuestas | filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+        </span>
+      </div>
+      
     </div>
 
     <br><br><br><br>

@@ -285,7 +285,7 @@ angular.module('starter.controllers', [
         
         }]
     },*/
-    /*{
+    {
       id: 3,
       level: 0,
       name: 'Encuesta interno y emisor',
@@ -306,8 +306,8 @@ angular.module('starter.controllers', [
           state: 'app.dane',
           items: null
         
-        }*///]
-    //},
+        }*/]
+    },
     {
       id:4,
       level:0,

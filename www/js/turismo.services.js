@@ -347,6 +347,20 @@ angular.module('turismo.interno.services', [])
 	    }); 
     	return deferred.promise;  
   	};
-
   	
+  	this.guardarfuentesinformacion=function (data) {
+	    let deferred = $q.defer();
+	    
+	    $http({
+	      method: "POST",
+	      header: {'content-type':'application/json'},
+	      url: CONFIG.APIURL+'turismointernoapi/guardarfuentesinformacion',
+	      data: data
+	    }).success(function(result, status) {
+	        deferred.resolve(result);	       		
+	    }).error(function(error) {
+	        deferred.reject(error);          
+		});
+		return deferred.promise;
+  	};
 });

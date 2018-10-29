@@ -6,7 +6,31 @@
     </label>
   </div>
   <ion-content class="has-subheader">
-    <div class="card list animated fadeInLeft" ng-repeat="item in temporadas| filter:search" ng-class="{true:'active-card', false:'inactive-card'}[item.Estado]" ng-if="item.Estado">
+
+    <div class="card padding animated fadeInLeft">
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green" 
+        ng-disabled="currentPage == 0" 
+        ng-click="currentPage=currentPage-1">
+        <i class="icon ion-ios-arrow-back"></i>
+      
+      </button>
+      <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green"
+        ng-disabled="currentPage >= (temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+        ng-click="currentPage=currentPage+1">
+
+        <i class="icon ion-ios-arrow-forward"></i>
+      </button>
+      <span class="ion-badges" style="float: right;">
+        {{(temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+      </span>
+    </div>
+
+
+    <div class="card list animated fadeInLeft" 
+      ng-repeat="item in temporadas| filter:search | firstPage:currentPage*pageSize | limitTo:pageSize" ng-class="{true:'active-card', false:'inactive-card'}[item.Estado]" ng-if="item.Estado">
       <div class="item">
         <h2>{{item.Nombre}}</h2>
         <p>{{item.Name}}</p>
@@ -15,6 +39,27 @@
           <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/verTemporada/{{item.id}}"><i class="ion-eye"></i></a>
         </div>
       </div>
+    </div>
+
+    <div class="card padding animated fadeInLeft">
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green" 
+        ng-disabled="currentPage == 0" 
+        ng-click="currentPage=currentPage-1">
+        <i class="icon ion-ios-arrow-back"></i>
+      
+      </button>
+      <span class="ion-badges ion-badges-grand">{{currentPage+1}}/{{numberOfPages((temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search))}}</span>
+      <button 
+        class="button button-positive button-small button-outline ripple ripple-green"
+        ng-disabled="currentPage >= (temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length/pageSize - 1" 
+        ng-click="currentPage=currentPage+1">
+
+        <i class="icon ion-ios-arrow-forward"></i>
+      </button>
+      <span class="ion-badges" style="float: right;">
+        {{(temporadas| filter:filtroEstadoEncuesta.value | filter:campoSelected.value |filter:search).length}} resultados
+      </span>
     </div>
   </ion-content> 
 </ion-view>
