@@ -1360,6 +1360,18 @@ angular.module('receptor.controllers', [])
     }
     return false;
   };
+
+  $scope.toggleGroup = function(group) {
+    if ($scope.isGroupShown(group)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = group;
+    }
+  };
+
+  $scope.isGroupShown = function(group) {
+    return $scope.shownGroup === group;
+  };
  
   if(localStorage.getItem("loader_receptor")!=null){
     $rootScope.loader_receptor=JSON.parse(localStorage.getItem("loader_receptor"));
@@ -1415,6 +1427,10 @@ angular.module('receptor.controllers', [])
         });
         if (data.encuesta.Estancias == null) {
           $scope.agregar();
+        }
+
+        if(data.encuesta.Estancias.length>0){
+          $scope.toggleGroup(data.encuesta.Estancias[data.encuesta.Estancias.length-1])
         }
       }
       $scope.encuesta.Id = $scope.id;

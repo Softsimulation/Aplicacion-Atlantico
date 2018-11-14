@@ -7,7 +7,7 @@ angular.module('interno.controllers', [])
   $scope.currentPage = 0;
   $scope.pageSize = 5;  
   $scope.encuestas = []; 
-    
+  $scope.temporadas = [];
   $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
@@ -1816,3 +1816,4 @@ angular.module('interno.controllers', [])
     });
   }
 })
+

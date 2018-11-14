@@ -215,17 +215,16 @@
           <h2>De acuerdo a su experiencia durante el viaje realizado, calique B (Bueno) R (Regular) M (Malo), el siguiente grupo de preguntas referente a los servicios utilizados y al entorno turístico visitado: </h2>
         </div>
         <div class="item" >
-          <ion-scroll direction="x" >
             <div class="row row-table">
-              <div class="col col-60">SERVICIOS</div>
-              <div class="col col-20">B</div>
-              <div class="col col-20">M</div>
-              <div class="col col-20">R</div>  
-              <div class="col col-20">NA</div>  
+              <div class="col col-40">SERVICIOS</div>
+              <div class="col col-15">B</div>
+              <div class="col col-15">M</div>
+              <div class="col col-15">R</div>  
+              <div class="col col-15">NA</div>  
             </div> 
             <div class="row row-table-col" ng-repeat="e in experiencias|filter:{tipo:false}">
-              <div class="col col-60">{{e.nombre}}</div>
-              <div class="col col-20" ng-repeat="c in calificaciones" style="text-align:center">
+              <div class="col col-40">{{e.nombre}}</div>
+              <div class="col col-15" ng-repeat="c in calificaciones" style="text-align:center">
                 <ion-radio 
                   ng-required="true"
                   name="calificacion_{{e.id}}" 
@@ -235,7 +234,7 @@
                 </ion-radio>
               </div>
               
-              <div class="col col-20">
+              <div class="col col-15">
                 <ion-radio 
                   ng-required="true"
                   name="calificacion_{{e.id}}" 
@@ -246,15 +245,15 @@
             </div>
 
             <div class="row row-table">
-              <div class="col col-60">ENTORNO TURÍSTICO</div>
-              <div class="col col-20"></div>
-              <div class="col col-20"></div>
-              <div class="col col-20"></div>  
-              <div class="col col-20"></div>  
+              <div class="col col-40">ENTORNO TURÍSTICO</div>
+              <div class="col col-15"></div>
+              <div class="col col-15"></div>
+              <div class="col col-15"></div>  
+              <div class="col col-15"></div>  
             </div>
             <div class="row row-table-col" ng-repeat="e in experiencias|filter:{tipo:true}">
-              <div class="col col-60">{{e.nombre}}</div>
-              <div class="col col-20" ng-repeat="c in calificaciones" style="text-align:center">
+              <div class="col col-40">{{e.nombre}}</div>
+              <div class="col col-15" ng-repeat="c in calificaciones" style="text-align:center">
                 <ion-radio 
                   ng-required="true"
                   name="calificacion_{{e.id}}" 
@@ -264,7 +263,7 @@
                 </ion-radio>
               </div>
               
-              <div class="col col-20">
+              <div class="col col-15">
                 <ion-radio 
                   ng-required="true"
                   name="calificacion_{{e.id}}" 
@@ -273,7 +272,6 @@
                 </ion-radio>
               </div>  
             </div> 
-          </ion-scroll>
         </div>
       </div>
 

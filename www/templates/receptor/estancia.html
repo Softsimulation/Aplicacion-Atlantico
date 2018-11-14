@@ -14,107 +14,97 @@
           <h2> B2. Registre los municipios que visitó en el Atlántico</h2>
         </div>
         <div class="item">
-          <a ng-click="agregar()" class="button button-small button-outline button-positive ripple ripple-green">
+          <a ng-click="agregar(); toggleGroup(encuesta.Estancias[encuesta.Estancias.length-1])" class="button button-small button-outline button-positive ripple ripple-green">
             <i class="ion-plus"></i>
           </a>
         </div>
         <div class="item" ng-if="encuesta.Estancias.length>0">
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table">
-              <div class="col col-75">Municipio visitado</div>
-              <div class="col col-75">Número de noches</div>
-              <div class="col col-75">Tipo de Alojamiento utilizado</div>
-              <div class="col col-33">Destino Principal</div>
-              <div class="col col-20"></div>
-            </div>
-            <div class="row row-table-col" ng-repeat="es in encuesta.Estancias">
-              <div class="col col-75" >
-                
-                <a 
-                  class="item item-input item-select ripple ripple-green item-select-block" 
-                  modal-select 
-                  ng-model="es.municipio" 
-                  options="Datos.Municipios" 
-                  modal-title="Elegir grupo" 
-                  has-search="true" 
-                  header-footer-class="bar-custom" 
-                  cancel-search-button='X' 
-                  search-placeholder="Buscar..." 
-                  cancel-button="Cancelar" 
-                  reset-button="Limpiar" 
-                  sub-header-class="bar-custom"
-                  name="municipio{{$index}}" 
-                  ng-required="true"
-                  ng-change="es.Municipio=es.municipio.id;cambioselectmunicipio(es);">
-                  {{es.municipio.nombre}}
-                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.municipio{{$index}}.$touched">
-                      <span ng-show="forms.EstanciaForm.municipio{{$index}}.$error.required">*</span>
-                  </span>
-                  <div class="option ripple ripple-green">
-                      {{option.nombre}}
-                  </div>  
-                </a> 
-              </div>
 
-              <div class="col col-75">
-                <label class="item item-input item-floating-label">
-                  <span class="input-label" >Número de noches</span>
-                  <input 
-                    type="number" 
-                    placeholder="Número de noches"
-                    name="noche{{$index}}" 
-                    ng-change="cambionoches(es)" 
-                    min= "0"
-                    ng-model="es.Noches"
-                    ng-required="true">
-                    <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.noche{{$index}}.$touched">
-                      <span  ng-show="forms.EstanciaForm.noche{{$index}}.$error.required">*</span>
-                    </span>
-                </label>
-                
-              </div>
-
-              <div class="col col-75">
-                
-                <a 
-                  class="item item-input item-select ripple ripple-green item-select-block" 
-                  modal-select 
-                  ng-model="es.alojamiento" 
-                  options="Datos.Alojamientos" 
-                  modal-title="Elegir grupo" 
-                  has-search="true" 
-                  header-footer-class="bar-custom" 
-                  cancel-search-button='X' 
-                  search-placeholder="Buscar..." 
-                  cancel-button="Cancelar" 
-                  reset-button="Limpiar" 
-                  sub-header-class="bar-custom"
-                  name="alojamiento{{$index}}"
-                  ng-required="true"
-                  ng-change="es.Alojamiento=es.alojamiento.id;cambioselectalojamiento(es)">
-                  {{es.alojamiento.tipos_alojamiento_con_idiomas[0].nombre}}
-                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.alojamiento{{$index}}.$touched">
-                      <span ng-show="forms.EstanciaForm.alojamiento{{$index}}.$error.required">*</span>
-                  </span>
-                  <div class="option ripple ripple-green">
-                      {{option.tipos_alojamiento_con_idiomas[0].nombre}}
-                  </div>  
-                </a>
-              </div>
-
-              <div class="col col-33">
-                <ion-radio  ng-model="encuesta.Principal" ng-value="es.Municipio" class="ripple ripple-green" name="destino" >
-                </ion-radio>
-              </div>
-
-              <div class="col col-20">
-
+          <div class="card" ng-repeat="es in encuesta.Estancias">
+            <ion-item 
+              ng-click="toggleGroup(es)" 
+              ng-class="{active: isGroupShown(es)}" 
+              class="item item-divider ripple ripple-green">
+              Pulse aquí, para ver información de municipio visitado
+            </ion-item>
+            <ion-item class="item-accordion" ng-show="isGroupShown(es)">  
+              <div class="item">
                 <a type="button" ng-click="quitar(es)" class="button button-small button-outline button-assertive ripple ripple-green">
                   <i class="ion-close-round"></i>
                 </a>
-              </div>
-            </div>
-          </ion-scroll>
+              </div>              
+              <a 
+                class="item item-input item-select ripple ripple-green item-select-block" 
+                modal-select 
+                ng-model="es.municipio" 
+                options="Datos.Municipios" 
+                modal-title="Elegir grupo" 
+                has-search="true" 
+                header-footer-class="bar-custom" 
+                cancel-search-button='X' 
+                search-placeholder="Buscar..." 
+                cancel-button="Cancelar" 
+                reset-button="Limpiar" 
+                sub-header-class="bar-custom"
+                name="municipio{{$index}}" 
+                ng-required="true"
+                ng-change="es.Municipio=es.municipio.id;cambioselectmunicipio(es);">
+                Municipio visitado: {{es.municipio.nombre}}
+                <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.municipio{{$index}}.$touched">
+                    <span ng-show="forms.EstanciaForm.municipio{{$index}}.$error.required">*</span>
+                </span>
+                <div class="option ripple ripple-green">
+                    {{option.nombre}}
+                </div>  
+              </a> 
+              <label class="item item-input item-floating-label">
+                <span class="input-label" >Número de noches</span>
+                <input 
+                  type="number" 
+                  placeholder="Número de noches"
+                  name="noche{{$index}}" 
+                  ng-change="cambionoches(es)" 
+                  min= "0"
+                  ng-model="es.Noches"
+                  ng-required="true">
+                  <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.noche{{$index}}.$touched">
+                    <span  ng-show="forms.EstanciaForm.noche{{$index}}.$error.required">*</span>
+                  </span>
+              </label>
+              <a 
+                class="item item-input item-select ripple ripple-green item-select-block" 
+                modal-select 
+                ng-model="es.alojamiento" 
+                options="Datos.Alojamientos" 
+                modal-title="Elegir grupo" 
+                has-search="true" 
+                header-footer-class="bar-custom" 
+                cancel-search-button='X' 
+                search-placeholder="Buscar..." 
+                cancel-button="Cancelar" 
+                reset-button="Limpiar" 
+                sub-header-class="bar-custom"
+                name="alojamiento{{$index}}"
+                ng-required="true"
+                ng-change="es.Alojamiento=es.alojamiento.id;cambioselectalojamiento(es)">
+                Tipo de alojamiento:{{es.alojamiento.tipos_alojamiento_con_idiomas[0].nombre}}
+                <span class="validated" ng-show="forms.EstanciaForm.$submitted || forms.EstanciaForm.alojamiento{{$index}}.$touched">
+                    <span ng-show="forms.EstanciaForm.alojamiento{{$index}}.$error.required">*</span>
+                </span>
+                <div class="option ripple ripple-green">
+                    {{option.tipos_alojamiento_con_idiomas[0].nombre}}
+                </div>  
+              </a>
+              <ion-radio  
+                ng-model="encuesta.Principal" 
+                ng-value="es.Municipio" 
+                class="ripple ripple-green" 
+                name="destino" >
+                Destino principal
+              </ion-radio>
+            </ion-item>
+          </div>
+          
         </div>   	
       </div>
 

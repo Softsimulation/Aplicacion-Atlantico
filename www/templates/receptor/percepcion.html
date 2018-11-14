@@ -45,42 +45,35 @@
           <h2>Calificación del servicio de alojamiento</h2>
         </div>
 
-        <div class="item" >
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table-col" >
-              <div class="col col-75">{{aspectos[0].aspectos_evaluados_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
-              <div class="col col-20" >NR</div>
-            </div>
+        <div class="card" ng-repeat="it in aspectos[0].items_evaluars">
+          <div class="item item-divider situr-header">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+          <div ng-repeat="n in [] | range:11">
+            <ion-radio 
+              id="alojamiento_{{it.id}}_{{$index+1}}"
+              name="alojamiento_{{it.id}}"  
+              ng-model="it.radios" 
+              ng-checked="checkedRadio('alojamiento_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" 
+              ng-value="{Id:it.id,Valor:{{$index+1}}}"
+              ng-if="!$last"
+              class="ripple ripple-green">
+              {{$index+1}}
+            </ion-radio>
 
-            <div class="row row-table-col" ng-repeat="it in aspectos[0].items_evaluars">
-              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:11">
-                <ion-radio 
-                  id="alojamiento_{{it.id}}_{{$index+1}}"
-                  name="alojamiento_{{it.id}}"  
-                  ng-model="it.radios" 
-                  ng-checked="checkedRadio('alojamiento_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" ng-value="{Id:it.id,Valor:{{$index+1}}}"
-                  ng-if="!$last"
-                  class="ripple ripple-green">
-                </ion-radio>
-
-                <ion-radio 
-                  id="alojamiento_{{it.id}}_{{$index}}"
-                  ng-checked="it.radios==null" 
-                  ng-click="limpiarFila(it.id, 'alojamiento_{{it.id}}_{{$index}}')" 
-                  name="alojamiento_{{it.id}}" 
-                  value="0"
-                  ng-init='checkStatus=0'
-                  ng-model="checkStatus"
-                  ng-if="$last"
-                  class="ripple ripple-green"
-                  >
-                </ion-radio>
-              </div>
-            </div>
-          </ion-scroll>
-        </div>    
+            <ion-radio 
+              id="alojamiento_{{it.id}}_{{$index}}"
+              ng-checked="it.radios==null" 
+              ng-click="limpiarFila(it.id, 'alojamiento_{{it.id}}_{{$index}}')" 
+              name="alojamiento_{{it.id}}" 
+              value="0"
+              ng-init='checkStatus=0'
+              ng-model="checkStatus"
+              ng-if="$last"
+              class="ripple ripple-green"
+              >
+              No Sabe / No Responde
+            </ion-radio>
+          </div>
+        </div>          
       </div>
 
       <div class="card animated fadeInLeft" >
@@ -120,43 +113,33 @@
           <h2>Calificación del servicio de restaurante</h2>
         </div>
 
-        <div class="item" >
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table-col">
-              <div class="col col-75">{{aspectos[1].aspectos_evaluados_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
-              <div class="col col-20" >NR</div>
-            </div>
-
-            <div class="row row-table-col" ng-repeat="it in aspectos[1].items_evaluars">
-              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:11">
-                <ion-radio 
-                  id="restaurante_{{it.id}}_{{$index+1}}" 
-                  name="restaurante_{{it.id}}" 
-                  ng-checked="checkedRadio('restaurante_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
-                  ng-model="it.radios" 
-                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
-                  ng-if="!$last"
-                  class="ripple ripple-green">
-                </ion-radio>
-                <ion-radio 
-                  id="restaurante_{{it.id}}_{{$index}}"
-                  ng-checked="it.radios==null" 
-                  ng-click="limpiarFila(it.id, restaurante_{{it.id}}_{{$index}})"
-                  name="restaurante_{{it.id}}" 
-                  value="0"
-                  ng-init='checkStatus=0'
-                  ng-model="checkStatus"
-                  ng-if="$last"
-                  class="ripple ripple-green"
-                  >
-                </ion-radio>
-              </div>
-            </div>
-
-            
-          </ion-scroll>
+        <div class="card" ng-repeat="it in aspectos[1].items_evaluars">
+          <div class="item item-divider situr-header">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+          <div ng-repeat="n in [] | range:11">
+            <ion-radio 
+              id="restaurante_{{it.id}}_{{$index+1}}" 
+              name="restaurante_{{it.id}}" 
+              ng-checked="checkedRadio('restaurante_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+              ng-model="it.radios" 
+              ng-value="{Id:it.id,Valor:{{$index+1}}}"
+              ng-if="!$last"
+              class="ripple ripple-green">
+              {{$index+1}}
+            </ion-radio>
+            <ion-radio 
+              id="restaurante_{{it.id}}_{{$index}}"
+              ng-checked="it.radios==null" 
+              ng-click="limpiarFila(it.id, restaurante_{{it.id}}_{{$index}})"
+              name="restaurante_{{it.id}}" 
+              value="0"
+              ng-init='checkStatus=0'
+              ng-model="checkStatus"
+              ng-if="$last"
+              class="ripple ripple-green"
+              >
+              No sabe / No responde
+            </ion-radio>
+          </div>
         </div>
       </div>
 
@@ -165,44 +148,34 @@
           <h2>Factores Ambientales</h2>
         </div>
 
-
-        <div class="item" >
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table-col">
-              <div class="col col-75">{{aspectos[2].aspectos_evaluados_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
-              <div class="col col-20" >NR</div>
-            </div>
-
-            <div class="row row-table-col" ng-repeat="it in aspectos[2].items_evaluars">
-              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:11">
-                <ion-radio
-                name="factores_{{it.id}}" 
-                id="factores_{{it.id}}_{{$index+1}}" 
-                ng-checked="checkedRadio('factores_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
-                ng-model="it.radios" 
-                ng-value="{Id:it.id,Valor:{{$index+1}}}"
-                ng-if="!$last" 
-                class="ripple ripple-green"
-                >
-                </ion-radio>
-                <ion-radio 
-                  id="factores_{{it.id}}_{{$index}}"
-                  ng-checked="it.radios==null" 
-                  ng-click="limpiarFila(it.id, factores_{{it.id}}_{{$index}})"
-                  name="factores_{{it.id}}" 
-                  value="0"
-                  ng-init='checkStatus=0'
-                  ng-model="checkStatus"
-                  ng-if="$last"
-                  class="ripple ripple-green"
-                  >
-                </ion-radio>
-              </div>
-            </div>
-
-          </ion-scroll>
+        <div class="card" ng-repeat="it in aspectos[2].items_evaluars">
+          <div class="item item-divider situr-header">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+          <div ng-repeat="n in [] | range:11">
+            <ion-radio
+            name="factores_{{it.id}}" 
+            id="factores_{{it.id}}_{{$index+1}}" 
+            ng-checked="checkedRadio('factores_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+            ng-model="it.radios" 
+            ng-value="{Id:it.id,Valor:{{$index+1}}}"
+            ng-if="!$last" 
+            class="ripple ripple-green"
+            >
+            {{$index+1}}
+            </ion-radio>
+            <ion-radio 
+              id="factores_{{it.id}}_{{$index}}"
+              ng-checked="it.radios==null" 
+              ng-click="limpiarFila(it.id, factores_{{it.id}}_{{$index}})"
+              name="factores_{{it.id}}" 
+              value="0"
+              ng-init='checkStatus=0'
+              ng-model="checkStatus"
+              ng-if="$last"
+              class="ripple ripple-green"
+              >
+              No sabe / No responde
+            </ion-radio>
+          </div>
         </div>
       </div>
 
@@ -211,43 +184,33 @@
           <h2>Ocio, recreación y tiempo libre</h2>
         </div>
 
-        <div class="item" >
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table-col">
-              <div class="col col-75">{{aspectos[3].aspectos_evaluados_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
-              <div class="col col-20" >NR</div>
-            </div>
-
-            <div class="row row-table-col" ng-repeat="it in aspectos[3].items_evaluars">
-              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:11">
-                <ion-radio 
-                  name="ocio_{{it.id}}" 
-                  ng-model="it.radios" 
-                  id="ocio_{{it.id}}_{{$index+1}}" 
-                  ng-checked="checkedRadio('ocio_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
-                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
-                  ng-if="!$last"
-                  class="ripple ripple-green">
-                </ion-radio>
-                <ion-radio 
-                  id="ocio_{{it.id}}_{{$index}}"
-                  ng-checked="it.radios==null" 
-                  ng-click="limpiarFila(it.id, ocio_{{it.id}}_{{$index}})"
-                  name="ocio_{{it.id}}" 
-                  value="0"
-                  ng-init='checkStatus=0'
-                  ng-model="checkStatus"
-                  ng-if="$last"
-                  class="ripple ripple-green"
-                  >
-                </ion-radio>
-
-              </div>
-            </div>
-
-          </ion-scroll>
+        <div class="card" ng-repeat="it in aspectos[3].items_evaluars">
+          <div class="item item-divider situr-header">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+          <div ng-repeat="n in [] | range:11">
+            <ion-radio 
+              name="ocio_{{it.id}}" 
+              ng-model="it.radios" 
+              id="ocio_{{it.id}}_{{$index+1}}" 
+              ng-checked="checkedRadio('ocio_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})"  
+              ng-value="{Id:it.id,Valor:{{$index+1}}}"
+              ng-if="!$last"
+              class="ripple ripple-green">
+              {{$index+1}}
+            </ion-radio>
+            <ion-radio 
+              id="ocio_{{it.id}}_{{$index}}"
+              ng-checked="it.radios==null" 
+              ng-click="limpiarFila(it.id, ocio_{{it.id}}_{{$index}})"
+              name="ocio_{{it.id}}" 
+              value="0"
+              ng-init='checkStatus=0'
+              ng-model="checkStatus"
+              ng-if="$last"
+              class="ripple ripple-green"
+              >
+              No sabe / No responde
+            </ion-radio>
+          </div>
         </div>
      </div>
 
@@ -255,43 +218,34 @@
         <div class="item item-divider situr-header">
           <h2>Infraestructura</h2>
         </div>
+        <div class="card" ng-repeat="it in aspectos[4].items_evaluars">
+          <div class="item item-divider situr-header">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
+          <div ng-repeat="n in [] | range:11">
+            <ion-radio 
+              name="infraestructura_{{it.id}}" 
+              id="infraestructura_{{it.id}}_{{$index+1}}" 
+              ng-checked="checkedRadio('infraestructura_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" 
+              ng-model="it.radios" 
+              ng-value="{Id:it.id,Valor:{{$index+1}}}"
+              ng-if="!$last"
+              class="ripple ripple-green">
+              {{$index+1}}
+            </ion-radio>
 
-        <div class="item" >
-          <ion-scroll direction="x" id="scroll-x">
-            <div class="row row-table-col">
-              <div class="col col-75">{{aspectos[4].aspectos_evaluados_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:10">{{$index+1}}</div>
-              <div class="col col-20" >NR</div>
-            </div>
-
-            <div class="row row-table-col" ng-repeat="it in aspectos[4].items_evaluars">
-              <div class="col col-75">{{it.items_evaluar_con_idiomas[0].nombre}}</div>
-              <div class="col col-20" ng-repeat="n in [] | range:11">
-                <ion-radio 
-                  name="infraestructura_{{it.id}}" 
-                  id="infraestructura_{{it.id}}_{{$index+1}}" 
-                  ng-checked="checkedRadio('infraestructura_{{it.id}}_{{$index}}', it.radios.Valor,{{$index}})" 
-                  ng-model="it.radios" 
-                  ng-value="{Id:it.id,Valor:{{$index+1}}}"
-                  ng-if="!$last"
-                  class="ripple ripple-green">
-                </ion-radio>
-
-                <ion-radio 
-                  id="infraestructura_{{it.id}}_{{$index}}"
-                  ng-checked="it.radios==null" 
-                  ng-click="limpiarFila(it.id, infraestructura_{{it.id}}_{{$index}})"
-                  name="infraestructura_{{it.id}}" 
-                  value="0"
-                  ng-init='checkStatus=0'
-                  ng-model="checkStatus"
-                  ng-if="$last"
-                  class="ripple ripple-green"
-                  >
-                </ion-radio>
-              </div>
-            </div>          
-          </ion-scroll>
+            <ion-radio 
+              id="infraestructura_{{it.id}}_{{$index}}"
+              ng-checked="it.radios==null" 
+              ng-click="limpiarFila(it.id, infraestructura_{{it.id}}_{{$index}})"
+              name="infraestructura_{{it.id}}" 
+              value="0"
+              ng-init='checkStatus=0'
+              ng-model="checkStatus"
+              ng-if="$last"
+              class="ripple ripple-green"
+              >
+              No sabe / No responde
+            </ion-radio>
+          </div>
         </div>
      </div>
 
