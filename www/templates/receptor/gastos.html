@@ -330,7 +330,7 @@
       </div>
 
       <div class="card animated fadeInLeft"  ng-if="abrirTerrestre">
-        <div class="item item-divider situr-header required">
+        <div class="item item-divider situr-header">
           <h2>E7.¿Cuál es el nombre de la empresa de transporte terrestre de pasajeros utilizado desde una ciudad de  Colombia a Atlántico?</h2>
         </div>
         <label class="item item-input item-floating-label">
@@ -340,8 +340,9 @@
             name="empresa" 
             placeholder="Nombre de empresa"  
             ng-model="encuestaReceptor.Empresa" 
-            ng-required="abrirTerrestre"
+            
             max="150">
+            <!--ng-required="abrirTerrestre"-->
             <span  class="validated" ng-show="forms.GastoForm.$submitted || forms.GastoForm.empresa.$touched">     
               <span ng-show="forms.GastoForm.empresa.$error.required">* </span>
             </span>
