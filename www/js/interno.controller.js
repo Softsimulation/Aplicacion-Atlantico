@@ -1,6 +1,6 @@
 angular.module('interno.controllers', [])
 
-.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory, $rootScope, ionicToast, $cordovaNetwork) {
+.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory) {
   
   $ionicHistory.clearHistory();
   $ionicHistory.clearCache();
@@ -8,40 +8,26 @@ angular.module('interno.controllers', [])
   $scope.pageSize = 5;  
   $scope.encuestas = []; 
   $scope.temporadas = [];
+  $ionicLoading.show({
+    template: '<ion-spinner></ion-spinner> Espere por favor...',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
 
-  $rootScope.interno_off=[];
-
-  if(localStorage.getItem("interno_off")!=null ){
-    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
-    if($rootScope.interno_off.length>0)
-    ionicToast.show("Hay encuestas cargadas para sincronizar",'middle', false, 5000);
-  }
-
-  if ($cordovaNetwork.getNetwork() == 'none' || $cordovaNetwork.getNetwork() == 'unknown') {
-    ionicToast.show("No tiene conexion, no podra ver la lista de encuestas",'top', false, 5000);
-  }else{
-
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoInterno.getTemporadas().then(function (data) {
-        $ionicLoading.hide();
-        $scope.temporadas = data.temporadas;
-    }, 
-    function (error, data) {
+  turismoInterno.getTemporadas().then(function (data) {
       $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-          title: '¡Error!',
-          template: 'Ha ocurrido un error.',
-          okType:'button-stable'
-      });
+      $scope.temporadas = data.temporadas;
+  }, 
+  function (error, data) {
+    $ionicLoading.hide();
+    let alertPopup =$ionicPopup.alert({
+        title: '¡Error!',
+        template: 'Ha ocurrido un error.',
+        okType:'button-stable'
     });
-  }
+  });
 
   $scope.len=function (a) {
     return Object.keys(a).length - 1;
