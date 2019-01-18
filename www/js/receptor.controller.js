@@ -611,10 +611,10 @@ angular.module('receptor.controllers', [])
   }else{
 
     turismoReceptor.informaciondatoscrear().then(function (data) {
-        if(!$rootScope.loader_receptor.general){
+        //if(!$rootScope.loader_receptor.general){
           $rootScope.loader_receptor.general=data;
           localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-        }
+        //}
         $ionicLoading.hide();
         $scope.grupos = data.grupos;
         $scope.encuestadores = data.encuestadores;
@@ -900,6 +900,8 @@ angular.module('receptor.controllers', [])
     }  
   }else{
     turismoReceptor.cargareditardatos($stateParams.id).then(function (data) {
+        $rootScope.loader_receptor.general=data;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
         $ionicLoading.hide();
         $scope.departamentos = data.departamentosr;
         $scope.municipios = data.municipiosr;
@@ -1410,10 +1412,10 @@ angular.module('receptor.controllers', [])
 
     turismoReceptor.cargardatosseccionestancia($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.estancia){
-          $rootScope.loader_receptor.estancia=data.Enlaces;
-          localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //if(!$rootScope.loader_receptor.estancia){
+        $rootScope.loader_receptor.estancia=data.Enlaces;
+        localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
+      //}
       
       $scope.Datos = data.Enlaces;
       if(data.encuesta != undefined){
@@ -1492,10 +1494,10 @@ angular.module('receptor.controllers', [])
 
     turismoReceptor.cargardatostransporte($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.transporte){
+      //if(!$rootScope.loader_receptor.transporte){
           $rootScope.loader_receptor.transporte=data;
           localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //}
       
       $scope.transportes = data.transporte_llegar;
       $scope.lugares = data.lugares;
@@ -1620,10 +1622,10 @@ angular.module('receptor.controllers', [])
     });
   	turismoReceptor.cargardatosseccionviaje($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.grupo){
+      //if(!$rootScope.loader_receptor.grupo){
         $rootScope.loader_receptor.grupo=data;
         localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //}
       $scope.viaje_grupos = data.viaje_grupos;
       $scope.grupo.Id = $scope.id;  
       if (data.tam_grupo != null && data.personas != null) {
@@ -2001,10 +2003,10 @@ angular.module('receptor.controllers', [])
 
     turismoReceptor.infogasto($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.gastos){
+      //if(!$rootScope.loader_receptor.gastos){
         $rootScope.loader_receptor.gastos=data;
         localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //}
       $scope.divisas = data.divisas;
       $scope.financiadores = data.financiadores;
       $scope.municipios = data.municipios;
@@ -2283,10 +2285,10 @@ angular.module('receptor.controllers', [])
 
     turismoReceptor.cargardatospercepcion($stateParams.id).then(function (data) {
       $ionicLoading.hide();
-      if(!$rootScope.loader_receptor.percepcion){
+      //if(!$rootScope.loader_receptor.percepcion){
         $rootScope.loader_receptor.percepcion=data;
         localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //}
       $scope.aspectos = $scope.convertirObjeto(data.percepcion);
       $scope.elementos = data.elementos;
       $scope.veces = data.veces;
@@ -2455,10 +2457,10 @@ angular.module('receptor.controllers', [])
       $scope.fuentesDurante = data.fuentesDurante;
       $scope.redes = data.redes;
       $scope.enteran.Id = $scope.id;
-      if(!$rootScope.loader_receptor.enteran){
+      //if(!$rootScope.loader_receptor.enteran){
         $rootScope.loader_receptor.enteran=data;
         localStorage.setItem("loader_receptor",JSON.stringify($rootScope.loader_receptor));
-      }
+      //}
       if (data.invitacion_correo != null) {
         $scope.enteran.FuentesAntes = data.fuentes_antes;
         $scope.enteran.FuentesDurante = data.fuentes_durante;

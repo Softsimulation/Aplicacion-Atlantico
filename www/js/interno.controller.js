@@ -1,6 +1,6 @@
 angular.module('interno.controllers', [])
 
-.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory) {
+.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory, $cordovaNetwork, $rootScope, ionicToast) {
   
   $ionicHistory.clearHistory();
   $ionicHistory.clearCache();
@@ -8,26 +8,47 @@ angular.module('interno.controllers', [])
   $scope.pageSize = 5;  
   $scope.encuestas = []; 
   $scope.temporadas = [];
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  $scope.is_offline=0;
 
-  turismoInterno.getTemporadas().then(function (data) {
-      $ionicLoading.hide();
+
+  if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+    if(localStorage.getItem("temporadas")!=null){
+      let data=JSON.parse(localStorage.getItem("temporadas"));
       $scope.temporadas = data.temporadas;
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+    }
+    $scope.is_offline=1;
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+    turismoInterno.getTemporadas().then(function (data) {
+        $ionicLoading.hide();
+        $scope.temporadas = data.temporadas;
+        localStorage.setItem("temporadas",JSON.stringify(data)); 
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
+
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+    ionicToast.show("Hay hogares cargados para sincronizar",'middle', false, 5000);
+  }else{
+    $rootScope.interno_off=[];
+  }
+
+
+  console.log($rootScope.interno_off)
 
   $scope.len=function (a) {
     return Object.keys(a).length - 1;
@@ -38,14 +59,14 @@ angular.module('interno.controllers', [])
   };
 })
 
-.controller('verTemporadaController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup) {
+.controller('verTemporadaController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, $cordovaNetwork, factories) {
   $scope.active_content = 'hogar';
   $scope.currentPage = 0;
   $scope.pageSize = 5; 
   $scope.datos = [];
   $scope.datos.Hogares = [];
   $scope.encuestas = []; 
-
+  $scope.is_offline=$stateParams.isOff;
 
   $scope.setActiveContent = function(active_content){
     $scope.active_content = active_content;
@@ -59,35 +80,58 @@ angular.module('interno.controllers', [])
     return Math.ceil(encuestas.length/$scope.pageSize);                
   };
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  if($scope.is_offline==1){
+    let data=JSON.parse(localStorage.getItem("temporadas"));
+    
+    $scope.datos=factories.findSelect(parseInt($stateParams.id), data.temporadas);
+    $scope.datos.Hogares = [];
+    $scope.encuestas = [];
 
-  turismoInterno.cargardatos($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.datos=data.temporada;
-      $scope.encuestas = data.encuestas;
+    
+  }else{
 
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+    turismoInterno.cargardatos($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $scope.datos=data.temporada;          
+        $scope.encuestas = data.encuestas;
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 })
 
-.controller('hogarController', function($scope, $stateParams, $ionicModal,  $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $filter, $ionicScrollDelegate, $location) {
+.controller('hogarController', function($scope, $stateParams, $ionicModal,  $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $filter, $ionicScrollDelegate, $location, $rootScope, $cordovaNetwork) {
   $scope.encuesta = {};
   $scope.encuesta.integrantes = [];
   $scope.integrante = {};
   $scope.forms = {};
+
+
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
+
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+
+  }else{
+    $rootScope.interno_off=[];
+  }
 
   $ionicModal.fromTemplateUrl('templates/modalIntegrante.html', {
     scope: $scope
@@ -96,27 +140,36 @@ angular.module('interno.controllers', [])
   });
 
   $scope.selectables = [{"option":1,"value":"Si"},{"option":0, "value":"No"}];
-
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-
-  turismoInterno.datoshogar().then(function (data) {
-      $ionicLoading.hide();
-      $scope.datos=data; 
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+  
+  if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+    let data = $rootScope.loader_interno.hogar;
+    $scope.datos=data; 
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+
+    turismoInterno.datoshogar().then(function (data) {
+        $ionicLoading.hide();
+        $rootScope.loader_interno.hogar=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+        $scope.datos=data; 
+
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
+  
 
   $scope.selectBarrios=function(id) {
 
@@ -189,40 +242,51 @@ angular.module('interno.controllers', [])
     }
 
     if ($scope.forms.DatosForm.$valid) {
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
 
-      $scope.encuesta.Temporada_id=$stateParams.id;
-      $scope.encuesta.Fecha_aplicacion=$filter('date')($scope.encuesta.Fecha_aplicacion, 'yyyy-MM-dd HH:mm');
-      
-      turismoInterno.guardarhogar($scope.encuesta).then(function (data) {
-          $ionicLoading.hide();
-          $scope.data=data;
+      if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
+          $rootScope.interno_off.push({'hogar':$scope.encuesta});
+          $scope.encuesta.Temporada_id=$stateParams.id;
+          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+          ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
+          $location.path('/app/editHogar/'+($rootScope.interno_off.length-1)+"/1");
 
-          if (data.success) {
-            ionicToast.show("Se ha guardado el hogar exitosamente",'middle', false, 2000);
-            $location.path('/app/editHogar/'+data.id);
+      }else{
 
-
-          }else{
-            $ionicScrollDelegate.scrollTop(true);
-            ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-            $scope.errores = data.errores;
-          }
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        let alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error. Intenta nuevamente',
-            okType:'button-stable'
+        $ionicLoading.show({
+          template: '<ion-spinner></ion-spinner> Espere por favor...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
         });
-      });
+
+        $scope.encuesta.Temporada_id=$stateParams.id;
+        $scope.encuesta.Fecha_aplicacion=$filter('date')($scope.encuesta.Fecha_aplicacion, 'yyyy-MM-dd HH:mm');
+        
+        turismoInterno.guardarhogar($scope.encuesta).then(function (data) {
+            $ionicLoading.hide();
+            $scope.data=data;
+
+            if (data.success) {
+              ionicToast.show("Se ha guardado el hogar exitosamente",'middle', false, 2000);
+              $location.path('/app/editHogar/'+data.id+"/0");
+
+
+            }else{
+              $ionicScrollDelegate.scrollTop(true);
+              ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+              $scope.errores = data.errores;
+            }
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          let alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error. Intenta nuevamente',
+              okType:'button-stable'
+          });
+        });
+      }
 
     }else {
         ionicToast.show("Formulario incompleto corrige los errores",'middle', false, 5000)
@@ -230,22 +294,63 @@ angular.module('interno.controllers', [])
   };
 })
 
-.controller('editHogarController', function($scope, $stateParams, $ionicModal,  $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $filter, $ionicScrollDelegate, $state, factories) {
+.controller('editHogarController', function($scope, $stateParams, $ionicModal,  $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $filter, $ionicScrollDelegate, $state, factories, $rootScope) {
   $scope.encuesta = {}
   $scope.encuesta.integrantes = []
   $scope.integrante = {}
   $scope.forms = {};
   $scope.encuesta.municipio_id={};
   $scope.id=$stateParams.id;
+  $scope.is_offline=$stateParams.isOff;
+
   $ionicModal.fromTemplateUrl('templates/modalIntegrante.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modalCreate = modal;
   });
 
-  $scope.selectables = [{"option":1,"value":"Si"},{"option":0, "value":"No"}];
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
 
-  $ionicLoading.show({
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
+
+  $scope.selectables = [{"option":1,"value":"Si"},{"option":0, "value":"No"}];
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.hogarEdit;
+    $scope.datos = data.datos;
+    $scope.barrios = data.barrios;
+    $scope.encuestadores=data.datos.encuestadores;
+    $scope.estados=data.datos.estados
+    $scope.encuesta = data.encuesta;
+    $scope.encuestadores=data.datos.encuestadores;
+    $scope.estados=data.datos.estados
+    $scope.municipio_id = factories.findSelect(data.encuesta.edificacione.barrio.municipio_id, data.datos.municipios);
+    $scope.barrio = factories.findSelect(data.encuesta.edificacione.barrio_id, data.barrios);
+    $scope.estrato = factories.findSelect(data.encuesta.edificacione.estrato_id, data.datos.estratos);
+    $scope.encuestador = factories.findSelect(data.encuesta.digitadores_id, data.datos.encuestadores);
+    let encuesta = $rootScope.interno_off[$stateParams.id].hogar
+    $scope.encuesta = data.encuesta;
+    $scope.encuesta.Fecha_aplicacion = encuesta.Fecha_aplicacion
+    $scope.encuesta.Barrio=String(encuesta.Barrio)
+    $scope.encuesta.Estrato=String(encuesta.Estrato)
+    $scope.encuesta.Direccion=encuesta.Direccion
+    $scope.encuesta.Telefono=Number(encuesta.Telefono)
+    $scope.encuesta.Encuestador=String(encuesta.digitadores_id)
+    $scope.encuesta.Nombre_Entrevistado=encuesta.Nombre_Entrevistado
+    $scope.encuesta.Celular_Entrevistado=Number(encuesta.Telefono)
+    $scope.encuesta.Email_Entrevistado=encuesta.Email_Entrevistado
+    $scope.encuesta.integrantes= encuesta.integrantes
+
+  }
+  else{
+    $ionicLoading.show({
     template: '<ion-spinner></ion-spinner> Espere por favor...',
     animation: 'fade-in',
     showBackdrop: true,
@@ -254,6 +359,8 @@ angular.module('interno.controllers', [])
   });
 
   turismoInterno.datoseditar($stateParams).then(function (data) {
+      $rootScope.loader_interno.hogarEdit=data;
+      localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
       $ionicLoading.hide();
       $scope.datos = data.datos
       $scope.barrios = data.barrios
@@ -261,7 +368,7 @@ angular.module('interno.controllers', [])
       $scope.barrio = factories.findSelect(data.encuesta.edificacione.barrio_id, data.barrios);
       $scope.estrato = factories.findSelect(data.encuesta.edificacione.estrato_id, data.datos.estratos);
       $scope.encuestador = factories.findSelect(data.encuesta.digitadores_id, data.datos.encuestadores);
-      $scope.encuestadores=data.datos.encuestadores
+      $scope.encuestadores=data.datos.encuestadores;
       $scope.estados=data.datos.estados
       $scope.encuesta = data.encuesta;
       $scope.encuesta.Fecha_aplicacion = data.encuesta.fecha_realizacion
@@ -284,6 +391,8 @@ angular.module('interno.controllers', [])
         okType:'button-stable'
     });
   });
+  }
+  
 
   function cambiar(array){
     for(let i=0;i<array.length;i++){
@@ -444,42 +553,52 @@ angular.module('interno.controllers', [])
 
   $scope.save=function(){ 
     $scope.encuesta.id=$stateParams.id;
-    
+
     if ($scope.forms.DatosForm.$valid) {
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
 
-      
-      $scope.encuesta.Fecha_aplicacion=$filter('date')($scope.encuesta.Fecha_aplicacion, 'yyyy-MM-dd hh:mm:ss');
-      
-      turismoInterno.guardareditarhogar($scope.encuesta).then(function (data) {
-          $ionicLoading.hide();
-          $scope.data=data;
+      if ($scope.is_offline!=0) {
+          $rootScope.interno_off[$stateParams.id]={'hogar':$scope.encuesta};
+          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
 
-          if (data.success) {
-            ionicToast.show("Se ha guardado el hogar exitosamente",'middle', false, 2000);
-            $state.reload();
-
-
-          }else{
-            $ionicScrollDelegate.scrollTop(true);
-            ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-            $scope.errores = data.errores;
-          }
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        let alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error. Intenta nuevamente',
-            okType:'button-stable'
+          ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
+          $state.reload();
+      }else{
+        $ionicLoading.show({
+          template: '<ion-spinner></ion-spinner> Espere por favor...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
         });
-      });
+
+        
+        $scope.encuesta.Fecha_aplicacion=$filter('date')($scope.encuesta.Fecha_aplicacion, 'yyyy-MM-dd hh:mm:ss');
+        
+        turismoInterno.guardareditarhogar($scope.encuesta).then(function (data) {
+            $ionicLoading.hide();
+            $scope.data=data;
+
+            if (data.success) {
+              ionicToast.show("Se ha guardado el hogar exitosamente",'middle', false, 2000);
+              $state.reload();
+
+
+            }else{
+              $ionicScrollDelegate.scrollTop(true);
+              ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+              $scope.errores = data.errores;
+            }
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          let alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error. Intenta nuevamente',
+              okType:'button-stable'
+          });
+        });
+      }
+      
 
     }else {
         ionicToast.show("Formulario incompleto corrige los errores",'middle', false, 5000)
@@ -487,7 +606,7 @@ angular.module('interno.controllers', [])
   }
 })
 
-.controller('viajesRealizadoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+.controller('viajesRealizadoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
   $scope.encuesta = {};
   $scope.PrincipalViaje = {};
   $scope.forms= {};
@@ -495,41 +614,68 @@ angular.module('interno.controllers', [])
   $scope.id=$stateParams.id;
   $scope.ver = false;
   $scope.env = {};
-  $scope.env.id = $scope.id; 
-  $scope.hogar = $stateParams.hogar;
+  $scope.env.id = $scope.id;
+  $scope.is_offline = $stateParams.isOff;
   $scope.env.principal = $scope.PrincipalViaje.id;
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
 
-  turismoInterno.viajes($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.Datos = data.Enlaces;
-      $scope.Viajes = data.Viajes;
-      $scope.PrincipalViaje.id = data.Principal; 
-      $scope.hogar = data.hogar.id;
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.viajesRealizados;
+    $scope.Datos = data.Enlaces;
+    $scope.hogar = $location.search().vector;
+    $scope.Viajes = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes;
 
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+    if(!$rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes=[];
+    }
+
+    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env){
+      $scope.PrincipalViaje.id = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env.principal[0];
+    }
+  }else{
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+
+    turismoInterno.viajes($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $rootScope.loader_interno.viajesRealizados=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+        $scope.Datos = data.Enlaces;
+        $scope.Viajes = data.Viajes;
+        $scope.PrincipalViaje.id = data.Principal; 
+        $scope.hogar = data.hogar.id;
+
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 
   $scope.agregar = function () {
     $scope.estancia ={};
-     
     if ($scope.encuesta.Estancias != null) {
         $scope.encuesta.Estancias.push($scope.estancia)
-
 
     } else {
         $scope.encuesta.Estancias = []
@@ -559,11 +705,14 @@ angular.module('interno.controllers', [])
     es.Municipio = null;
     es.municipio = {};
     es.departamento = {};
+
+    $scope.datosDpto = $filter('filter')($scope.Datos.Depertamentos, {idP : es.Pais }, true);
   };
 
   $scope.cambioselectdepartamento = function (es) {
     es.Municipio = null;
     es.municipio = {};
+    $scope.datosMpios = $filter('filter')($scope.Datos.Municipios, {idD : es.Departamento }, true);
   };
 
   $scope.cambioselectmunicipio = function (es) {
@@ -638,106 +787,121 @@ angular.module('interno.controllers', [])
   };
 
   $scope.guardar = function () {
-    $scope.encuesta.Inicio=$filter('date')($scope.encuesta.Inicio, 'yyyy-MM-dd');
-    $scope.encuesta.Fin=$filter('date')($scope.encuesta.Fin, 'yyyy-MM-dd');
-
     if (!$scope.forms.EstanciaForm.$valid) {
       ionicToast.show("Complete los campos del formulario",'middle', false, 2000);
       return
     }
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
+    if($scope.is_offline!=0){
+      let key = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes.length;
+      $scope.encuesta.key = key;
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes.push($scope.encuesta);
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $scope.ver = false;
+      $scope.cancelar();
 
-    $scope.errores = null
-    if ($scope.encuesta.Id == null){
-      $scope.encuesta.Id = $scope.id;
-      $scope.encuesta.Crear = true;
-    }
+    }else{
+      $scope.encuesta.Inicio=$filter('date')($scope.encuesta.Inicio, 'yyyy-MM-dd');
+      $scope.encuesta.Fin=$filter('date')($scope.encuesta.Fin, 'yyyy-MM-dd');      
 
-    
-    turismoInterno.createviaje($scope.encuesta).then(function (data) {
-      $ionicLoading.hide();
-      $scope.data=data;
-      if (data.success == true) {
-        $state.reload();          
-      }else{
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });
-    
+
+      $scope.errores = null
+      if ($scope.encuesta.Id == null){
+        $scope.encuesta.Id = $scope.id;
+        $scope.encuesta.Crear = true;
+      }
+
+      
+      turismoInterno.createviaje($scope.encuesta).then(function (data) {
+        $ionicLoading.hide();
+        $scope.data=data;
+        if (data.success == true) {
+          $state.reload();          
+        }else{
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
   };
 
-  $scope.editar = function (es) {
+  $scope.editar = function (es, index) {
     $scope.errores = null;
     $scope.forms.EstanciaForm.$setPristine();
     $scope.forms.EstanciaForm.$setUntouched();
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
 
-    turismoInterno.viaje(es.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.edit = es;
-      $scope.encuesta = data.encuesta;
-      $scope.encuesta.Id = $scope.id;
-      $scope.encuesta.Crear = false;
-      $scope.encuesta.Idv = es.id;
-      if(!$scope.encuesta.motivo){$scope.encuesta.motivo=factories.findSelect(parseInt($scope.encuesta.Motivo), $scope.Datos.Motivos);}
-
-      $scope.encuesta.Estancias.forEach(function(_this) {
-        if(!_this.pais){_this.pais=factories.findSelect(_this.Pais,$scope.Datos.Paises)}
-        if(!_this.departamento){_this.departamento=factories.findSelect(_this.Departamento,$scope.Datos.Depertamentos)}
-        if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
-
-      });  
-
-      if (data.encuesta.Numero != null) {
-        $scope.Total = data.encuesta.Numero - 1
-      }
-      if (data.encuesta.Inicio != null && data.encuesta.Fin != null) {
-        fechal = data.encuesta.Inicio.split('-')
-        fechas = data.encuesta.Fin.split('-')
-        $scope.encuesta.Inicio = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2])
-        $scope.encuesta.Fin = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2])
-
-      }
-      if (data.encuesta.Estancias == null) {
-        $scope.agregar();
-      }
-
+    if($scope.is_offline!=0){
+      $scope.encuesta= es;
       $scope.ver = true;
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });  
+
+      turismoInterno.viaje(es.id).then(function (data) {
+        $ionicLoading.hide();
+        $scope.edit = es;
+        $scope.encuesta = data.encuesta;
+        $scope.encuesta.Id = $scope.id;
+        $scope.encuesta.Crear = false;
+        $scope.encuesta.Idv = es.id;
+        if(!$scope.encuesta.motivo){$scope.encuesta.motivo=factories.findSelect(parseInt($scope.encuesta.Motivo), $scope.Datos.Motivos);}
+
+        $scope.encuesta.Estancias.forEach(function(_this) {
+          if(!_this.pais){_this.pais=factories.findSelect(_this.Pais,$scope.Datos.Paises)}
+          if(!_this.departamento){_this.departamento=factories.findSelect(_this.Departamento,$scope.Datos.Depertamentos)}
+          if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
+
+        });  
+
+        if (data.encuesta.Numero != null) {
+          $scope.Total = data.encuesta.Numero - 1
+        }
+        if (data.encuesta.Inicio != null && data.encuesta.Fin != null) {
+          fechal = data.encuesta.Inicio.split('-')
+          fechas = data.encuesta.Fin.split('-')
+          $scope.encuesta.Inicio = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2])
+          $scope.encuesta.Fin = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2])
+
+        }
+        if (data.encuesta.Estancias == null) {
+          $scope.agregar();
+        }
+
+        $scope.ver = true;
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }    
   };
 
-  $scope.eliminar = function (es) {
+  $scope.eliminar = function (es, index) {
 
     $ionicPopup.confirm({
       title: '¿Desea eliminar el viaje?',
@@ -747,7 +911,13 @@ angular.module('interno.controllers', [])
           {
             text:'Si',type: 'button-stable', 
             onTap: function(e) {
-              deleted(es);
+              if($scope.is_offline!=0){
+                $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes.splice(index, 1);
+                localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+
+              }else{
+                deleted(es);
+              }
             }
           }
         ]
@@ -785,11 +955,87 @@ angular.module('interno.controllers', [])
 
   $scope.siguiente = function () {
     
+
+
     if ($scope.PrincipalViaje.id == null) {
         ionicToast.show("Debe seleccionar un viaje como principal",'middle', false, 5000);        
         return;
     }
 
+    if ($scope.encuesta.Id == null) {
+        $scope.encuesta.Id = $scope.id;
+        $scope.encuesta.Crear = true;
+    }
+
+    if($scope.is_offline!=0){
+      $scope.env = {};
+      $scope.env.id = $scope.id; 
+      $scope.env.principal = [$scope.PrincipalViaje.id];
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env=$scope.env;
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+
+      $location.path("/app/viajePrincipal/"+$scope.env.principal+"/1").search({'integrantes':$scope.id, 'hogar':$scope.hogar});
+
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+     
+      
+      $scope.env = {};
+      $scope.env.id = $scope.id; 
+      $scope.env.principal = $scope.PrincipalViaje.id;
+      turismoInterno.siguienteviaje($scope.env).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/viajePrincipal/"+$scope.env.principal+"/0");
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
+  }; 
+})
+
+.controller('viajePrincipalController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
+  $scope.forms= {};
+  $scope.is_offline = $stateParams.isOff;
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
+
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
+
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.viajesRealizados;
+    $scope.Datos = data.Enlaces;
+    $scope.hogar = parseInt($location.search().hogar);
+    $scope.integrantes = $location.search().integrantes;
+    $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id];
+    $scope.encuesta.Id = $stateParams.id;
+  }
+  else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
       animation: 'fade-in',
@@ -797,106 +1043,71 @@ angular.module('interno.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
-   
-    if ($scope.encuesta.Id == null) {
-        $scope.encuesta.Id = $scope.id;
-        $scope.encuesta.Crear = true;
-    }
-    $scope.env = {};
-    $scope.env.id = $scope.id; 
-    $scope.env.principal = $scope.PrincipalViaje.id;
 
-    turismoInterno.siguienteviaje($scope.env).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/viajePrincipal/"+$scope.env.principal);
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
+    turismoInterno.viajedataprincipal($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $scope.Datos = data.Enlaces;
+        $scope.encuesta = data.encuesta;
+        $scope.encuesta.Id = $stateParams.id;
+        
+        $rootScope.loader_interno.viajesPrincipal=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+        //$scope.id = $stateParams.id;
+        if(!$scope.encuesta.motivo){$scope.encuesta.motivo=factories.findSelect(parseInt($scope.encuesta.Motivo), $scope.Datos.Motivos);}
+        $scope.encuesta.Estancias.forEach(function(_this) {
+          if(!_this.pais){_this.pais=factories.findSelect(_this.Pais,$scope.Datos.Paises)}
+          if(!_this.departamento){_this.departamento=factories.findSelect(_this.Departamento,$scope.Datos.Depertamentos)}
+          if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
+          if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
+
+
+        });
+        if (data.encuesta.Numero != null) {
+             $scope.Total = data.encuesta.Numero - 1
+         }
+         if (data.encuesta.Inicio != null && data.encuesta.Fin != null) {
+             fechal = data.encuesta.Inicio.split('-')
+             fechas = data.encuesta.Fin.split('-')
+             $scope.encuesta.Inicio = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2])
+             $scope.encuesta.Fin = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2])
+
+         }
+         if (data.encuesta.Estancias == null) {
+             $scope.agregar();
+         }
     }, 
     function (error, data) {
       $ionicLoading.hide();
       let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
       });
     });
-  };
-})
-
-.controller('viajePrincipalController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
-  $scope.forms= {};
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-
-  turismoInterno.viajedataprincipal($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.Datos = data.Enlaces;
-      $scope.encuesta = data.encuesta;
-      $scope.encuesta.Id = $stateParams.id;
-      
-
-      //$scope.id = $stateParams.id;
-      if(!$scope.encuesta.motivo){$scope.encuesta.motivo=factories.findSelect(parseInt($scope.encuesta.Motivo), $scope.Datos.Motivos);}
-      $scope.encuesta.Estancias.forEach(function(_this) {
-        if(!_this.pais){_this.pais=factories.findSelect(_this.Pais,$scope.Datos.Paises)}
-        if(!_this.departamento){_this.departamento=factories.findSelect(_this.Departamento,$scope.Datos.Depertamentos)}
-        if(!_this.municipio){_this.municipio=factories.findSelect(_this.Municipio,$scope.Datos.Municipios)}
-        if(!_this.alojamiento){_this.alojamiento=factories.findSelect(_this.Alojamiento,$scope.Datos.Alojamientos)}
-
-
-      });
-      if (data.encuesta.Numero != null) {
-           $scope.Total = data.encuesta.Numero - 1
-       }
-       if (data.encuesta.Inicio != null && data.encuesta.Fin != null) {
-           fechal = data.encuesta.Inicio.split('-')
-           fechas = data.encuesta.Fin.split('-')
-           $scope.encuesta.Inicio = new Date(fechal[0], (parseInt(fechal[1]) - 1), fechal[2])
-           $scope.encuesta.Fin = new Date(fechas[0], (parseInt(fechas[1]) - 1), fechas[2])
-
-       }
-       if (data.encuesta.Estancias == null) {
-           $scope.agregar();
-       }
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
+  }
 
   $scope.cambioselectpais= function (es) {
     es.Departamento = null;
     es.Municipio = null;
     es.municipio = {};
     es.departamento = {};
+
+    $scope.datosDpto = $filter('filter')($scope.Datos.Depertamentos, {idP : es.Pais }, true);
   };
 
   $scope.cambioselectdepartamento = function (es) {
     es.Municipio = null;
     es.municipio = {};
+    $scope.datosMpios = $filter('filter')($scope.Datos.Municipios, {idD : es.Departamento }, true);
   };
 
   $scope.cambioselectmunicipio = function (es) {
     for (i = 0; i < $scope.encuesta.Estancias.length; i++) {
       if ($scope.encuesta.Estancias[i] != es) {
-          if ($scope.encuesta.Estancias[i].Municipio == es.Municipio) {
-              es.Municipio = null;
-              es.municipio = {};
-          }
+        if ($scope.encuesta.Estancias[i].Municipio == es.Municipio) {
+          es.Municipio = null;
+          es.municipio = {};
+        }
       }
     }
   };
@@ -1016,47 +1227,53 @@ angular.module('interno.controllers', [])
   $scope.siguiente = function () {
     $scope.encuesta.Inicio=$filter('date')($scope.encuesta.Inicio, 'yyyy-MM-dd');
     $scope.encuesta.Fin=$filter('date')($scope.encuesta.Fin, 'yyyy-MM-dd');
-
     if (!$scope.forms.EstanciaForm.$valid) {
        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
        return
     }
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoInterno.createviajeprincipal($scope.encuesta).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        if (data.Sw == 1) {
-          $location.path("/app/actividades/"+$scope.encuesta.Id);
-        } else {
-           $location.path("/app/transporteInterno/"+$scope.encuesta.Id);
-        }
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    if($scope.is_offline!=0){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id]=$scope.encuesta
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $location.path("/app/actividades/"+$scope.encuesta.Id+"/1").search({'integrantes':$scope.id, 'hogar':$scope.hogar});;
+    }
+    else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });   
+
+      turismoInterno.createviajeprincipal($scope.encuesta).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          if (data.Sw == 1) {
+            $location.path("/app/actividades/"+$scope.encuesta.Id+"/0");
+          } else {
+             $location.path("/app/transporteInterno/"+$scope.encuesta.Id+"/0");
+          }
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    } 
   };
 })
 
-.controller('actividadesController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+.controller('actividadesController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
   $scope.forms= {};
   $scope.encuesta = {}
   $scope.MensajeAlojamiento = false
@@ -1064,27 +1281,54 @@ angular.module('interno.controllers', [])
   $scope.encuesta.ActividadesRelizadas=[];
   $scope.encuesta.OpcionesActividades=[];
   $scope.id=$stateParams.id;
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-  turismoInterno.actividades($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
+  $scope.is_offline = $stateParams.isOff;
+
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
+
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
+
+  if($scope.is_offline!=0){
+      let data = $rootScope.loader_interno.actividades;
       $scope.Datos = data.Enlaces;
-      $scope.encuesta = data.encuesta;
+      $scope.hogar = parseInt($location.search().hogar);
+      $scope.integrantes = $location.search().integrantes;
+      if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].actividades){
+        $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].actividades
+      }
       $scope.encuesta.Id = $stateParams.id;
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+    turismoInterno.actividades($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $rootScope.loader_interno.actividades=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+        $scope.Datos = data.Enlaces;
+        $scope.encuesta = data.encuesta;
+        $scope.encuesta.Id = $stateParams.id;
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 
   $scope.existeActividad= function(obj){   
 
@@ -1229,7 +1473,75 @@ angular.module('interno.controllers', [])
     }
 
     $scope.errores = null
-        
+    
+    if($scope.is_offline!=0){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].actividades = $scope.encuesta 
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $location.path("/app/transporteInterno/"+$scope.id+"/1");
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+
+      turismoInterno.crearestancia($scope.encuesta).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/transporteInterno/"+$scope.id+"/0").search({'integrantes':$scope.id, 'hogar':$scope.hogar});
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
+  }
+})
+
+.controller('transporteInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
+  $scope.forms = {}
+  $scope.id=$stateParams.id;
+  $scope.forms= {};
+  $scope.transporte={};
+  $scope.is_offline = $stateParams.isOff;
+
+
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
+
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
+
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.transporte;
+    $scope.transportes = data.transportes;
+    $scope.medios=data.medios;
+    $scope.transporte.id = $stateParams.id;
+    $scope.hogar = parseInt($location.search().hogar);
+    $scope.integrantes = $location.search().integrantes;
+    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte){
+      $scope.transporte = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte
+    }
+    
+  }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
       animation: 'fade-in',
@@ -1238,61 +1550,27 @@ angular.module('interno.controllers', [])
       showDelay: 0
     });
 
-    turismoInterno.crearestancia($scope.encuesta).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/transporteInterno/"+$scope.id);
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
+    turismoInterno.cargartransporte($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $rootScope.loader_interno.transporte=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+        $scope.transportes = data.transportes;
+        $scope.medios=data.medios;
+        $scope.transporte.id = $stateParams.id;
+        $scope.transporte.Mover = data.tipo_transporte;
+        $scope.transporte.Medio = data.medio_transporte;
+        $scope.transporte.Tipo_otro=data.otrotipo;
+        $scope.transporte.Medio_otro=data.otromedio;
     }, 
     function (error, data) {
       $ionicLoading.hide();
       let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
       });
     });
   }
-})
-
-.controller('transporteInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
-  $scope.forms = {}
-  $scope.id=$stateParams.id;
-  $scope.forms= {};
-  $scope.transporte={};
-
-
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-
-  turismoInterno.cargartransporte($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.transportes = data.transportes;
-      $scope.medios=data.medios;
-      $scope.transporte.id = $stateParams.id;
-      $scope.transporte.Mover = data.tipo_transporte;
-      $scope.transporte.Medio = data.medio_transporte;
-      $scope.transporte.Tipo_otro=data.otrotipo;
-      $scope.transporte.Medio_otro=data.otromedio;
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
 
   $scope.cambio=function(){ 
     if($scope.transporte.Mover!=10){          
@@ -1311,102 +1589,65 @@ angular.module('interno.controllers', [])
       ionicToast.show("Corrija los errores",'middle', false, 5000);
       return
     }
+    if($scope.is_offline!=0){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte = $scope.transporte;
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $location.path("/app/gastosInterno/"+$scope.id+"/1");
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
-
-    turismoInterno.guardartransporte($scope.transporte).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/gastosInterno/"+$scope.id);
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });    
+
+      turismoInterno.guardartransporte($scope.transporte).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/gastosInterno/"+$scope.id+"/0");
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });  
+    } 
   };
 })
 
-.controller('gastosInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+.controller('gastosInternoController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
   $scope.porcentajeGastoRubros = [];
   $scope.id=$stateParams.id;
   $scope.forms={};
   $scope.encuesta={};
   $scope.encuesta.serviciosPaquetes=[];
   $scope.encuesta.financiadores=[];
+  $scope.is_offline = $stateParams.isOff;
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
 
-  turismoInterno.datagastos($stateParams.id).then(function (data) {
-    $ionicLoading.hide();
-    $scope.encuesta = data.encuesta;
-    $scope.divisas = data.divisas;
-    $scope.financiadores = data.financiadores;
-    $scope.opcionesLugares = data.opcionesLugares;
-    $scope.serviciosPaquetes = data.serviciosPaquetes;
-    $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
-    $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
-    if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
-      $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
-    }            
-    for(let i=0; i< $scope.encuesta.rubros.length ;i++){
-      if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
-        $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
-      }
-      if($scope.encuesta.rubros[i].id==8){
-        $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
-        $scope.changeRubros($scope.encuesta.rubros[i]); break;
-      }
-    }
-            
-    for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
-      for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
-        if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
-          $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
-          break;
-        }
-      }              
-    }
-            
-    for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
-      for (let j = 0; j < $scope.encuesta.rubros.length; j++){
-        if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
-          $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
-          break;
-        }
-      }
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
 
-    }
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
-    });
-  });
+
 
   $scope.changeServiciosPaquetes = function(s){
     if(s.id==9 || s.id==10 || s.id==11 ){
@@ -1506,6 +1747,140 @@ angular.module('interno.controllers', [])
     return $scope.shownGroup === group;
   };
 
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.gastos;
+    $scope.divisas = data.divisas;
+    $scope.financiadores = data.financiadores;
+    $scope.opcionesLugares = data.opcionesLugares;
+    $scope.serviciosPaquetes = data.serviciosPaquetes;
+    $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
+    if(data.encuesta && data.encuesta.empresaTransporte){
+      $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
+    }
+    $scope.hogar = parseInt($location.search().hogar);
+    $scope.integrantes = $location.search().integrantes;
+    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos){
+      $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos
+      var rb = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos.rubros
+    }
+    $scope.encuesta.rubros=data.encuesta.rubros;    
+    
+    for(let i=0; i<$scope.encuesta.rubros.length; i++){
+        $scope.encuesta.rubros[i].viajes_gastos_internos[0] = {};
+    }
+    if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
+      $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
+    } 
+    if($scope.encuesta.rubros){           
+      for(let i=0; i< $scope.encuesta.rubros.length ;i++){
+        if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
+          $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
+        }
+        if($scope.encuesta.rubros[i].id==8){
+          $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
+          $scope.changeRubros($scope.encuesta.rubros[i]); break;
+        }
+      }
+    }
+    
+    if($scope.encuesta.gastosServicosPaquetes){              
+      for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
+        for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
+          if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
+            $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
+            break;
+          }
+        }              
+      }
+    }
+    
+    if($scope.encuesta.porcentajeGastoRubros){     
+      for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
+        for (let j = 0; j < $scope.encuesta.rubros.length; j++){
+          if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
+            $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
+            break;
+          }
+        }
+
+      }
+    }
+
+    if(rb){
+      for(let i=0; i<$scope.encuesta.rubros.length; i++){
+        for(let j=0; j<rb.length;j++ ){
+         if(rb[j].rubros_id==$scope.encuesta.rubros[i].id){
+            $scope.encuesta.rubros[i].viajes_gastos_internos.splice(0,1);
+            $scope.encuesta.rubros[i].viajes_gastos_internos.push(rb[j]);
+            $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
+           
+         }
+        }
+      }
+    }
+  }
+  else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    turismoInterno.datagastos($stateParams.id).then(function (data) {
+      $ionicLoading.hide();
+      $rootScope.loader_interno.gastos=data;
+      localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+      $scope.encuesta = data.encuesta;
+      $scope.divisas = data.divisas;
+      $scope.financiadores = data.financiadores;
+      $scope.opcionesLugares = data.opcionesLugares;
+      $scope.serviciosPaquetes = data.serviciosPaquetes;
+      $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
+      $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
+      if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
+        $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
+      }            
+      for(let i=0; i< $scope.encuesta.rubros.length ;i++){
+        if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
+          $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
+        }
+        if($scope.encuesta.rubros[i].id==8){
+          $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
+          $scope.changeRubros($scope.encuesta.rubros[i]); break;
+        }
+      }
+              
+      for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
+        for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
+          if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
+            $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
+            break;
+          }
+        }              
+      }
+              
+      for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
+        for (let j = 0; j < $scope.encuesta.rubros.length; j++){
+          if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
+            $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
+            break;
+          }
+        }
+
+      }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
+
   $scope.guardar = function () {
         
     if (!$scope.forms.GastoForm.$valid || $scope.encuesta.financiadores.length==0) {
@@ -1568,33 +1943,41 @@ angular.module('interno.controllers', [])
       }
     }
 
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
+    if($scope.is_offline!=0){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos = data;
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $location.path("/app/fuentesInformacion/"+$scope.id+"/1").search({'integrantes':$scope.id, 'hogar':$scope.hogar});
 
-    turismoInterno.guardargastos(data).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/fuentesInformacion/"+$scope.id);
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });
+
+      turismoInterno.guardargastos(data).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/fuentesInformacion/"+$scope.id+"/0");
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
+    
   };
 
   $scope.toggleSelection2 = function (id) {
@@ -1609,51 +1992,85 @@ angular.module('interno.controllers', [])
   };
 })
 
-.controller('fuentesInformacionController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories) {
+.controller('fuentesInformacionController', function($scope, $stateParams, $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, factories, $rootScope) {
   $scope.enteran = {'FuentesDurante': [],'FuentesAntes': [],'Redes':[]};
   $scope.id=$stateParams.id;
   $scope.forms={};
+  $scope.is_offline = $stateParams.isOff;
 
-  $ionicLoading.show({
-    template: '<ion-spinner></ion-spinner> Espere por favor...',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
+  if(localStorage.getItem("loader_interno")!=null){
+    $rootScope.loader_interno=JSON.parse(localStorage.getItem("loader_interno"));
+  }else{
+    $rootScope.loader_interno={};
+  }
 
-  turismoInterno.cargardatosfuentes($stateParams.id).then(function (data) {
-      $ionicLoading.hide();
-      $scope.fuentesAntes = data.fuentesAntes
-      $scope.fuentesDurante = data.fuentesDurante
-      $scope.redes = data.redes
-      $scope.enteran.id = $scope.id
-      $scope.experiencias = data.experiencias
-      $scope.calificaciones = data.calificaciones
+  if(localStorage.getItem("interno_off")!=null){
+    $rootScope.interno_off=JSON.parse(localStorage.getItem("interno_off"));
+  }else{
+    $rootScope.interno_off=[];
+  }
 
-      if (data.invitacion_correo != null) {
-        $scope.enteran.FuentesAntes = data.fuentes_antes
-        $scope.enteran.FuentesDurante = data.fuentes_durante
-        $scope.enteran.Redes = data.compar_redes
-        $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes
-        $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante
-        $scope.enteran.Correo = data.invitacion_correo
-        $scope.enteran.Invitacion = data.invitacion
-        $scope.enteran.NombreFacebook = data.facebook
-        $scope.enteran.NombreTwitter = data.twitter
-        $scope.enteran.Autorizo=data.autorizo
-        $scope.enteran.Acepta_tratamiento=data.acepta
-        $scope.enteran.otra_red=data.Otrared
-      }
-  }, 
-  function (error, data) {
-    $ionicLoading.hide();
-    let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error.',
-        okType:'button-stable'
+
+  if($scope.is_offline!=0){
+    let data = $rootScope.loader_interno.fuentes;
+    $scope.fuentesAntes = data.fuentesAntes
+    $scope.fuentesDurante = data.fuentesDurante
+    $scope.redes = data.redes
+    $scope.enteran.id = $scope.id
+    
+    $scope.calificaciones = data.calificaciones
+    $scope.hogar = parseInt($location.search().hogar);
+    $scope.integrantes = $location.search().integrantes;
+
+    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran){
+      $scope.enteran = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran;
+      $scope.experiencias =  $scope.enteran.Experiencias 
+    }
+    
+  }else{
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
     });
-  });
+
+    turismoInterno.cargardatosfuentes($stateParams.id).then(function (data) {
+        $ionicLoading.hide();
+        $scope.fuentesAntes = data.fuentesAntes
+        $scope.fuentesDurante = data.fuentesDurante
+        $scope.redes = data.redes
+        $scope.enteran.id = $scope.id
+        $scope.experiencias = data.experiencias
+        $scope.calificaciones = data.calificaciones
+        $rootScope.loader_interno.fuentes=data;
+        localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));
+
+        if (data.invitacion_correo != null) {
+          $scope.enteran.FuentesAntes = data.fuentes_antes
+          $scope.enteran.FuentesDurante = data.fuentes_durante
+          $scope.enteran.Redes = data.compar_redes
+          $scope.enteran.OtroFuenteAntes = data.OtroFuenteAntes
+          $scope.enteran.OtroFuenteDurante = data.OtroFuenteDurante
+          $scope.enteran.Correo = data.invitacion_correo
+          $scope.enteran.Invitacion = data.invitacion
+          $scope.enteran.NombreFacebook = data.facebook
+          $scope.enteran.NombreTwitter = data.twitter
+          $scope.enteran.Autorizo=data.autorizo
+          $scope.enteran.Acepta_tratamiento=data.acepta
+          $scope.enteran.otra_red=data.Otrared
+        }
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 
   $scope.toggleSelection = function (item) {
     let idx = $scope.enteran.FuentesAntes.indexOf(item);
@@ -1728,7 +2145,6 @@ angular.module('interno.controllers', [])
       let idx = $scope.enteran.FuentesDurante.indexOf(item);
 
       if (idx > -1) {
-        console.log($scope.enteran.FuentesDurante, idx)
         $scope.enteran.FuentesDurante.splice(idx, 1)
 
       }else {
@@ -1787,33 +2203,42 @@ angular.module('interno.controllers', [])
     if ($scope.enteran.FuentesDurante.indexOf(14) == -1) {$scope.enteran.OtroFuenteDurante = null}
 
     $scope.enteran.Experiencias = $scope.experiencias
-    $ionicLoading.show({
-      template: '<ion-spinner></ion-spinner> Espere por favor...',
-      animation: 'fade-in',
-      showBackdrop: true,
-      maxWidth: 200,
-      showDelay: 0
-    });
 
-    turismoInterno.guardarfuentesinformacion($scope.enteran).then(function (data) {
-      $ionicLoading.hide();
-      if (data.success == true) {
-        ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-        $location.path("/app/temporadas");
-      } else {
-        $ionicScrollDelegate.scrollTop(true);
-        ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
-        $scope.errores = data.errores;
-      }
-    }, 
-    function (error, data) {
-      $ionicLoading.hide();
-      let alertPopup =$ionicPopup.alert({
-        title: '¡Error!',
-        template: 'Ha ocurrido un error. Intenta nuevamente',
-        okType:'button-stable'
+    if($scope.is_offline!=0){
+      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran = $scope.enteran;
+      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+      $location.path("/app/temporadas").search({});
+
+
+    }else{
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
       });
-    });
+
+      turismoInterno.guardarfuentesinformacion($scope.enteran).then(function (data) {
+        $ionicLoading.hide();
+        if (data.success == true) {
+          ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
+          $location.path("/app/temporadas");
+        } else {
+          $ionicScrollDelegate.scrollTop(true);
+          ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
+          $scope.errores = data.errores;
+        }
+      }, 
+      function (error, data) {
+        $ionicLoading.hide();
+        let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error. Intenta nuevamente',
+          okType:'button-stable'
+        });
+      });
+    }
   }
 })
 

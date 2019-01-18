@@ -14,6 +14,9 @@
   border-bottom: 0px;
 
 }
+.platform-android .item-radio .radio-icon{
+  font-size: 0px;
+}
 
 .platform-android .popup-head,.platform-android .popup-title{
   color: black;
@@ -378,7 +381,7 @@ font-weight: bold;
   content:"" ;
   position: absolute ;
   right: 20px ;
-  top: 21px ;
+  top: 20px ;
   background:#16469e ;
   width: 12px ;
   height: 12px ;

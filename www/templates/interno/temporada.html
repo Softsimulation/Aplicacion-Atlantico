@@ -36,7 +36,7 @@
         <p>{{item.Name}}</p>
         <p>{{item.Fecha_ini | date:'MM/dd/yyyy'}} - {{item.Fecha_fin | date:'MM/dd/yyyy'}}</p>
         <div class="pull-right">
-          <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/verTemporada/{{item.id}}"><i class="ion-eye"></i></a>
+          <a class="ripple ripple-green button button-outline button-positive button-small" href="#/app/verTemporada/{{item.id}}/{{is_offline}}"><i class="ion-eye"></i></a>
         </div>
       </div>
     </div>

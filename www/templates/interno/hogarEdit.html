@@ -82,7 +82,7 @@
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.barrio.$touched">
             <span  ng-show="forms.DatosForm.barrio.$error.required">*</span>
           </span>
-          Barrio: {{barrio.nombre}}
+          Barrio: {{barrio.nombre}} 
           <div class="option ripple ripple-green">
               {{option.nombre}}
           </div>  
@@ -155,7 +155,7 @@
 
       <div class="card animated bounceInUp" >
         <div class="item item-divider situr-header required">
-          <h2> encuestarmación del hogar</h2>
+          <h2> Información del hogar</h2>
         </div>
 
         <label class="item">
@@ -164,32 +164,32 @@
           </button>
         </label>
 
-        <div class="item" ng-if="encuesta.integrantes.length>0">
-          <ion-scroll direction="x" id="scroll-x">
+        <div class="" ng-if="encuesta.integrantes.length>0">
+          
             <div class="row row-table">
               
-              <div class="col col-75">Nombre</div>
-              <div class="col col-50">Jefe de hogar</div>
-              <div class="col col-50"></div>
+              <div class="col col-33">Nombre</div>
+              <div class="col col-33">Jefe de hogar</div>
+              <div class="col col-33"></div>
         
             </div>
             <div class="row row-table-col" ng-repeat="data in encuesta.integrantes">
-              <div class="col col-75">{{data.Nombre}}</div>
-              <div class="col col-50">
+              <div class="col col-33">{{data.Nombre}}</div>
+              <div class="col col-33">
                   <ion-radio ng-model="data.jefe_hogar" ng-value="data.jefe_hogar" class="ripple ripple-green genero" name="jefe" value="true">
                     <span style="color: transparent; float: left;">-</span>
                   </ion-radio>
                 
               </div>
-              <div class="col col-50">
+              <div class="col col-33">
                 <a ng-click="integranteAdd($index)" class="button button-outline button-stable button-small"><i class="ion-edit"></i></a>
                 <a ng-click="deleteIntegrante($index)" class="button button-outline button-assertive button-small"><i class="ion-ios-trash"></i></a>
-                <a ng-if="data.id != null && data.es_viajero && data.es_residente" href="#/app/viajeRealizado/{{data.id}}"class="button button-outline button-royal button-small"><i class="ion-clipboard"></i></a>
+                <a ng-if="data.id != null && data.es_viajero && data.es_residente && is_offline==0" href="#/app/viajeRealizado/{{data.id}}/0" class="button button-outline button-royal button-small"><i class="ion-clipboard"></i></a>
+                <a ng-if="data.Viaje==1 && data.Vive==1 && is_offline==1" href="#/app/viajeRealizado/{{$index}}/1?vector={{id}}" class="button button-outline button-royal button-small"><i class="ion-clipboard"></i></a>
 
               </div>
             </div>
 
-          </ion-scroll>
         </div>
       </div>
 

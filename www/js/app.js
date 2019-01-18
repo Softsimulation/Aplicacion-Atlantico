@@ -24,8 +24,8 @@ angular.module('starter', ['ionic',
                            ])
 
 .constant('CONFIG', {
-  //APIURL: "http://situr-andoedo94.c9users.io/",
-  APIURL: "http://demo.situratlantico.info/",
+  APIURL: "http://situr-andoedo94.c9users.io/",
+  //APIURL: "http://demo.situratlantico.info/",
   
 })
 
@@ -217,7 +217,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.verTemporada', {
-    url: '/verTemporada/:id',
+    url: '/verTemporada/:id/:isOff',
     views: {
       'menuContent': {
         templateUrl: 'templates/interno/verTemporada.html',
@@ -238,7 +238,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.editHogar', {
-    url: '/editHogar/:id',
+    url: '/editHogar/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -249,7 +249,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.viajeRealizado', {
-    url: '/viajeRealizado/:id',
+    url: '/viajeRealizado/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -260,7 +260,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.viajePrincipal', {
-    url: '/viajePrincipal/:id',
+    url: '/viajePrincipal/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -271,7 +271,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.actividades', {
-    url: '/actividades/:id',
+    url: '/actividades/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -282,7 +282,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.transporteInterno', {
-    url: '/transporteInterno/:id',
+    url: '/transporteInterno/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -293,7 +293,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.gastosInterno', {
-    url: '/gastosInterno/:id',
+    url: '/gastosInterno/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -304,7 +304,7 @@ angular.module('starter', ['ionic',
   })
 
   .state('app.fuentesInformacion', {
-    url: '/fuentesInformacion/:id',
+    url: '/fuentesInformacion/:id/:isOff',
     cache:false,
     views: {
       'menuContent': {
@@ -316,172 +316,6 @@ angular.module('starter', ['ionic',
 
   /*****************************************/
   
- 
-  
-
-  
-
-
-  .state('app.listarGrupo', {
-    url: '/listarGrupo',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/listarGrupo.html',
-        controller: 'listarGrupoController'
-      }
-    }
-  })
-
-  .state('app.nuevoGrupo', {
-    url: '/nuevoGrupo',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/nuevoGrupo.html',
-        controller: 'nuevoGrupoController'
-      }
-    }
-  })
-
-  .state('app.verGrupo', {
-    url: '/verGrupo',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/verGrupo.html',
-        controller: 'verGrupoController'
-      }
-    }
-  })
-
-  .state('app.listarOyE', {
-    url: '/listarOyE',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/listarOyE.html',
-        controller: 'listarOyEController'
-      }
-    }
-  })
-
-  .state('app.encuestaSitio', {
-    url: '/encuestaSitio',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/encuestaSitio.html',
-        controller: 'encuestaSitioController'
-      }
-    }
-  })
-
-  .state('app.encuestaAdmin', {
-    url: '/encuestaAdmin',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/encuestaAdmin.html',
-        controller: 'encuestaAdminController'
-      }
-    }
-  })
-
-  .state('app.actividadComercialAdmin', {
-    url: '/actividadComercialAdmin',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/actividadComercialAdmin.html',
-        controller: 'actividadComercialAdminController'
-      }
-    }
-  })
-
-  .state('app.caracterizacionAlojamientos', {
-    url: '/caracterizacionAlojamientos',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/caracterizacionAlojamientos.html',
-        controller: 'caracterizacionAlojamientosController'
-      }
-    }
-  })
-
-  .state('app.ofertaAlojamiento', {
-    url: '/ofertaAlojamiento',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/ofertaAlojamiento.html',
-        controller: 'ofertaAlojamientoController'
-      }
-    }
-  })
-
-  .state('app.empleoMensual', {
-    url: '/empleoMensual',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/empleoMensual.html',
-        controller: 'empleoMensualController'
-      }
-    }
-  })
-
-  .state('app.numeroEmpleados', {
-    url: '/numeroEmpleados',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/numeroEmpleados.html',
-        controller: 'numeroEmpleadosController'
-      }
-    }
-  })
-
-  .state('app.empleadosCaracterizacion', {
-    url: '/empleadosCaracterizacion',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/empleadosCaracterizacion.html',
-        controller: 'empleadosCaracterizacionController'
-      }
-    }
-  })
-
-  .state('app.encuestasAdministrador', {
-    url: '/encuestasAdministrador',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/encuestasAdministrador.html',
-        controller: 'encuestasAdministradorController'
-      }
-    }
-  })
-
-  .state('app.proveedoresActivos', {
-    url: '/proveedoresActivos',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/proveedoresActivos.html',
-        controller: 'proveedoresActivosController'
-      }
-    }
-  })
-
-  .state('app.datosRegistroNacionalTurismo', {
-    url: '/datosRegistroNacionalTurismo',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/datosRegistroNacionalTurismo.html',
-        controller: 'datosRegistroNacionalTurismoController'
-      }
-    }
-  })
-
-  .state('app.dane', {
-    url: '/dane',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/poblacionDANE.html',
-        controller: 'daneController'
-      }
-    }
-  })  ;
-
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
