@@ -42,6 +42,7 @@
         </a>        	
       </div>
 
+
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
           <h2>Datos de encuesta</h2>
@@ -78,12 +79,38 @@
           cancel-button="Cancelar" 
           reset-button="Limpiar" 
           sub-header-class="bar-custom"
-          ng-change="encuesta.aplicacion=encuesta.Aplicacion.id"
+          ng-change="encuesta.aplicacion=encuesta.Aplicacion.id; filterSub(encuesta.aplicacion);"
           name="aplicacion" 
           ng-required="true">
           Lugar de aplicación: {{encuesta.Aplicacion.nombre}}
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.aplicacion.$touched">
             <span ng-show="forms.DatosForm.aplicacion.$error.required">*</span>
+          </span>
+          <div class="option ripple ripple-green">
+              {{option.nombre}}
+          </div>  
+        </a>
+
+        <!--sub Lugar aplicacion-->
+        <a 
+          class="item item-input item-select ripple ripple-green item-select-block" 
+          modal-select 
+          ng-model="encuesta.SubAplicacion" 
+          options="sub_lugares_aplicacion_filter" 
+          modal-title="Elegir grupo" 
+          has-search="true" 
+          header-footer-class="bar-custom" 
+          cancel-search-button='X' 
+          search-placeholder="Buscar..." 
+          cancel-button="Cancelar" 
+          reset-button="Limpiar" 
+          sub-header-class="bar-custom"
+          ng-change="encuesta.sub_lugar_aplicacion_id=encuesta.SubAplicacion.id"
+          name="subaplicacion" 
+          ng-required="true">
+          Sub lugar de aplicación: {{encuesta.SubAplicacion.nombre}}
+          <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.aplicacion.$touched">
+            <span ng-show="forms.DatosForm.subaplicacion.$error.required">*</span>
           </span>
           <div class="option ripple ripple-green">
               {{option.nombre}}

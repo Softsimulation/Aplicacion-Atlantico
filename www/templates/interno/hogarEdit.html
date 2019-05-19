@@ -125,7 +125,7 @@
           <span class="input-label" >Telefono Fijo</span>
           <input type="number" placeholder="Telefono Fijo" ng-model="encuesta.Telefono">
         </label> 
-        
+       
     
        <!--encuestador-->
         <a 
@@ -208,16 +208,15 @@
 
         <label class="item item-input item-floating-label">
           <span class="input-label" >Celular</span>
-          <input type="number" placeholder="Celular" ng-required="true" name="celular_entrevistado" ng-model="encuesta.Celular_Entrevistado">
+          <input type="number" placeholder="Celular"  name="celular_entrevistado" ng-model="encuesta.Celular_Entrevistado">
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.celular_entrevistado.$touched">
             <span ng-show="forms.DatosForm.celular_entrevistado.$error.required">*</span>
           </span>
-
         </label>
 
         <label class="item item-input item-floating-label">
           <span class="input-label" >Email</span>
-          <input type="email" placeholder="Email" ng-required="true" name="email_entrevistado" ng-model="encuesta.Email_Entrevistado">
+          <input type="email" placeholder="Email"  name="email_entrevistado" ng-model="encuesta.Email_Entrevistado">
           <span class="validated" ng-show="forms.DatosForm.$submitted || forms.DatosForm.email_entrevistado.$touched">
               <span ng-show="forms.DatosForm.email_entrevistado.$error.required">*</span>
               <span ng-show="forms.DatosForm.email_entrevistado.$error.email">*</span>

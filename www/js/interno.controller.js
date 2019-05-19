@@ -1,6 +1,6 @@
 angular.module('interno.controllers', [])
 
-.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory, $cordovaNetwork, $rootScope, ionicToast) {
+.controller('temporadasController', function($scope, $stateParams, $ionicModal, $ionicPopup, turismoInterno,$ionicLoading, $ionicHistory, $cordovaNetwork, $rootScope, ionicToast, $http, CONFIG, $q) {
   
   $ionicHistory.clearHistory();
   $ionicHistory.clearCache();
@@ -47,8 +47,408 @@ angular.module('interno.controllers', [])
     $rootScope.interno_off=[];
   }
 
+  $ionicModal.fromTemplateUrl('templates/interno/hogaresOff.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
 
   console.log($rootScope.interno_off)
+  $scope.sincronizar=function () {
+    for (let i = 0; i < $rootScope.interno_off.length; i++) {
+      $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner> Espere por favor...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+      if(!$rootScope.interno_off[i].hogar.hogar_id){
+        let section1 = $http.post(CONFIG.APIURL+'turismointernoapi/guardarhogar', $rootScope.interno_off[i].hogar,{'content-type':'application/json',});
+        $q.all([section1]).then(data => {
+          let success=data[0].data.success;
+          if(success==true){
+
+            let integrantes = data[0].data.integrantes
+            $rootScope.interno_off[i].hogar.hogar_id = data[0].data.id;
+            for(let j=0; j<$rootScope.interno_off[i].hogar.integrantes .length; j++){
+              $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner> Espere por favor...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+              });
+              $rootScope.interno_off[i].hogar.integrantes[j].id=integrantes[j];
+              if($rootScope.interno_off[i].hogar.integrantes[j].Viajes){
+                for(let k = 0; k < $rootScope.interno_off[i].hogar.integrantes[j].Viajes.length; k++){
+                  let viaje = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k];
+                  viaje.Id = $rootScope.interno_off[i].hogar.integrantes[j].id;
+                  if (viaje.Idv){
+                    viaje.Crear=false
+                  }else{
+                    viaje.Crear=true
+                  }
+                  let section2 = $http.post(CONFIG.APIURL+'turismointernoapi/createviaje', viaje,{'content-type':'application/json',});
+                  $q.all([section2]).then(data => {
+                    let success=data[0].data.success;
+                    if(success==true){
+                      $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].Idv = data[0].data.viaje.id;
+                      if(k ==$rootScope.interno_off[i].hogar.integrantes[j].env.principal[0]){
+                        let env = {id:$rootScope.interno_off[i].hogar.integrantes[j].id, principal:data[0].data.viaje.id};
+                        let section3 = $http.post(CONFIG.APIURL+'turismointernoapi/siguienteviaje', env,{'content-type':'application/json',});
+                        $q.all([section3]).then(data => {
+                          let success=data[0].data.success;
+                          if(success==true){
+                            let principal = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k];
+                            principal.Id = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].Idv;
+                            let section4 = $http.post(CONFIG.APIURL+'turismointernoapi/createviajeprincipal', principal,{'content-type':'application/json',});
+                            $q.all([section4]).then(data => {
+                              let success=data[0].data.success;
+                              if(success==true){
+                                $rootScope.interno_off[i].hogar.integrantes[j].lastSection='principal';
+                                $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores){
+                                  delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores;
+                                }
+                                if( $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades){
+                                  let actividades = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades;
+                                  actividades.Id = principal.Id;
+                                  let section5 =  $http.post(CONFIG.APIURL+'turismointernoapi/crearestancia', actividades,{'content-type':'application/json',});
+                                  $q.all([section5]).then(data => {
+                                    let success=data[0].data.success;
+                                    if(success==true){
+                                      $rootScope.interno_off[i].hogar.integrantes[j].lastSection='actividades';
+                                      $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                      if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores){
+                                        delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores;
+                                      }
+                                      if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte){
+                                        let transporte = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte;
+                                        transporte.id = principal.Id;
+                                        let section6 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardartransporte', transporte,{'content-type':'application/json',});
+                                        $q.all([section6]).then(data => {
+                                          let success=data[0].data.success;
+                                          if(success==true){
+                                            $rootScope.interno_off[i].hogar.integrantes[j].lastSection='transporte';
+                                            $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                            if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores){
+                                              delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores;
+                                            }
+                                            if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos){
+                                              let gastos = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos;
+                                              gastos.id = principal.Id;
+                                              let section7 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardargastos', gastos,{'content-type':'application/json',});
+                                              $q.all([section7]).then(data => {
+                                                let success=data[0].data.success;
+                                                if(success==true){
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].lastSection='gastos';
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                                  if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores){
+                                                    delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores;
+                                                  }
+                                                  if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran){
+                                                    let enteran = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran;
+                                                    enteran.id = principal.Id;
+                                                    let section8 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardarfuentesinformacion', enteran,{'content-type':'application/json',});
+                                                    $q.all([section8]).then(data => {
+                                                      let success=data[0].data.success;
+                                                      if(success==true){
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].lastSection='enteran';
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                                        if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores){
+                                                          delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores;
+                                                        }
+                                                      }else{
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores=data[0].data.errores;
+                                                      }
+                                                      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                                      $ionicLoading.hide();
+                                                    }).catch(reason => {
+                                                      $ionicLoading.hide(); 
+                                                      ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                                    })
+                                                  }else{
+                                                    $ionicLoading.hide();
+                                                  }
+                                                }else{
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores = data[0].data.errores
+                                                  $ionicLoading.hide();
+                                                }
+                                                localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                              }).catch(reason => {
+                                                $ionicLoading.hide(); 
+                                                ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                              })
+                                            }else{
+                                              $ionicLoading.hide();
+                                            }
+                                          }else{
+                                            $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores;
+                                            $ionicLoading.hide();
+                                          }
+                                          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                        }).catch(reason => {
+                                          $ionicLoading.hide(); 
+                                          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                        });
+                                      }else{
+                                        $ionicLoading.hide();
+                                      }
+                                    }else{
+                                      $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores;
+                                      $ionicLoading.hide();
+                                    }
+                                    localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                  }).catch(reason => {
+                                    $ionicLoading.hide(); 
+                                    ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                  });
+                                }else{
+                                  $ionicLoading.hide();
+                                }
+                              }else{
+                                $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores;
+                                $ionicLoading.hide();
+                              }
+                              localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                            }).catch(reason => {
+                              $ionicLoading.hide(); 
+                              ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                            });
+                          }else{
+                            $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores=data[0].data.errores;
+                            $ionicLoading.hide();
+                          }
+                          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                        }).catch(reason => {
+                          $ionicLoading.hide(); 
+                          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                        });
+                      }else{
+                        $ionicLoading.hide();
+                      }
+                    }else{
+                      $rootScope.interno_off[i].hogar.integrantes[j].errores = data[0].data.errores;
+                      $ionicLoading.hide();
+                    }
+                    localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                  }).catch(reason => {
+                    $ionicLoading.hide(); 
+                    ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                  });
+                }
+              }else{
+                $ionicLoading.hide();
+              }
+            }
+            localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+          }else{
+            $rootScope.interno_off[i].hogar.errores = data[0].data.errores;
+            $ionicLoading.hide();
+          }
+          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+        }).catch(reason => {
+          $ionicLoading.hide(); 
+          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+        });
+      }else{
+        let data = $rootScope.interno_off[i].hogar;
+        data.id = $rootScope.interno_off[i].hogar.hogar_id;
+        let section1 = $http.post(CONFIG.APIURL+'turismointernoapi/guardareditarhogar', data,{'content-type':'application/json',});
+        
+        $q.all([section1]).then(data => {
+          let success=data[0].data.success;
+          if(success==true){
+            $rootScope.interno_off[i].hogar.hogar_id = data[0].data.id;
+            for(let j=0; j<$rootScope.interno_off[i].hogar.integrantes.length; j++){
+              $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner> Espere por favor...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+              });
+              if($rootScope.interno_off[i].hogar.integrantes[j].Viajes){
+                for(let k = 0; k < $rootScope.interno_off[i].hogar.integrantes[j].Viajes.length; k++){
+                  $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner> Espere por favor...',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 0
+                  });
+                  let viaje = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k];
+                  viaje.Id = $rootScope.interno_off[i].hogar.integrantes[j].id;
+                  let section2 = $http.post(CONFIG.APIURL+'turismointernoapi/createviaje', viaje,{'content-type':'application/json',});
+                  $q.all([section2]).then(data => {
+                    if(success==true){
+                      $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].Idv = data[0].data.viaje.id;
+                      if(k ==$rootScope.interno_off[i].hogar.integrantes[j].env.principal[0]){
+                        let env = {id:$rootScope.interno_off[i].hogar.integrantes[j].id, principal:data[0].data.viaje.id};
+                        let section3 = $http.post(CONFIG.APIURL+'turismointernoapi/siguienteviaje', env,{'content-type':'application/json',});
+                        $q.all([section3]).then(data => {
+                          let success=data[0].data.success;
+                          if(success==true){
+                            let principal = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k];
+                            principal.Id = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].Idv;
+                            let section4 = $http.post(CONFIG.APIURL+'turismointernoapi/createviajeprincipal', principal,{'content-type':'application/json',});
+                            $q.all([section4]).then(data => {
+                              let success=data[0].data.success;
+                              if(success==true){
+                                $rootScope.interno_off[i].hogar.integrantes[j].lastSection='principal';
+                                $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores){
+                                  delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores;
+                                }
+                                if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades){
+                                  let actividades = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades;
+                                  actividades.Id = principal.Id;
+                                  let section5 =  $http.post(CONFIG.APIURL+'turismointernoapi/crearestancia', actividades,{'content-type':'application/json',});
+                                  $q.all([section5]).then(data => {
+                                    let success=data[0].data.success;
+                                    if(success==true){
+                                      $rootScope.interno_off[i].hogar.integrantes[j].lastSection='actividades';
+                                      $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                      if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores){
+                                        delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores;
+                                      }
+                                      if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte){
+                                        let transporte = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte;
+                                        transporte.id = principal.Id;
+                                        let section6 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardartransporte', transporte,{'content-type':'application/json',});
+                                        $q.all([section6]).then(data => {
+                                          let success=data[0].data.success;
+                                          if(success==true){
+                                            $rootScope.interno_off[i].hogar.integrantes[j].lastSection='transporte';
+                                            $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                            if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores){
+                                              delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores;
+                                            }
+                                            if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos){
+                                              let gastos = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos;
+                                              gastos.id = principal.Id;
+                                              let section7 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardargastos', gastos,{'content-type':'application/json',});
+                                              $q.all([section7]).then(data => {
+                                                let success=data[0].data.success;
+                                                if(success==true){
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].lastSection='gastos';
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                                  if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores){
+                                                    delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores;
+                                                  }
+                                                  if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran){
+                                                    let enteran = $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran;
+                                                    enteran.id = principal.Id;
+                                                    let section8 =  $http.post(CONFIG.APIURL+'turismointernoapi/guardarfuentesinformacion', enteran,{'content-type':'application/json',});
+                                                    $q.all([section8]).then(data => {
+                                                      let success=data[0].data.success;
+                                                      if(success==true){
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].lastSection='enteran';
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].isUpload = true;
+                                                        if($rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores){
+                                                          delete $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores;
+                                                        }
+                                                        
+                                                      }else{
+                                                        $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].enteran.errores=data[0].data.errores;
+                                                        $ionicLoading.hide();
+                                                      }
+                                                      $ionicLoading.hide();
+                                                      localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                                    }).catch(reason => {
+                                                      $ionicLoading.hide(); 
+                                                      ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                                    })
+                                                  }else{
+                                                    $ionicLoading.hide();
+                                                  }
+                                                }else{
+                                                  $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].gastos.errores = data[0].data.errores
+                                                  $ionicLoading.hide();
+                                                }
+                                                localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                              }).catch(reason => {
+                                                $ionicLoading.hide(); 
+                                                ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                              })
+                                            }else{
+                                              $ionicLoading.hide();
+                                            }
+                                          }else{
+                                            $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].transporte.errores;
+                                            $ionicLoading.hide();
+                                          }
+                                          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                        }).catch(reason => {
+                                          $ionicLoading.hide(); 
+                                          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                        });
+                                      }else{
+                                        $ionicLoading.hide();
+                                      }
+                                    }else{
+                                      $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].actividades.errores;
+                                      $ionicLoading.hide();
+                                    }
+                                    localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                                  }).catch(reason => {
+                                    $ionicLoading.hide(); 
+                                    ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                                  });
+                                }else{
+                                  $ionicLoading.hide();
+                                }
+                              }else{
+                                $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores;
+                                $ionicLoading.hide();
+                              }
+                              localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                            }).catch(reason => {
+                              $ionicLoading.hide(); 
+                              ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                            });
+                          }else{
+                            $rootScope.interno_off[i].hogar.integrantes[j].Viajes[k].errores=data[0].data.errores;
+                            $ionicLoading.hide();
+                          }
+                          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+                        }).catch(reason => {
+                          $ionicLoading.hide(); 
+                          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                        });
+                      }else{
+                        $ionicLoading.hide();
+                      }
+                    }else{
+                      $rootScope.interno_off[i].hogar.integrantes[j].errores = data[0].data.errores;
+                      $ionicLoading.hide();
+                    }
+                    localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off))
+
+                  }).catch(reason => {
+                    $ionicLoading.hide(); 
+                    ionicToast.show("Error interno del servidor",'middle', false, 5000);
+                  });
+                }
+              }else{
+                $ionicLoading.hide();
+              }
+            }
+            localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+          }else{
+            $rootScope.interno_off[i].hogar.errores = data[0].data.errores;
+            $ionicLoading.hide();
+          }
+          localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
+        }).catch(reason => {
+          $ionicLoading.hide(); 
+          ionicToast.show("Error interno del servidor",'middle', false, 5000);
+        });
+      }
+    }
+  }
 
   $scope.len=function (a) {
     return Object.keys(a).length - 1;
@@ -133,7 +533,7 @@ angular.module('interno.controllers', [])
     $rootScope.interno_off=[];
   }
 
-  $ionicModal.fromTemplateUrl('templates/modalIntegrante.html', {
+  $ionicModal.fromTemplateUrl('templates/interno/modalIntegrante.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modalCreate = modal;
@@ -142,8 +542,13 @@ angular.module('interno.controllers', [])
   $scope.selectables = [{"option":1,"value":"Si"},{"option":0, "value":"No"}];
   
   if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown') {
-    let data = $rootScope.loader_interno.hogar;
-    $scope.datos=data; 
+    if(!$rootScope.loader_interno.hogar){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+    }else{ 
+      let data = $rootScope.loader_interno.hogar;
+      $scope.datos=data;
+    }
+ 
   }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -174,29 +579,35 @@ angular.module('interno.controllers', [])
   $scope.selectBarrios=function(id) {
 
     if(id){
-      let data={};
-      data.id=id;
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
 
-      turismoInterno.barrios(data).then(function (data) {
+      if($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown'){
+        $scope.barrios = $filter('filter')($scope.datos.barrios, {municipio_id : id }, true);
+      }
+      else{
+        let data={};
+        data.id=id;
+        $ionicLoading.show({
+          template: '<ion-spinner></ion-spinner> Espere por favor...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
+        });
+
+        turismoInterno.barrios(data).then(function (data) {
           $ionicLoading.hide();
           $scope.barrios=data.barrios;
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        let alertPopup =$ionicPopup.alert({
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          let alertPopup =$ionicPopup.alert({
             title: '¡Error!',
             template: 'Ha ocurrido un error.',
             okType:'button-stable'
+          });
         });
-      });
-    }
+      }
+    }     
   };
 
   $scope.integranteAdd=function(indice) {
@@ -297,13 +708,14 @@ angular.module('interno.controllers', [])
 .controller('editHogarController', function($scope, $stateParams, $ionicModal,  $ionicLoading, turismoInterno, $ionicPopup, ionicToast, $filter, $ionicScrollDelegate, $state, factories, $rootScope) {
   $scope.encuesta = {}
   $scope.encuesta.integrantes = []
+  $scope.encuesta.Personas = []
   $scope.integrante = {}
   $scope.forms = {};
   $scope.encuesta.municipio_id={};
   $scope.id=$stateParams.id;
   $scope.is_offline=$stateParams.isOff;
 
-  $ionicModal.fromTemplateUrl('templates/modalIntegrante.html', {
+  $ionicModal.fromTemplateUrl('templates/interno/modalIntegrante.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modalCreate = modal;
@@ -323,30 +735,39 @@ angular.module('interno.controllers', [])
 
   $scope.selectables = [{"option":1,"value":"Si"},{"option":0, "value":"No"}];
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.hogarEdit;
-    $scope.datos = data.datos;
-    $scope.barrios = data.barrios;
-    $scope.encuestadores=data.datos.encuestadores;
-    $scope.estados=data.datos.estados
-    $scope.encuesta = data.encuesta;
-    $scope.encuestadores=data.datos.encuestadores;
-    $scope.estados=data.datos.estados
-    $scope.municipio_id = factories.findSelect(data.encuesta.edificacione.barrio.municipio_id, data.datos.municipios);
-    $scope.barrio = factories.findSelect(data.encuesta.edificacione.barrio_id, data.barrios);
-    $scope.estrato = factories.findSelect(data.encuesta.edificacione.estrato_id, data.datos.estratos);
-    $scope.encuestador = factories.findSelect(data.encuesta.digitadores_id, data.datos.encuestadores);
-    let encuesta = $rootScope.interno_off[$stateParams.id].hogar
-    $scope.encuesta = data.encuesta;
-    $scope.encuesta.Fecha_aplicacion = encuesta.Fecha_aplicacion
-    $scope.encuesta.Barrio=String(encuesta.Barrio)
-    $scope.encuesta.Estrato=String(encuesta.Estrato)
-    $scope.encuesta.Direccion=encuesta.Direccion
-    $scope.encuesta.Telefono=Number(encuesta.Telefono)
-    $scope.encuesta.Encuestador=String(encuesta.digitadores_id)
-    $scope.encuesta.Nombre_Entrevistado=encuesta.Nombre_Entrevistado
-    $scope.encuesta.Celular_Entrevistado=Number(encuesta.Telefono)
-    $scope.encuesta.Email_Entrevistado=encuesta.Email_Entrevistado
-    $scope.encuesta.integrantes= encuesta.integrantes
+    if(!$rootScope.loader_interno.hogarEdit){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+    }else{
+      let data = $rootScope.loader_interno.hogarEdit;
+      $scope.datos = data.datos;
+      $scope.barrios = data.barrios;
+      $scope.encuestadores=data.datos.encuestadores;
+      $scope.estados=data.datos.estados
+      $scope.encuesta = data.encuesta;
+      $scope.encuestadores=data.datos.encuestadores;
+      $scope.estados=data.datos.estados
+      $scope.municipio_id = factories.findSelect(data.encuesta.edificacione.barrio.municipio_id, data.datos.municipios);
+      $scope.barrio = factories.findSelect(data.encuesta.edificacione.barrio_id, data.barrios);
+      $scope.estrato = factories.findSelect(data.encuesta.edificacione.estrato_id, data.datos.estratos);
+      $scope.encuestador = factories.findSelect(data.encuesta.digitadores_id, data.datos.encuestadores);
+      let encuesta = $rootScope.interno_off[$stateParams.id].hogar
+      $scope.temporada_id=encuesta.Temporada_id
+      $scope.hogar_id=encuesta.hogar_id
+      $scope.encuesta = data.encuesta;
+      $scope.encuesta.Fecha_aplicacion = encuesta.Fecha_aplicacion
+      $scope.encuesta.Barrio=String(encuesta.Barrio)
+      $scope.encuesta.Estrato=String(encuesta.Estrato)
+      $scope.encuesta.Direccion=encuesta.Direccion
+      $scope.encuesta.Telefono=Number(encuesta.Telefono)
+      $scope.encuesta.Encuestador=String(encuesta.digitadores_id)
+      $scope.encuesta.Nombre_Entrevistado=encuesta.Nombre_Entrevistado
+      $scope.encuesta.Celular_Entrevistado=Number(encuesta.Celular_Entrevistado)
+      $scope.encuesta.Email_Entrevistado=encuesta.Email_Entrevistado
+      $scope.encuesta.integrantes= encuesta.integrantes
+      if($rootScope.interno_off[$stateParams.id].hogar && $rootScope.interno_off[$stateParams.id].hogar.errores){
+        $scope.errores = $rootScope.interno_off[$stateParams.id].hogar.errores
+      }
+    }
 
   }
   else{
@@ -381,7 +802,7 @@ angular.module('interno.controllers', [])
       $scope.encuesta.Celular_Entrevistado=Number(data.encuesta.edificacione.telefono_entrevistado)
       $scope.encuesta.Email_Entrevistado=data.encuesta.edificacione.email_entrevistado
 
-      $scope.encuesta.integrantes= cambiar($scope.encuesta.personas)
+      $scope.encuesta.integrantes = cambiar($scope.encuesta.personas)
   }, 
   function (error, data) {
     $ionicLoading.hide();
@@ -434,28 +855,33 @@ angular.module('interno.controllers', [])
 
   $scope.selectBarrios=function(id) {
     if(id){
-      let data={};
-      data.id=id;
-      $ionicLoading.show({
-        template: '<ion-spinner></ion-spinner> Espere por favor...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
-
-      turismoInterno.barrios(data).then(function (data) {
-          $ionicLoading.hide();
-          $scope.barrios=data.barrios;
-      }, 
-      function (error, data) {
-        $ionicLoading.hide();
-        let alertPopup =$ionicPopup.alert({
-            title: '¡Error!',
-            template: 'Ha ocurrido un error.',
-            okType:'button-stable'
+      if($scope.is_offline!=0){
+        $scope.barrios = $filter('filter')($scope.datos.barrios, {municipio_id : id }, true);
+      }  
+      else{
+        let data={};
+        data.id=id;
+        $ionicLoading.show({
+          template: '<ion-spinner></ion-spinner> Espere por favor...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
         });
-      });
+
+        turismoInterno.barrios(data).then(function (data) {
+            $ionicLoading.hide();
+            $scope.barrios=data.barrios;
+        }, 
+        function (error, data) {
+          $ionicLoading.hide();
+          let alertPopup =$ionicPopup.alert({
+              title: '¡Error!',
+              template: 'Ha ocurrido un error.',
+              okType:'button-stable'
+          });
+        });
+      }
     }
   }
 
@@ -467,7 +893,12 @@ angular.module('interno.controllers', [])
     } else {
         $scope.aux = indice;
         $scope.integrante =  $scope.encuesta.integrantes[indice];
-        $scope.integrante.Sexo=$scope.integrante.sexo;
+        if($scope.integrante.Sexo==true){
+          $scope.integrante.Sexo=$scope.integrante.Sexo;
+        }else{
+          $scope.integrante.Sexo=$scope.integrante.sexo;
+        }
+
         if(!$scope.integrante.civil){$scope.integrante.civil=factories.findSelect(parseInt($scope.integrante.Civil), $scope.datos.estados);}
         if(!$scope.integrante.ocupacion){$scope.integrante.ocupacion=factories.findSelect(parseInt($scope.integrante.Ocupacion), $scope.datos.ocupaciones);}
         if(!$scope.integrante.vive){$scope.integrante.vive=factories.findSelect(parseInt($scope.integrante.Vive), $scope.selectables, true);}
@@ -478,7 +909,6 @@ angular.module('interno.controllers', [])
   }
 
   $scope.guardarIntegrante = function () {
-   
     if ($scope.forms.IntegranteForm.$valid==true) {
       $scope.modalCreate.hide();
       if ($scope.aux == -1) {
@@ -557,9 +987,12 @@ angular.module('interno.controllers', [])
     if ($scope.forms.DatosForm.$valid) {
 
       if ($scope.is_offline!=0) {
-          $rootScope.interno_off[$stateParams.id]={'hogar':$scope.encuesta};
+          $scope.encuesta.Temporada_id=$scope.temporada_id;
+          if($scope.hogar_id){
+            $scope.encuesta.hogar_id=$scope.hogar_id;
+          }
+          $rootScope.interno_off[$stateParams.id].hogar=$scope.encuesta;
           localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
-
           ionicToast.show("Se almacenó la sección para sincronización",'top', false, 5000);
           $state.reload();
       }else{
@@ -630,17 +1063,26 @@ angular.module('interno.controllers', [])
   }
 
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.viajesRealizados;
-    $scope.Datos = data.Enlaces;
-    $scope.hogar = $location.search().vector;
-    $scope.Viajes = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes;
 
-    if(!$rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes){
-      $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes=[];
-    }
+    if(!$rootScope.loader_interno.viajesRealizados){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+    }else{
+      let data = $rootScope.loader_interno.viajesRealizados;
+      $scope.Datos = data.Enlaces;
+      $scope.hogar = $location.search().vector;
+      $scope.Viajes = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes;
 
-    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env){
-      $scope.PrincipalViaje.id = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env.principal[0];
+      if(!$rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes){
+        $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].Viajes=[];
+      }
+
+      if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env){
+        $scope.PrincipalViaje.id = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$stateParams.id].env.principal[0];
+      }
+
+      if($rootScope.interno_off[$stateParams.id].hogar && $rootScope.interno_off[$stateParams.id].hogar.integrantes[$stateParams.id].errores){
+        $scope.errores = $rootScope.interno_off[$stateParams.id].hogar.integrantes[$stateParams.id].errores
+      }
     }
   }else{
 
@@ -818,6 +1260,7 @@ angular.module('interno.controllers', [])
         $scope.encuesta.Crear = true;
       }
 
+     
       
       turismoInterno.createviaje($scope.encuesta).then(function (data) {
         $ionicLoading.hide();
@@ -1028,12 +1471,16 @@ angular.module('interno.controllers', [])
   }
 
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.viajesRealizados;
-    $scope.Datos = data.Enlaces;
-    $scope.hogar = parseInt($location.search().hogar);
-    $scope.integrantes = $location.search().integrantes;
-    $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id];
-    $scope.encuesta.Id = $stateParams.id;
+    if(!$rootScope.loader_interno.viajesRealizados){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+    }else{
+      let data = $rootScope.loader_interno.viajesRealizados;
+      $scope.Datos = data.Enlaces;
+      $scope.hogar = parseInt($location.search().hogar);
+      $scope.integrantes = $location.search().integrantes;
+      $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id];
+      $scope.encuesta.Id = $stateParams.id;
+    }
   }
   else{
     $ionicLoading.show({
@@ -1235,7 +1682,7 @@ angular.module('interno.controllers', [])
     if($scope.is_offline!=0){
       $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id]=$scope.encuesta
       localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
-      $location.path("/app/actividades/"+$scope.encuesta.Id+"/1").search({'integrantes':$scope.id, 'hogar':$scope.hogar});;
+      $location.path("/app/actividades/"+$scope.encuesta.Id+"/1").search({'integrantes':$scope.integrantes, 'hogar':$scope.hogar});;
     }
     else{
       $ionicLoading.show({
@@ -1296,6 +1743,10 @@ angular.module('interno.controllers', [])
   }
 
   if($scope.is_offline!=0){
+    if(!$rootScope.loader_interno.actividades){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+
+    }else{
       let data = $rootScope.loader_interno.actividades;
       $scope.Datos = data.Enlaces;
       $scope.hogar = parseInt($location.search().hogar);
@@ -1304,6 +1755,7 @@ angular.module('interno.controllers', [])
         $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].actividades
       }
       $scope.encuesta.Id = $stateParams.id;
+    }
   }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -1477,7 +1929,7 @@ angular.module('interno.controllers', [])
     if($scope.is_offline!=0){
       $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].actividades = $scope.encuesta 
       localStorage.setItem("interno_off",JSON.stringify($rootScope.interno_off));
-      $location.path("/app/transporteInterno/"+$scope.id+"/1");
+      $location.path("/app/transporteInterno/"+$scope.id+"/1").search({'integrantes':$scope.id, 'hogar':$scope.hogar})
     }else{
       $ionicLoading.show({
         template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -1491,7 +1943,7 @@ angular.module('interno.controllers', [])
         $ionicLoading.hide();
         if (data.success == true) {
           ionicToast.show("Se realizó la operación exitosamente",'top', false, 5000);
-          $location.path("/app/transporteInterno/"+$scope.id+"/0").search({'integrantes':$scope.id, 'hogar':$scope.hogar});
+          $location.path("/app/transporteInterno/"+$scope.id+"/0");
         } else {
           $ionicScrollDelegate.scrollTop(true);
           ionicToast.show("Hay errores en el formulario corrigelo",'middle', false, 5000);
@@ -1531,16 +1983,20 @@ angular.module('interno.controllers', [])
   }
 
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.transporte;
-    $scope.transportes = data.transportes;
-    $scope.medios=data.medios;
-    $scope.transporte.id = $stateParams.id;
-    $scope.hogar = parseInt($location.search().hogar);
-    $scope.integrantes = $location.search().integrantes;
-    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte){
-      $scope.transporte = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte
-    }
-    
+    if(!$rootScope.loader_interno.transporte){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
+
+    }else{
+      let data = $rootScope.loader_interno.transporte;
+      $scope.transportes = data.transportes;
+      $scope.medios=data.medios;
+      $scope.transporte.id = $stateParams.id;
+      $scope.hogar = parseInt($location.search().hogar);
+      $scope.integrantes = $location.search().integrantes;
+      if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte){
+        $scope.transporte = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].transporte
+      }
+    }    
   }else{
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner> Espere por favor...',
@@ -1748,73 +2204,78 @@ angular.module('interno.controllers', [])
   };
 
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.gastos;
-    $scope.divisas = data.divisas;
-    $scope.financiadores = data.financiadores;
-    $scope.opcionesLugares = data.opcionesLugares;
-    $scope.serviciosPaquetes = data.serviciosPaquetes;
-    $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
-    if(data.encuesta && data.encuesta.empresaTransporte){
-      $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
-    }
-    $scope.hogar = parseInt($location.search().hogar);
-    $scope.integrantes = $location.search().integrantes;
-    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos){
-      $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos
-      var rb = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos.rubros
-    }
-    $scope.encuesta.rubros=data.encuesta.rubros;    
-    
-    for(let i=0; i<$scope.encuesta.rubros.length; i++){
-        $scope.encuesta.rubros[i].viajes_gastos_internos[0] = {};
-    }
-    if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
-      $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
-    } 
-    if($scope.encuesta.rubros){           
-      for(let i=0; i< $scope.encuesta.rubros.length ;i++){
-        if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
-          $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
-        }
-        if($scope.encuesta.rubros[i].id==8){
-          $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
-          $scope.changeRubros($scope.encuesta.rubros[i]); break;
-        }
-      }
-    }
-    
-    if($scope.encuesta.gastosServicosPaquetes){              
-      for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
-        for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
-          if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
-            $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
-            break;
-          }
-        }              
-      }
-    }
-    
-    if($scope.encuesta.porcentajeGastoRubros){     
-      for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
-        for (let j = 0; j < $scope.encuesta.rubros.length; j++){
-          if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
-            $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
-            break;
-          }
-        }
+    if(!$rootScope.loader_interno.gastos){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
 
+    }else{
+      let data = $rootScope.loader_interno.gastos;
+      $scope.divisas = data.divisas;
+      $scope.financiadores = data.financiadores;
+      $scope.opcionesLugares = data.opcionesLugares;
+      $scope.serviciosPaquetes = data.serviciosPaquetes;
+      $scope.TipoProveedorPaquete = data.TipoProveedorPaquete;
+      if(data.encuesta && data.encuesta.empresaTransporte){
+        $scope.verNombreEmpresa  =  data.encuesta.empresaTransporte ? true : false;
       }
-    }
-
-    if(rb){
+      $scope.hogar = parseInt($location.search().hogar);
+      $scope.integrantes = $location.search().integrantes;
+      if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos){
+        $scope.encuesta = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos
+        var rb = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].gastos.rubros
+      }
+      $scope.encuesta.rubros=data.encuesta.rubros;    
+      
       for(let i=0; i<$scope.encuesta.rubros.length; i++){
-        for(let j=0; j<rb.length;j++ ){
-         if(rb[j].rubros_id==$scope.encuesta.rubros[i].id){
-            $scope.encuesta.rubros[i].viajes_gastos_internos.splice(0,1);
-            $scope.encuesta.rubros[i].viajes_gastos_internos.push(rb[j]);
+          $scope.encuesta.rubros[i].viajes_gastos_internos[0] = {};
+      }
+      if($scope.encuesta.viajeExcursion && $scope.encuesta.viajeExcursion.divisas_id){
+        $scope.encuesta.viajeExcursion.Divisas = factories.findSelect($scope.encuesta.viajeExcursion.divisas_id, $scope.divisas);
+      } 
+      if($scope.encuesta.rubros){           
+        for(let i=0; i< $scope.encuesta.rubros.length ;i++){
+          if($scope.encuesta.rubros[i] && $scope.encuesta.rubros[i].viajes_gastos_internos[0]){
             $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
-           
-         }
+          }
+          if($scope.encuesta.rubros[i].id==8){
+            $scope.rubroAlquilerVehiculo = $scope.encuesta.rubros[i];
+            $scope.changeRubros($scope.encuesta.rubros[i]); break;
+          }
+        }
+      }
+      
+      if($scope.encuesta.gastosServicosPaquetes){              
+        for(let i=0; i< $scope.encuesta.gastosServicosPaquetes.length ;i++){               
+          for (let j = 0; j < $scope.serviciosPaquetes.length; j++){
+            if ($scope.encuesta.gastosServicosPaquetes[i].servicio_paquete_id == $scope.serviciosPaquetes[j].id) { 
+              $scope.encuesta.gastosServicosPaquetes[i].nombre = $scope.serviciosPaquetes[j].nombre;
+              break;
+            }
+          }              
+        }
+      }
+      
+      if($scope.encuesta.porcentajeGastoRubros){     
+        for(let i=0; i< $scope.encuesta.porcentajeGastoRubros.length ;i++){            
+          for (let j = 0; j < $scope.encuesta.rubros.length; j++){
+            if ($scope.encuesta.porcentajeGastoRubros[i].rubro_interno_id == $scope.encuesta.rubros[j].id) { 
+              $scope.encuesta.porcentajeGastoRubros[i].nombre = $scope.encuesta.rubros[j].nombre;
+              break;
+            }
+          }
+
+        }
+      }
+
+      if(rb){
+        for(let i=0; i<$scope.encuesta.rubros.length; i++){
+          for(let j=0; j<rb.length;j++ ){
+           if(rb[j].rubros_id==$scope.encuesta.rubros[i].id){
+              $scope.encuesta.rubros[i].viajes_gastos_internos.splice(0,1);
+              $scope.encuesta.rubros[i].viajes_gastos_internos.push(rb[j]);
+              $scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_obj=factories.findSelect($scope.encuesta.rubros[i].viajes_gastos_internos[0].divisa_id,data.divisas)
+             
+           }
+          }
         }
       }
     }
@@ -2012,19 +2473,24 @@ angular.module('interno.controllers', [])
 
 
   if($scope.is_offline!=0){
-    let data = $rootScope.loader_interno.fuentes;
-    $scope.fuentesAntes = data.fuentesAntes
-    $scope.fuentesDurante = data.fuentesDurante
-    $scope.redes = data.redes
-    $scope.enteran.id = $scope.id
-    
-    $scope.calificaciones = data.calificaciones
-    $scope.hogar = parseInt($location.search().hogar);
-    $scope.integrantes = $location.search().integrantes;
+    if(!$rootScope.loader_interno.fuentes){
+      ionicToast.show("No hay datos precargados no pdra realizar la encuesta sin conexión",'middle', false, 5000);
 
-    if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran){
-      $scope.enteran = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran;
-      $scope.experiencias =  $scope.enteran.Experiencias 
+    }else{
+      let data = $rootScope.loader_interno.fuentes;
+      $scope.fuentesAntes = data.fuentesAntes
+      $scope.fuentesDurante = data.fuentesDurante
+      $scope.redes = data.redes
+      $scope.enteran.id = $scope.id
+      $scope.experiencias = data.experiencias
+      $scope.calificaciones = data.calificaciones
+      $scope.hogar = parseInt($location.search().hogar);
+      $scope.integrantes = $location.search().integrantes;
+
+      if($rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran){
+        $scope.enteran = $rootScope.interno_off[$scope.hogar].hogar.integrantes[$scope.integrantes].Viajes[$stateParams.id].enteran;
+        $scope.experiencias =  $scope.enteran.Experiencias 
+      }
     }
     
   }else{
@@ -2043,6 +2509,7 @@ angular.module('interno.controllers', [])
         $scope.redes = data.redes
         $scope.enteran.id = $scope.id
         $scope.experiencias = data.experiencias
+
         $scope.calificaciones = data.calificaciones
         $rootScope.loader_interno.fuentes=data;
         localStorage.setItem("loader_interno",JSON.stringify($rootScope.loader_interno));

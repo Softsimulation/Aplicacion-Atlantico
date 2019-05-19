@@ -1,6 +1,6 @@
 angular.module('receptor.controllers', [])
 
-.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, $ionicHistory, $rootScope, $cordovaNetwork, ionicToast, $ionicModal, $q, $http, CONFIG, $ionicActionSheet, $location) {
+.controller('encuestasController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, $ionicHistory, $rootScope, $cordovaNetwork, ionicToast, $ionicModal, $q, $http, CONFIG, $ionicActionSheet, $location, $filter) {
   $ionicHistory.clearHistory();
   $ionicHistory.clearCache();
   $scope.currentPage = 0;
@@ -28,6 +28,12 @@ angular.module('receptor.controllers', [])
     $scope.modal = modal;
   });
 
+  $ionicModal.fromTemplateUrl('templates/receptor/modal-filter-fecha.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal2 = modal;
+  });
 
   $scope.filter = [
                     {'option':'Todas las encuestas', 'value':''}, 
@@ -58,9 +64,13 @@ angular.module('receptor.controllers', [])
       maxWidth: 200,
       showDelay: 0
     });
-    turismoReceptor.encuestas().then(function (data) {
+    let _date = new Date ();
+    $scope.fin = $filter('date')(_date, "yyyy-MM-dd");
+    _date.setDate(_date.getDate()-30);  
+    $scope.inicio = $filter('date')(_date, "yyyy-MM-dd");
+    turismoReceptor.encuestas($scope.inicio, $scope.fin).then(function (data) {
         $ionicLoading.hide();
-        $scope.encuestas=data;
+        $scope.encuestas=data.encuestas;
         for (let i = 0; i < $scope.encuestas.length; i++) {
             if ($scope.encuestas[i].estadoid > 0 && $scope.encuestas[i].estadoid < 7) {
                 $scope.encuestas[i].Filtro = 'sincalcular';
@@ -550,6 +560,50 @@ angular.module('receptor.controllers', [])
       },
     });
   }
+
+  $scope.filter_date=function (inicio, fin) {
+    if(!inicio || !fin){
+      ionicToast.show("Complete los campos",'top', false, 5000);
+      return;
+    }
+    
+    if(inicio>fin){
+      ionicToast.show("La fecha final debe ser mayor o igual a la fecha incial",'top', false, 5000);
+      return;
+    }    
+
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner> Espere por favor...',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    inicio = $filter('date')(inicio, "yyyy-MM-dd");
+    fin = $filter('date')(fin, "yyyy-MM-dd");
+    
+    turismoReceptor.encuestas(inicio, fin).then(function (data) {
+        $ionicLoading.hide();
+        $scope.modal2.hide();
+        $scope.encuestas=data.encuestas;
+        for (let i = 0; i < $scope.encuestas.length; i++) {
+            if ($scope.encuestas[i].estadoid > 0 && $scope.encuestas[i].estadoid < 7) {
+                $scope.encuestas[i].Filtro = 'sincalcular';
+            } else {
+                $scope.encuestas[i].Filtro = 'calculadas';
+            }
+        }      
+    }, 
+    function (error, data) {
+      $ionicLoading.hide();
+      let alertPopup =$ionicPopup.alert({
+          title: '¡Error!',
+          template: 'Ha ocurrido un error.',
+          okType:'button-stable'
+      });
+    });
+  }
 })
 
 .controller('generalController', function($scope, turismoReceptor, $ionicLoading, $ionicPopup, ionicToast, $ionicScrollDelegate, $state, $filter, $location, $rootScope, $cordovaNetwork, factories) {
@@ -602,6 +656,7 @@ angular.module('receptor.controllers', [])
         $scope.medicos = data.medicos;
         $scope.departamentos_colombia = data.departamentos;
         $scope.lugares_aplicacion = data.lugares_aplicacion;
+        $scope.sub_lugares_aplicacion = data.sub_lugares_aplicacion;
         $scope.all_departamentos = data.all_departamentos;
         $scope.all_municipios = data.all_municipios;
       }else{
@@ -626,6 +681,8 @@ angular.module('receptor.controllers', [])
         $scope.lugares_aplicacion = data.lugares_aplicacion;
         $scope.all_departamentos = data.all_departamentos;
         $scope.all_municipios = data.all_municipios;
+        $scope.sub_lugares_aplicacion = data.sub_lugares_aplicacion;
+
     }, 
     function (error, data) {
       $ionicLoading.hide();
@@ -637,6 +694,7 @@ angular.module('receptor.controllers', [])
     });
   }
 
+  $scope.filterSub = function (id) {$scope.sub_lugares_aplicacion_filter = $filter('filter')($scope.sub_lugares_aplicacion, {'opcion_id':id}, true);}
 
   $scope.changedepartamento = function (id) {
     
@@ -880,6 +938,8 @@ angular.module('receptor.controllers', [])
         $scope.medicos = data.medicos;
         $scope.departamentos_colombia = data.departamentos;
         $scope.lugares_aplicacion = data.lugares_aplicacion;
+        $scope.sub_lugares_aplicacion = data.sub_lugares_aplicacion;
+
         $scope.all_departamentos = data.all_departamentos;
         $scope.all_municipios = data.all_municipios;
         $scope.encuesta = $rootScope.receptor_off[$stateParams.id].section_1;
@@ -891,6 +951,8 @@ angular.module('receptor.controllers', [])
         $scope.departamentod2=$scope.encuesta.departamentod;
         $scope.encuesta.Sexo=Boolean($scope.encuesta.Sexo); 
         $scope.encuesta.Municipio=$scope.encuesta.municipio.id;
+        $scope.sub_lugares_aplicacion_filter = $filter('filter')($scope.sub_lugares_aplicacion, {'opcion_id':$scope.encuesta.aplicacion}, true);
+        
         if($rootScope.receptor_off[$stateParams.id].section_1 && $rootScope.receptor_off[$stateParams.id].section_1.errores){
           $scope.errores = $rootScope.receptor_off[$stateParams.id].section_1.errores;
         }
@@ -913,6 +975,7 @@ angular.module('receptor.controllers', [])
         $scope.motivos = data.datos.motivos;
         $scope.medicos = data.datos.medicos;
         $scope.lugares_aplicacion = data.datos.lugares_aplicacion;
+        $scope.sub_lugares_aplicacion = data.datos.sub_lugares_aplicacion;
         $scope.departamentos_colombia = data.datos.departamentos;
         $scope.encuesta = data.visitante;
         $scope.pais_residencia =factories.findSelect(data.visitante.Pais, data.datos.paises);
@@ -925,13 +988,14 @@ angular.module('receptor.controllers', [])
 
         $scope.encuesta.encuestador = factories.findSelect(data.visitante.Encuestador, data.datos.encuestadores);
         $scope.encuesta.Aplicacion = factories.findSelect(data.visitante.aplicacion, data.datos.lugares_aplicacion);
+        $scope.encuesta.SubAplicacion = factories.findSelect(data.visitante.sub_lugar_aplicacion_id, data.datos.sub_lugares_aplicacion);
         $scope.encuesta.nacimiento = factories.findSelect(data.visitante.Nacimiento, data.datos.lugar_nacimiento);
         $scope.encuesta.pais_nacimiento = factories.findSelect(data.visitante.Pais_Nacimiento, data.datos.paises);
         $scope.encuesta.municipio = factories.findSelect(data.visitante.Municipio, data.municipiosr);
         if(data.visitante.Destino){
           $scope.encuesta.destino = factories.findSelect(data.visitante.Destino, data.municipiosd);
         }
-
+        $scope.sub_lugares_aplicacion_filter = $filter('filter')($scope.sub_lugares_aplicacion, {'opcion_id':$scope.encuesta.aplicacion}, true);
 
         if(data.visitante.fechaAplicacion != null){
           let split1 = data.visitante.fechaAplicacion.split(" ");
@@ -951,6 +1015,9 @@ angular.module('receptor.controllers', [])
     });
   }
   
+
+  $scope.filterSub = function (id) {$scope.sub_lugares_aplicacion_filter = $filter('filter')($scope.sub_lugares_aplicacion, {'opcion_id':id}, true);}
+
   $scope.changedepartamento = function (id) {
     $scope.encuesta.municipio={};
     if ($cordovaNetwork.getNetwork() == 'none'|| $cordovaNetwork.getNetwork() == 'unknown' || $scope.is_offline==1) {
@@ -1949,6 +2016,7 @@ angular.module('receptor.controllers', [])
       $scope.servicios = data.servicios;
       $scope.tipos = data.tipos;
       $scope.rubros = data.rubros;
+
       if($rootScope.receptor_off[$stateParams.id].section_5){
         $scope.encuestaReceptor = $rootScope.receptor_off[$stateParams.id].section_5;
         if($rootScope.receptor_off[$stateParams.id].section_5 && $rootScope.receptor_off[$stateParams.id].section_5.errores){
@@ -2079,7 +2147,7 @@ angular.module('receptor.controllers', [])
     }
 
     if($scope.is_offline==1){
-  
+      $scope.limpiarMatriz();
       delete $scope.encuestaReceptor.id;
       $rootScope.receptor_off[$stateParams.id].section_5=$scope.encuestaReceptor;
       if($scope.last_section<$scope.this_section){
@@ -2531,7 +2599,6 @@ angular.module('receptor.controllers', [])
 
   $scope.checked=function(id, objeto) {
     let i=0;
-    console.log(id, objeto)
     for(i=0; i<objeto.length; i++){
       if(id==objeto[i]){
         return true;
@@ -2662,4 +2729,11 @@ angular.module('receptor.controllers', [])
       });   
     } 
   }; 
+
+  $scope.verMarca = function(){
+    $ionicPopup.alert({
+     title: 'Marca de calidad turística',
+     templateUrl: 'templates/receptor/marca.html'
+   });
+  }
 })

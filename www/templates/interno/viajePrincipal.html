@@ -65,9 +65,9 @@
             <div class="col col-33">País</div>
             <div class="col col-33">Dpto</div>
             <div class="col col-33">Mpios</div>
-            <div class="col col-20">N° de noches</div>
+            <div class="col col-33">N° de noches</div>
             <div class="col col-33">Tipo de Alojamiento </div>
-            <div class="col col-20">Principal</div>
+            <div class="col col-33">Principal</div>
             <div class="col col-33"></div>
           </div>
           <div class="row row-table-col" ng-repeat="n in encuesta.Estancias">
@@ -153,7 +153,7 @@
               </a>              
             </div>
 
-            <div class="col col-20">
+            <div class="col col-33">
               <label class="item item-input item-floating-label">
                 <span class="input-label" ></span>
                 <input 
@@ -197,7 +197,7 @@
               </a> 
             </div>
 
-            <div class="col col-20">
+            <div class="col col-33">
               <ion-radio ng-model="encuesta.Principal" ng-value="n.Municipio" class="ripple ripple-green" name="destino">
               </ion-radio>
             </div>

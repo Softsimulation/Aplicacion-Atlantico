@@ -1,0 +1,53 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark bar-custom">
+      	<h1 class="title"><i class="ion-clipboard"></i> Hogares Offline</h1>
+      	<button class="button button-clear button-primary" ng-click="modal.hide()"><i class="ion-close-circled"></i></button>
+    </ion-header-bar>
+    <div class="bar bar-subheader bar-custom item-input-inset">
+	    <label class="item-input-wrapper">
+	      <i class="icon ion-ios-search placeholder-icon"></i>
+	      <input type="text" placeholder="Buscar encuesta..." ng-model="search2">
+	    </label>
+	  </div>
+
+    <ion-content class="has-subheader" style="background-color: #f4f4f7">
+	   	
+    <!--| firstPage:currentPage*pageSize | limitTo:pageSize"-->
+    	<div class="card list animated fadeInLeft active-card" 
+          ng-repeat="item in interno_off | filter:search2  " >
+          <div class="item">
+            <h2>{{item.hogar.edificacione.barrio.nombre}}</h2>
+            <p>Barrio</p>
+            <hr>
+            <h2>{{item.hogar.Direccion}}</h2>
+            <p>Dirección</p>
+            <hr>
+            <h2>{{item.hogar.Estrato}}</h2>
+            <p>Estrato</p>
+            <!--<h2>{{item.digitadore.asp_net_user.email}}</h2>
+            <p>Encuestador</p>-->
+            <hr>
+            <h2>{{item.hogar.Nombre_Entrevistado}}</h2>
+            <p>Nombre entrevistado</p>
+            <hr>
+            <h2>{{item.hogar.fecha_realizacion | date:'yyyy/MM/dd HH:mm'}}</h2>
+            <p>Fecha aplicación</p>
+            <div class="pull-right">
+              <a class="ripple ripple-green button button-outline button-positive button-small" ng-click="modal.hide()" href="#/app/editHogar/{{$index}}/1"><i class="ion-edit"></i></a>
+            </div>
+          </div>
+      </div>
+    </ion-content>
+
+    <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+      	<button class="botonF1 button ripple ripple-light button-positive animated zoomIn" ng-click="sincronizar()">
+        	<i class="ion-loop"></i>
+      	</button>
+	</div>
+	<div class="fixed-action-btn" style="bottom: 55px; right: 0px;">
+      	<button class="botonF1 button ripple ripple-light button-assertive animated zoomIn" ng-click="eliminar()">
+        	<i class="ion-trash-a"></i>
+      	</button>
+	</div>
+
+  </ion-modal-view>

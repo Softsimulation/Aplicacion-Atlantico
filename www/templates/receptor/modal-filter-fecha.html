@@ -1,0 +1,50 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-dark bar-custom">
+    <h1 class="title">Ingresar rango de fechas</h1>
+    <div class="buttons">
+      <button class="button button-clear ripple ripple-light" ng-click="modal2.hide()">
+        <i class='ion-chevron-down'></i> 
+      </button>
+    </div>
+
+  </ion-header-bar>
+  <ion-content>
+    <div class="card animated fadeInLeft">
+      <div class="item item-divider situr-header required">
+        <h2>Buscar...</h2>
+      </div>
+      <div class="item">
+        <label class="input-label">Fecha Inicial</label>
+        <div 
+          class="item date ripple ripple-green" 
+          ion-datetime-picker 
+          date 
+          ng-model="inicio" 
+          name="llegada" 
+          >
+          {{inicio| date: "yyyy-MM-dd" }}
+        </div>
+        
+      </div>
+
+      <div class="item">
+        <label class="input-label">Fecha final</label>
+        <div 
+          class="item date ripple ripple-green" 
+          ion-datetime-picker 
+          date 
+          ng-model="fin"
+          name="salida"
+          >
+          {{fin| date: "yyyy-MM-dd" }}            
+        </div>
+      </div>
+    </div>
+    <div class="padding">
+      <button type="submit" ng-click="filter_date(inicio, fin)" class=" button button-positive ripple ripple-light button-block">
+        Buscar
+      </button>
+    </div>
+    
+  </ion-content>
+</ion-modal-view>

@@ -116,16 +116,23 @@
     <br><br><br>
   </ion-content> 
 
-  <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
+ <div class="fixed-action-btn" style="bottom: 0px; right: 0px;">
     <a href="#/app/general">
       <button class="botonF1 button ripple ripple-light button-positive animated zoomIn">
         <i class=" ion-plus"></i>
       </button>
     </a>
   </div> 
-  <div class="fixed-action-btn" style="bottom: 55px; right: 0px;" ng-if="receptor_off.length>0">
-    <button class="botonF1 button ripple ripple-green button-dark animated zoomIn" ng-click="modal.show()">
-      <i class="ion-clipboard"></i>
+  
+  <div class="fixed-action-btn" style="bottom: 55px; right: 0px;" >
+    <button class="botonF1 button ripple ripple-green button-royal animated zoomIn " ng-click="modal2.show()">
+      <i class="ion-funnel"></i>
     </button>
   </div> 
+
+  <div class="fixed-action-btn" style="bottom: 110px; right: 0px;" ng-if="receptor_off.length>0">
+    <button class="botonF1 button ripple ripple-green button-dark animated zoomIn " ng-click="modal.show()">
+      <div class="ripple-infinite"></div>
+      <i class="ion-clipboard"></i>
+    </button>
 </ion-view>

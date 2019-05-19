@@ -4,7 +4,7 @@ angular.module('turismo.receptor.services', [])
 	let token="Bearer "+JSON.parse(localStorage.getItem("token"));
 	$http.defaults.headers.common['Authorization']=token;
 
-	this.encuestas=function () {
+	this.encuestas=function (inicio, fin) {
     	let deferred = $q.defer();    	
 
     	$http({
@@ -13,7 +13,7 @@ angular.module('turismo.receptor.services', [])
       			'content-type':'application/json',
             	
       		},
-	      	url: CONFIG.APIURL+'turismoreceptoroapi/encuestas',
+	      	url: CONFIG.APIURL+'turismoreceptoroapi/encuestasrango/'+inicio+"/"+fin,
 	    }).success(function(result, status) {
 	        deferred.resolve(result);  
 	    }).error(function(status, error, data) {

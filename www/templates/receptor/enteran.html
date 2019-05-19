@@ -46,7 +46,7 @@
         <div class="item item-divider situr-header required">
           <h2>G2. ¿Durante la permanencia en el Atlántico, de qué forma usted buscó más información sobre destinos turísticos?</h2>
         </div>
-        <div  ng-repeat="it in fuentesDurante | orderBy:'id'">
+        <div  ng-repeat="it in fuentesDurante">
 
           <ion-checkbox 
             class="ripple ripple-green" 
@@ -243,6 +243,9 @@
       <div class="card animated fadeInLeft">
         <div class="item item-divider situr-header required">
           <h2>H1. ¿Conoce la marca que acaba de ver?</h2>
+          <button class="button button-stable button-small ripple ripple-green" ng-click="verMarca()">
+              <i class="ion ion-eye"></i>
+          </button>
         </div>               
           <ion-radio 
             class="ripple ripple-green" 
